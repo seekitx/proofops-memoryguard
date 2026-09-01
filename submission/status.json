@@ -1,14 +1,18 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-09-01T04:06:05Z",
+  "updated_at": "2026-09-01T04:52:36Z",
   "claims": {
     "registration_confirmed": {
       "state": "verified",
       "evidence": "user_confirmed_in_codex_2026-09-01"
     },
     "private_build_page_access": {
-      "state": "verified_entry_exists_handoff_required",
-      "evidence": "Registration success page visibly confirmed a private build-page entry on 2026-09-01; edit token intentionally not stored"
+      "state": "verified_read_only",
+      "evidence": "Private build page opened and inspected read-only on 2026-09-01; edit token intentionally not stored"
+    },
+    "build_page_current_milestones": {
+      "state": "all_empty",
+      "evidence": "Public repo, demo video, two posts, and memory fields were all unfilled; nothing saved and not marked ready"
     },
     "build_page_team_and_builders": {
       "state": "human_required",
@@ -28,7 +32,7 @@
     },
     "repository_head_pushed": {
       "state": "verified",
-      "evidence": "origin/main contains transparent baseline c96325a plus in-window Agent commits 2a2775f and e35748e"
+      "evidence": "origin/main includes transparent baseline c96325a, Agent implementation 2a2775f, and runtime-evidence hardening 34d908645601f2ff5aef67b159d428ccf68f89ec after the current push"
     },
     "prior_work_boundary_reviewed": {
       "state": "human_required",
@@ -36,7 +40,7 @@
     },
     "contest_period_implementation": {
       "state": "implemented_unrun",
-      "evidence": "public in-window commits 2a2775f8c19ced4f8d463c6da238f6ef4ccb8641 and e35748e"
+      "evidence": "public in-window commits 2a2775f8c19ced4f8d463c6da238f6ef4ccb8641, e35748e, and 34d908645601f2ff5aef67b159d428ccf68f89ec"
     },
     "real_agent_behavior": {
       "state": "implemented_unrun",
@@ -45,6 +49,10 @@
     "sibyl_source_integration": {
       "state": "implemented_unrun",
       "evidence": "src/proofops_memoryguard/adapters/sibyl.py"
+    },
+    "sibyl_runtime_identity": {
+      "state": "implemented_unrun",
+      "evidence": "34d9086 binds the pinned SDK import and runtime files to distribution RECORD hashes and schema v4; real installed-runtime evidence remains pending"
     },
     "fresh_session_runtime": {
       "state": "unverified",
