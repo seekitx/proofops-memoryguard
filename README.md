@@ -91,7 +91,12 @@ the product never claims that it moved money.
 Development defaults to a clearly labelled deterministic planner so the repository
 can be inspected without a secret. Contest production refuses to start unless
 `AGENT_MODEL_MODE=remote` and a real HTTPS model endpoint, model name, and API key
-are configured. A deterministic-planner screenshot is not claimed as real-AI proof.
+are configured. The authorized contest run also exercised strict structured output
+through an OpenRouter free model across a full API restart; its generation IDs,
+completion hashes, legacy runtime-health binding limitation, and later receipt
+hardening are recorded in
+[`evidence/2026-09-01_OPENROUTER_HTTPS_EVIDENCE.md`](evidence/2026-09-01_OPENROUTER_HTTPS_EVIDENCE.md).
+A deterministic-planner screenshot is not claimed as real-AI proof.
 
 ## Run locally
 
@@ -184,8 +189,13 @@ The repository includes focused tests for:
 - adversarial model requests for an unregistered payment tool being suppressed;
 - Agent request idempotency and production Adapter rejection.
 
-On 2026-09-01, the authorized Python 3.11 run completed with `20 passed` using
-`.venv/bin/python -m pytest`. The first run exposed a missing Keccak backend; the
+On 2026-09-01, the latest authorized Python 3.11 run completed with `24 passed`
+using `.venv/bin/python -m pytest`. The remote-model evidence path now persists a
+non-secret model receipt in the same Sibyl Agent run and binds it to the tool trace;
+tampering with the generation ID fails the run integrity check. A successful live
+receipt-bound A/B rerun is still pending because the free providers later returned
+an empty response and HTTP 429. The first run exposed
+a missing Keccak backend; the
 runtime dependency now explicitly includes `eth-hash[pycryptodome]`, and the clean
 rerun passed. The Solidity contract was **not** compiled or tested, so no contract
 runtime claim is made.
@@ -198,7 +208,12 @@ no importable `sibyl_memory_client`; readiness, direct decision, and Agent run a
 returned 503, while the decision and Agent responses also reported
 `executable=false`. Exact values and limitations are recorded in
 [`evidence/2026-09-01_RUNTIME_EVIDENCE.md`](evidence/2026-09-01_RUNTIME_EVIDENCE.md).
-This is not remote-model evidence and does not replace the required unedited video.
+That earlier file is not remote-model evidence. A later production-configured run
+successfully used an OpenRouter free model in both sessions and was reachable through
+a temporary Cloudflare HTTPS tunnel. The free route later showed an intermittent
+provider failure and the temporary URL is not durable hosting, so neither result
+replaces the required unedited video or a stable judge URL. See
+[`evidence/2026-09-01_OPENROUTER_HTTPS_EVIDENCE.md`](evidence/2026-09-01_OPENROUTER_HTTPS_EVIDENCE.md).
 
 ## Prior Work
 

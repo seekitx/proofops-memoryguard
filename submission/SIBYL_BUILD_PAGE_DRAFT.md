@@ -33,17 +33,18 @@ current official tags at publication time.
 
 ### What breaks when memory is deleted?
 
-Do not submit this as a verified claim until the fresh-process and deletion captures
-have actually passed.
+The fresh-process A/B behavior and fail-closed probe have now been observed. The
+continuous video remains a separate publication gate.
 
 ```text
-Without Sibyl Memory, the Agent cannot recall the persisted dispute or revocation that changes the same non-executable payment intent from READY review to BLOCK_AND_ESCALATE in a fresh process. Production refuses to start, and development returns MEMORY_BACKEND_UNAVAILABLE with no JSON, browser, or process-memory fallback.
+Deleting the persisted Sibyl state removes the recalled dispute, so the identical action can no longer produce the same causal DENY. If the official Sibyl SDK/Adapter is unavailable, production refuses to start and development decision/Agent endpoints return MEMORY_BACKEND_UNAVAILABLE with no JSON, browser, or process-memory fallback.
 ```
 
 ### Memory walkthrough
 
-The official page asks for exactly three lines. Do not submit them as verified until
-the real A/B capture has passed.
+The official page asks for exactly three lines. These lines are now backed by the
+local and public HTTPS A/B observations. The final video still needs to show the
+restart continuously.
 
 ```text
 Persist: trusted typed payment limits, disputes, and revocations as versioned Sibyl entities; instruction-like external text is quarantined and only its hash is retained.
@@ -53,7 +54,7 @@ Changes the Agent's decision/action: the identical non-executable payment intent
 
 ### Memory primitives
 
-Select only these after the runtime evidence exists:
+Select only these; the required runtime evidence now exists:
 
 - `recall`
 - `entities`
@@ -64,9 +65,9 @@ recall.
 
 ## Save/ready order
 
-1. Complete the official SDK runtime, fresh-process, and deletion evidence.
+1. Save the verified repo and memory fields after explicit action-time approval.
 2. Publish the unedited demo video and two posts.
 3. Recheck every URL and claim against the evidence.
-4. Save the build-page fields after explicit action-time approval.
+4. Add the video/posts to the build page after explicit action-time approval.
 5. The owner reviews the IP/feature license and marks the build ready before the UTC
    deadline.

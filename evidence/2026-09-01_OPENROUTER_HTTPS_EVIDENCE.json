@@ -1,0 +1,117 @@
+{
+  "schema_version": "1.0",
+  "captured_at_utc": "2026-09-01T07:44:14Z",
+  "runtime_build_commit": "21f3d4b27bb59bf39337843ea4e7233e2bf98c38",
+  "scope": {
+    "remote_structured_model": true,
+    "model_generation_receipt_bound_to_agent_run": false,
+    "two_process_restart_demo": true,
+    "public_https_observed": true,
+    "durable_cloud_hosting": false,
+    "continuous_video": false,
+    "contract_compile": false,
+    "wallet_or_chain": false
+  },
+  "model": {
+    "gateway": "OpenRouter",
+    "configured_model": "dots-studio/dots-3-note-preview:free",
+    "resolved_model": "dots-studio/dots-3-note-preview-20260813:free",
+    "provider": "AtlasCloud",
+    "service_tier": "free_experimental",
+    "production_reliability_claimed": false,
+    "strict_json_schema": true,
+    "require_parameters": true,
+    "synthetic_demo_only": true,
+    "data_collection_deny_supported_by_tested_free_route": false
+  },
+  "restart_demo": {
+    "base_url": "https://themselves-snapshot-equilibrium-cabin.trycloudflare.com",
+    "subject": "judge-24ABC823-CFA4-42F4-95CE-2081662ECD4A",
+    "session_a_agent_run_id": "run_0055c8c6e76905999f9a",
+    "session_b_agent_run_id": "run_fcf432000f9a954f0136",
+    "session_a_command_shape": "session_a.py --base-url <temporary_https_url> --require-remote-model",
+    "session_b_command_shape": "session_b.py --base-url <temporary_https_url> --require-remote-model",
+    "session_a_runtime_instance_id": "runtime_720cbf614ffe40e2a3fa",
+    "session_b_runtime_instance_id": "runtime_f4eea05aaacd4ab4b8b8",
+    "different_runtime_instance": true,
+    "action_fingerprint": "dd23f9ac8ce55fa4261e8db4c1342cf30ce74d15a27a7ce54154bfc67a2db5a2",
+    "same_action_fingerprint": true,
+    "session_a_verdict": "ready",
+    "session_b_verdict": "deny",
+    "session_b_state": "block_and_escalate",
+    "dispute_observation_id": "obs_5ebe6dcbc07640c89a08",
+    "exact_dispute_recalled": true,
+    "cross_session": true,
+    "session_a_evidence_sha256": "b05fc34dbbfd04167d026bd80bb03e5039535f3dbe40c9aee22dbc79b1adad4b",
+    "review_tool_suppressed": true,
+    "escalation_tool_succeeded": true,
+    "non_executable_escalation": true,
+    "comparison_checks_passed": true,
+    "remote_model_checks_passed": true,
+    "remote_model_check_source": "legacy_runtime_health_immediately_after_agent_run",
+    "generation_receipt_bound_to_agent_run": false,
+    "continuous_video_proof": false,
+    "contest_gate_claimed": false
+  },
+  "generations": [
+    {
+      "session": "a",
+      "id": "gen-1788248292-zx1ojYtjh2QwEZinvUYa",
+      "completion_sha256": "b1742c0815a66e1bfd201b04dbbc10acb866175d4b6a6914ff74a6cbe6eb6d53",
+      "created_at": "2026-09-01T07:38:12.163Z",
+      "latency_ms": 447,
+      "generation_time_ms": 8340,
+      "native_tokens_prompt": 239,
+      "native_tokens_completion": 870,
+      "finish_reason": "stop",
+      "total_cost_usd": 0
+    },
+    {
+      "session": "b",
+      "id": "gen-1788248378-ceGyZOdVcYLRzC136IFe",
+      "completion_sha256": "2f6b8c21c77c6aa82e466328e6b8ec83ab1fa6f473f627c821e24ddb52333b9f",
+      "created_at": "2026-09-01T07:39:38.441Z",
+      "latency_ms": 3322,
+      "generation_time_ms": 10646,
+      "native_tokens_prompt": 243,
+      "native_tokens_completion": 904,
+      "finish_reason": "stop",
+      "total_cost_usd": 0
+    }
+  ],
+  "public_https": {
+    "url_observed": "https://themselves-snapshot-equilibrium-cabin.trycloudflare.com",
+    "mechanism": "cloudflare_quick_tunnel",
+    "health_ready_status": 200,
+    "root_status": 200,
+    "proof_status": 200,
+    "api_process_restarted": true,
+    "same_local_persistent_sibyl_database_after_restart": true,
+    "stable_hostname": false,
+    "cloud_persistent_disk": false,
+    "uptime_claimed": false
+  },
+  "later_free_tier_failure_observation": {
+    "remote_model_error_type": "RemoteModelResponseError",
+    "planning_degraded": true,
+    "verdict": "deny",
+    "review_tool_suppressed": true,
+    "escalation_tool_succeeded": true,
+    "executable": false,
+    "remote_model_gate_passed": false
+  },
+  "post_capture_hardening": {
+    "build_commit": "ea561f8256319da168a5a33d6e3e529b128f04e7",
+    "agent_run_schema": "1.1",
+    "model_receipt_persisted_in_agent_run": true,
+    "model_receipt_trace_hash_bound": true,
+    "tampered_generation_id_rejected_by_test": true,
+    "python_tests": "24 passed in 0.10s",
+    "receipt_bound_live_ab_rerun": "pending_free_provider_recovery",
+    "observed_rerun_failures": [
+      "RemoteModelResponseError",
+      "HTTPStatusError_429"
+    ]
+  },
+  "evidence_boundary": "The legacy successful A/B record proves observed structured OpenRouter generations, exact cross-process Sibyl recall, and fail-closed tool gating through the temporary public HTTPS base URL. Generation metadata was observed immediately after each run but was not stored inside legacy AgentRun schema 1.0. Schema 1.1 now binds non-secret receipts, but a successful receipt-bound live A/B rerun remains pending free-provider recovery. This does not prove a continuous restart video, durable cloud hosting, production model reliability, customer privacy for the free route, Base integration, or a completed contest submission."
+}
