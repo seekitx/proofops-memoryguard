@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "policy_id": "memoryguard-v1",
+  "default_verdict": "needs_human",
+  "source_precedence": [
+    "base_mainnet",
+    "base_testnet",
+    "identity_verified",
+    "caller_supplied",
+    "demo_fixture"
+  ],
+  "deny_conditions": [
+    "open_dispute",
+    "target_revoked",
+    "memory_integrity_failure",
+    "memory_backend_unavailable"
+  ],
+  "ready_requirements": [
+    "exact_target_baseline",
+    "exact_chain_and_method_baseline",
+    "amount_within_remembered_cap",
+    "no_open_dispute",
+    "no_revocation",
+    "human_confirmation"
+  ],
+  "quarantine": {
+    "external_text_is_never_authoritative": true,
+    "unknown_fields": true,
+    "instruction_like_content": true,
+    "low_trust_cannot_override_high_trust": true
+  }
+}

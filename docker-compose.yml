@@ -1,0 +1,19 @@
+services:
+  memoryguard:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      APP_ENV: development
+      PUBLIC_BASE_URL: http://localhost:8000
+      DATA_DIR: /app/.data
+      SIBYL_MEMORY_PATH: /app/.data/sibyl-memory.db
+      SIBYL_TENANT_ID: proofops-memoryguard-compose
+      BASE_CHAIN_ID: "84532"
+      BASE_NETWORK: base-sepolia
+      BASE_RPC_URL: https://sepolia.base.org
+    volumes:
+      - memoryguard-data:/app/.data
+
+volumes:
+  memoryguard-data:

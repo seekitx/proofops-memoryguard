@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MemoryGuard Proof Inspector</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/memoryguard.css" />
+</head>
+<body class="proof-page">
+  <div class="noise" aria-hidden="true"></div>
+  <header class="topbar"><a class="brand" href="/"><span class="brand-mark">M/G</span><span><strong>ProofOps</strong><small>PROOF INSPECTOR</small></span></a><nav><a href="/">← Demo</a><a href="https://github.com/seekitx/proofops-memoryguard" target="_blank" rel="noreferrer">Source ↗</a></nav></header>
+  <main class="proof-shell shell">
+    <div class="section-index">PUBLIC / REDACTED / REPLAYABLE</div>
+    <h1>Inspect a decision proof.</h1>
+    <p>Paste the server-issued decision ID. The inspector reloads the immutable draft and returns its current local or Base anchor state. It never accepts a replacement verdict or root.</p>
+    <form id="proofForm" class="proof-form">
+      <label>Decision ID<input id="proofDecisionId" required placeholder="dec_…" minlength="8" maxlength="128" /></label>
+      <button class="button primary" type="submit">Load proof</button>
+    </form>
+    <pre id="proofInspectorOutput" class="proof-inspector-output">No proof loaded.</pre>
+    <div class="proof-rules"><article><strong>What a hash proves</strong><p>The committed decision inputs did not change after the root was created.</p></article><article><strong>What it does not prove</strong><p>A hash does not make a claim true. Source identity and policy still matter.</p></article><article><strong>Onchain boundary</strong><p>Only the root, attester, memory version and timestamp are public.</p></article></div>
+  </main>
+  <script>
+    document.getElementById("proofForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const id = document.getElementById("proofDecisionId").value.trim();
+      const output = document.getElementById("proofInspectorOutput");
+      output.textContent = "Loading…";
+      try {
+        const response = await fetch(`/api/proofs/${encodeURIComponent(id)}`);
+        const body = await response.json();
+        output.textContent = JSON.stringify(body, null, 2);
+        if (!response.ok) output.textContent += "\n\nThe proof was not finalized.";
+      } catch (error) {
+        output.textContent = JSON.stringify({ error: String(error), executable: false }, null, 2);
+      }
+    });
+  </script>
+</body>
+</html>

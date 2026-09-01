@@ -1,0 +1,15 @@
+{
+  "name": "proofops-memoryguard-contracts",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:base-sepolia": "hardhat run deploy.cjs --network baseSepolia",
+    "deploy:base-mainnet": "hardhat run deploy.cjs --network baseMainnet"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "5.0.0",
+    "hardhat": "2.29.1"
+  }
+}
