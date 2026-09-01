@@ -19,8 +19,8 @@ winners September 13–15. Recheck the live site before relying on these dates.
 | Contest-period implementation | **Window open; in progress** | Substantive Agent/runtime work in reviewable in-window commits | Pre-build files committed later and relabeled |
 | Real Agent behavior | **Source implemented; runtime unverified** | Real remote model + Agent invokes decision/safety tools; fresh-process recall changes its chosen action | Deterministic dev planner, memory service, or chat shell only |
 | Prior Work boundary | Awaiting owner review | Pre-build snapshot and in-window delta are both explicit | Filesystem/Git dates imply a false build story |
-| Local dependency install | Not run | Exact official SDK installs from clean environment | README exists but runtime was never started |
-| Python tests | Supplied, not run | Focused suites pass with captured output | Presence of tests is called “passing” |
+| Local dependency install | **Passed on Python 3.11.15** | Official `sibyl-memory-client==0.7.0` and project dev dependencies installed in `.venv` | README exists but runtime was never started |
+| Python tests | **20 passed on 2026-09-01** | `.venv/bin/python -m pytest` completed in 0.09 s after the Keccak dependency fix | Presence of tests is called “passing” |
 | Contract compile/test | Supplied, not run | Clean Hardhat compile/test output | Source alone is called deployed/verified |
 | Real fresh-session Sibyl run | Not run | Separate A/B processes; same action hash; causal DENY | Browser visual reset only |
 | Deletion test | Not run | Removing Sibyl yields fail-closed 503 and no fallback | Static expected-output box only |

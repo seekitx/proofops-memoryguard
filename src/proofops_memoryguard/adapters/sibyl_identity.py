@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import base64
 import hashlib
+from functools import lru_cache
 from importlib import import_module
 from importlib.metadata import PackageNotFoundError, distribution
-from functools import lru_cache
 from pathlib import Path
 from typing import Any
 

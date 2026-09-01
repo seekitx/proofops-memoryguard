@@ -19,7 +19,7 @@ TARGET = "0x1111111111111111111111111111111111111111"
 
 def request_json(request: Request) -> tuple[int, dict[str, object]]:
     try:
-        with urlopen(request, timeout=15) as response:  # noqa: S310 - operator URL
+        with urlopen(request, timeout=15) as response:
             return response.status, json.loads(response.read())
     except HTTPError as exc:
         return exc.code, json.loads(exc.read())

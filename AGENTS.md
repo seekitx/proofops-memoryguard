@@ -64,3 +64,7 @@ showing behavior, but it is not adoption, a verified dispute, or a Base multipli
 
 Do not compile or run tests unless the user explicitly requests it. Fast static
 inspection is allowed. Never describe source inspection as runtime verification.
+
+When test/build troubleshooting is authorized, use `docs/编译踩坑记录.md` as the
+project-specific record and read only the section relevant to the current command or
+error.

@@ -16,9 +16,7 @@ TARGET = "0x1111111111111111111111111111111111111111"
 
 
 def get(base_url: str, path: str) -> dict[str, object]:
-    with urlopen(  # noqa: S310 - operator-supplied demo URL
-        f"{base_url.rstrip('/')}{path}", timeout=15
-    ) as response:
+    with urlopen(f"{base_url.rstrip('/')}{path}", timeout=15) as response:
         return json.loads(response.read())
 
 
@@ -194,7 +192,7 @@ def main() -> None:
         headers={"Content-Type": "application/json"},
         method="POST",
     )
-    with urlopen(request, timeout=15) as response:  # noqa: S310 - operator-supplied demo URL
+    with urlopen(request, timeout=15) as response:
         result = json.loads(response.read())
     result_decision = result.get("decision") or {}
     if not isinstance(result_decision, dict):
