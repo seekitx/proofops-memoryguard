@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-09-01T06:42:58Z",
+  "updated_at": "2026-09-01T06:52:03Z",
   "claims": {
     "registration_confirmed": {
       "state": "verified",
@@ -32,27 +32,27 @@
     },
     "repository_head_pushed": {
       "state": "verified",
-      "evidence": "origin/main includes transparent baseline c96325a, Agent implementation 2a2775f, and runtime-evidence hardening 34d908645601f2ff5aef67b159d428ccf68f89ec after the current push"
+      "evidence": "origin/main includes transparent baseline c96325a, Agent implementation 2a2775f, runtime-evidence hardening 34d908645601f2ff5aef67b159d428ccf68f89ec, tested runtime build 5442f6550c1ca7d4c9d78188804bda2036f85b47, and strengthened evidence gates 0a3b5595618566d97f973a6fec713ec72089edf5"
     },
     "prior_work_boundary_reviewed": {
       "state": "human_required",
       "evidence": "docs/04_PRIOR_WORK.md"
     },
     "contest_period_implementation": {
-      "state": "implemented_unrun",
-      "evidence": "public in-window commits 2a2775f8c19ced4f8d463c6da238f6ef4ccb8641, e35748e, and 34d908645601f2ff5aef67b159d428ccf68f89ec"
+      "state": "implemented_and_locally_exercised",
+      "evidence": "public in-window commits 2a2775f8c19ced4f8d463c6da238f6ef4ccb8641, e35748e, 34d908645601f2ff5aef67b159d428ccf68f89ec, and runtime build 0a3b5595618566d97f973a6fec713ec72089edf5; evidence/2026-09-01_RUNTIME_EVIDENCE.json"
     },
     "real_agent_behavior": {
-      "state": "implemented_unrun",
-      "evidence": "commit 2a2775f: remote ModelPort + Sibyl run/action ledgers + verdict-gated executor + model-selected optional tool; runtime proof pending"
+      "state": "deterministic_runtime_verified_remote_model_pending",
+      "evidence": "Two-process A/B exercised verdict-gated review versus escalation through deterministic_test_planner; a real remote model and continuous video remain pending"
     },
     "sibyl_source_integration": {
-      "state": "implemented_unrun",
-      "evidence": "src/proofops_memoryguard/adapters/sibyl.py"
+      "state": "runtime_verified_local",
+      "evidence": "src/proofops_memoryguard/adapters/sibyl.py; evidence/2026-09-01_RUNTIME_EVIDENCE.json"
     },
     "sibyl_runtime_identity": {
-      "state": "implemented_unrun",
-      "evidence": "34d9086 binds the pinned SDK import and runtime files to distribution RECORD hashes and schema v4; real installed-runtime evidence remains pending"
+      "state": "verified_local",
+      "evidence": "A/B runtime reported official sibyl-memory-client 0.7.0, matching installed-distribution RECORD hashes, and schema v4 compatible. Adapter production_eligible=true covers SDK/schema identity only; the deterministic development process is not production. Continuous video remains pending"
     },
     "local_dependency_install": {
       "state": "verified",
@@ -60,15 +60,15 @@
     },
     "python_tests": {
       "state": "verified",
-      "evidence": ".venv/bin/python -m pytest: 20 passed in 0.09s on 2026-09-01 after adding eth-hash[pycryptodome]"
+      "evidence": ".venv/bin/python -m pytest: 20 passed in 0.08s on 2026-09-01 after adding eth-hash[pycryptodome]"
     },
     "fresh_session_runtime": {
-      "state": "unverified",
-      "evidence": null
+      "state": "local_two_process_evidence_video_missing",
+      "evidence": "Different runtime IDs, same action fingerprint, exact dispute recall, READY to DENY; evidence/2026-09-01_RUNTIME_EVIDENCE.json. JSON does not prove the restart, so the unedited video gate remains open"
     },
     "deletion_test": {
-      "state": "unverified",
-      "evidence": null
+      "state": "missing_sdk_fail_closed_verified_deletion_video_pending",
+      "evidence": "Isolated runtime with no sibyl_memory_client returned 503 for readiness, direct decision, and Agent run with executable=false. Existing database deletion and continuous recording remain pending"
     },
     "base_contract": {
       "state": "implemented_uncompiled",

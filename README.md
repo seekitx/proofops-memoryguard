@@ -17,9 +17,10 @@ anchor contract, wallet transaction plan, and receipt verifier were committed as
 separately disclosed pre-build baseline. After the official 2026-09-01 00:00 UTC
 window opened, this repository added a substantive `MemoryGuardAgent`: a real model
 Seam, Sibyl-backed run ledger, verdict-gated tool executor, resumable runs, and
-executor-generated inspectable traces. That in-window source is implemented but still
-unrun. Runtime proof, Base evidence, hosted demo, video, posts, and PMF artifact are
-not claimed yet. See
+executor-generated inspectable traces. The deterministic Agent path, two-process
+Sibyl recall, and isolated missing-SDK fail-closed behavior have now been exercised
+locally. Remote-model proof, continuous video, Base evidence, hosted demo, posts, and
+PMF artifact are not claimed yet. See
 [manual completion gates](docs/07_MANUAL_COMPLETION_GATES.md).
 
 ## Judge path — under two minutes
@@ -65,9 +66,11 @@ audit chronology and the REFERENCE document preserves policy metadata, but this
 version does not claim that COLD/REFERENCE retrieval changes the decision or that it
 implements temporal/time-travel recall.
 
-If Sibyl is deleted, the meaningful behavior disappears. Development wiring returns
-`503 MEMORY_BACKEND_UNAVAILABLE`; production wiring refuses to start without the
-official Adapter. Both outcomes are intentional and neither falls back.
+If the stored Sibyl data is deleted, the remembered facts and the corresponding
+behavior change disappear. Separately, the tested missing-SDK/Adapter condition makes
+development decisions return `503 MEMORY_BACKEND_UNAVAILABLE`; production wiring
+refuses to start without the official Adapter. Neither condition falls back to a
+fixture or alternate memory store.
 
 ## Deep Module Interface
 
@@ -186,6 +189,16 @@ On 2026-09-01, the authorized Python 3.11 run completed with `20 passed` using
 runtime dependency now explicitly includes `eth-hash[pycryptodome]`, and the clean
 rerun passed. The Solidity contract was **not** compiled or tested, so no contract
 runtime claim is made.
+
+The same authorized run also completed a local two-process A/B exercise and an
+isolated missing-Sibyl probe. Session B had a different runtime ID, kept the same
+action fingerprint, recalled the exact dispute, and changed the deterministic Agent
+path from `READY/await_finalize` to `DENY/block_and_escalate`. The isolated API had
+no importable `sibyl_memory_client`; readiness, direct decision, and Agent run all
+returned 503, while the decision and Agent responses also reported
+`executable=false`. Exact values and limitations are recorded in
+[`evidence/2026-09-01_RUNTIME_EVIDENCE.md`](evidence/2026-09-01_RUNTIME_EVIDENCE.md).
+This is not remote-model evidence and does not replace the required unedited video.
 
 ## Prior Work
 
