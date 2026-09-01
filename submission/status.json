@@ -1,14 +1,14 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-09-01T04:02:55Z",
+  "updated_at": "2026-09-01T04:06:05Z",
   "claims": {
     "registration_confirmed": {
       "state": "verified",
       "evidence": "user_confirmed_in_codex_2026-09-01"
     },
     "private_build_page_access": {
-      "state": "human_required",
-      "evidence": null
+      "state": "verified_entry_exists_handoff_required",
+      "evidence": "Registration success page visibly confirmed a private build-page entry on 2026-09-01; edit token intentionally not stored"
     },
     "build_page_team_and_builders": {
       "state": "human_required",
