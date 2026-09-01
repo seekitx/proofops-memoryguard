@@ -1,30 +1,46 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-09-01T03:16:25Z",
+  "updated_at": "2026-09-01T04:01:52Z",
   "claims": {
     "registration_confirmed": {
       "state": "verified",
       "evidence": "user_confirmed_in_codex_2026-09-01"
     },
+    "private_build_page_access": {
+      "state": "human_required",
+      "evidence": null
+    },
+    "build_page_team_and_builders": {
+      "state": "human_required",
+      "evidence": null
+    },
+    "build_page_partner_stacks": {
+      "state": "human_required",
+      "evidence": "Only claim partner stacks exercised in the demo"
+    },
+    "memory_implementation_note": {
+      "state": "drafted_unsubmitted",
+      "evidence": "docs/06_DEMO_AND_SUBMISSION.md and README.md"
+    },
     "repository_public": {
-      "state": "observed",
+      "state": "verified",
       "evidence": "https://github.com/seekitx/proofops-memoryguard"
     },
     "repository_head_pushed": {
-      "state": "missing",
-      "evidence": null
+      "state": "verified",
+      "evidence": "c96325a7d8ae9a3e8dca99091f06e8521c6628f3 transparent pre-build baseline pushed to origin/main"
     },
     "prior_work_boundary_reviewed": {
       "state": "human_required",
       "evidence": "docs/04_PRIOR_WORK.md"
     },
     "contest_period_implementation": {
-      "state": "blocked_until_window",
-      "evidence": null
+      "state": "implemented_unrun",
+      "evidence": "local in-window commit 2a2775f8c19ced4f8d463c6da238f6ef4ccb8641; public push pending"
     },
     "real_agent_behavior": {
-      "state": "missing",
-      "evidence": null
+      "state": "implemented_unrun",
+      "evidence": "commit 2a2775f: remote ModelPort + Sibyl run/action ledgers + verdict-gated executor + model-selected optional tool; runtime proof pending"
     },
     "sibyl_source_integration": {
       "state": "implemented_unrun",
@@ -69,6 +85,10 @@
     "contest_submission": {
       "state": "human_required",
       "evidence": null
+    },
+    "build_page_marked_ready": {
+      "state": "human_required",
+      "evidence": "Must be completed before 2026-09-10T23:59:00Z"
     }
   }
 }

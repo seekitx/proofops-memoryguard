@@ -7,6 +7,7 @@
   const phase = params.get("phase") === "b" ? "b" : "a";
   const sessionId = `web_${crypto.randomUUID()}`;
   let latestDecision = null;
+  let latestRun = null;
   let toastTimer = null;
 
   const targetInput = byId("targetInput");
@@ -107,7 +108,8 @@
       output(name, result);
       return result;
     } catch (error) {
-      state(name, "FAILED CLOSED", "failure");
+      const isPending = Boolean(error.pending);
+      state(name, isPending ? "PENDING" : "FAILED CLOSED", isPending ? "working" : "failure");
       output(name, error.body || { error: error.message, executable: false });
       showToast(`Stopped safely: ${error.message}`);
       return null;
@@ -125,6 +127,10 @@
       pill.querySelector("b").textContent = available ? "Sibyl connected" : "Sibyl unavailable";
       if (runtime.base && runtime.base.anchor_configured) {
         byId("baseClaim").textContent = "anchor configured · receipt still required";
+      }
+      const model = runtime.agent && runtime.agent.model;
+      if (model) {
+        byId("agentRuntime").textContent = `${model.backend} · live verified: ${Boolean(model.live_call_verified)} · payment tool: ${runtime.agent.payment_tool_registered}`;
       }
       byId("buildMeta").textContent = `${runtime.build_commit} / ${runtime.server_time_utc}`;
     } catch (error) {
@@ -168,18 +174,36 @@
       ...intent(),
       idempotency_key: `decision-ready_${(await sha256(`${subject}:${sessionId}`)).slice(0, 32)}`,
     };
-    const result = await api("/api/decisions", { method: "POST", body });
-    latestDecision = result;
+    const result = await api("/api/agent/runs", { method: "POST", body });
+    if (result.planning_degraded) {
+      throw Object.assign(new Error("External model failed; Agent remained safe-only"), { body: result });
+    }
+    if (result.state !== "await_finalize" || !result.artifacts["human_review.prepare"]) {
+      throw Object.assign(new Error("Mandatory review artifact was not created"), { body: result });
+    }
+    loadRuntime();
+    latestRun = result;
+    latestDecision = result.decision;
     return {
       verdict: result.verdict,
+      agent_state: result.state,
       executable: result.executable,
-      reason_codes: result.reason_codes,
+      model_kind: result.model_kind,
+      model_requested_safe_tools: result.model_requested_safe_tools,
+      planning_degraded: result.planning_degraded,
+      explanation: result.explanation,
+      executed_artifacts: result.artifacts,
+      tool_trace: result.tool_trace,
+      reason_codes: result.decision.reason_codes,
       causal_memory_ids: result.causal_memory_ids,
       cross_session: result.cross_session,
-      decision_id: result.decision_id,
-      intent_hash: result.intent_hash,
+      run_id: result.run_id,
+      runtime_instance_id: result.runtime_instance_id,
+      action_fingerprint: result.action_fingerprint,
+      decision_id: result.decision.decision_id,
+      intent_hash: result.decision.intent_hash,
       proof_root: result.proof_root,
-      note: "READY is a draft; it cannot execute before finalization.",
+      note: "The Agent created only non-executable safety artifacts. The optional brief appears only when the model requested it; no payment tool exists.",
     };
   }));
 
@@ -227,22 +251,40 @@
       ...intent(),
       idempotency_key: `decision-deny_${(await sha256(`${subject}:${sessionId}`)).slice(0, 32)}`,
     };
-    const result = await api("/api/decisions", { method: "POST", body });
-    latestDecision = result;
+    const result = await api("/api/agent/runs", { method: "POST", body });
+    if (result.planning_degraded) {
+      throw Object.assign(new Error("External model failed; Agent remained safe-only"), { body: result });
+    }
+    if (result.state !== "block_and_escalate" || !result.artifacts["operator_escalation.create"]) {
+      throw Object.assign(new Error("Mandatory escalation artifact was not created"), { body: result });
+    }
+    loadRuntime();
+    latestRun = result;
+    latestDecision = result.decision;
     if (result.verdict !== "deny" || !result.cross_session || !result.causal_memory_ids.length) {
       throw Object.assign(new Error("Fresh-session causal DENY was not proven"), { body: result });
     }
     return {
       verdict: result.verdict,
+      agent_state: result.state,
       executable: result.executable,
-      reason_codes: result.reason_codes,
+      model_kind: result.model_kind,
+      model_requested_safe_tools: result.model_requested_safe_tools,
+      planning_degraded: result.planning_degraded,
+      explanation: result.explanation,
+      executed_artifacts: result.artifacts,
+      tool_trace: result.tool_trace,
+      reason_codes: result.decision.reason_codes,
       causal_memory_ids: result.causal_memory_ids,
       cross_session: result.cross_session,
-      memory_version: result.memory_version,
-      decision_id: result.decision_id,
-      intent_hash: result.intent_hash,
+      memory_version: result.decision.memory_version,
+      run_id: result.run_id,
+      runtime_instance_id: result.runtime_instance_id,
+      action_fingerprint: result.action_fingerprint,
+      decision_id: result.decision.decision_id,
+      intent_hash: result.decision.intent_hash,
       proof_root: result.proof_root,
-      conclusion: "Same intent blocked because Session B recalled Session A's dispute.",
+      conclusion: "The same intent was blocked and the escalation tool replaced the review-preparation tool because Session B recalled Session A's dispute.",
     };
   }));
 
@@ -264,28 +306,41 @@
 
   const proofButton = byId("proofButton");
   proofButton.addEventListener("click", () => run("proof", proofButton, async () => {
-    if (!latestDecision) {
+    if (!latestDecision || !latestRun) {
       throw new Error("Run a decision step in this browser session first");
     }
-    const preview = await api(`/api/decisions/${encodeURIComponent(latestDecision.decision_id)}/finalize`, {
+    const preview = await api(`/api/agent/runs/${encodeURIComponent(latestRun.run_id)}/resume`, {
       method: "POST",
-      body: { confirmation_tx_hash: null },
+      body: { kind: "prepare_anchor", confirmation_tx_hash: null },
     });
-    if (preview.state !== "confirmation_required" || !preview.anchor_plan) {
+    latestRun = preview;
+    const anchor = preview.artifacts && preview.artifacts["proof_anchor.prepare"];
+    if (anchor && anchor.state === "failed") {
+      throw Object.assign(new Error("Proof anchor preparation failed safely"), { body: preview });
+    }
+    if (!anchor || anchor.state !== "confirmation_required" || !anchor.anchor_plan) {
       return {
         ...preview,
         claim_boundary: "No Base multiplier claimed without a verified onchain receipt.",
       };
     }
     showToast("Your wallet is the final gate. Rejecting the prompt keeps the proof non-executable.");
-    const txHash = await requestWalletAnchor(preview.anchor_plan);
-    const verified = await api(`/api/decisions/${encodeURIComponent(latestDecision.decision_id)}/finalize`, {
+    const txHash = await requestWalletAnchor(anchor.anchor_plan);
+    const verified = await api(`/api/agent/runs/${encodeURIComponent(latestRun.run_id)}/resume`, {
       method: "POST",
-      body: { confirmation_tx_hash: txHash },
+      body: { kind: "anchor_transaction_observed", confirmation_tx_hash: txHash },
     });
+    if (verified.anchor_state === "pending") {
+      const error = Object.assign(new Error("Base receipt is still pending"), { body: verified });
+      error.pending = true;
+      throw error;
+    }
+    if (verified.anchor_state !== "verified") {
+      throw Object.assign(new Error("Base receipt verification failed safely"), { body: verified });
+    }
     return {
       ...verified,
-      claim_boundary: verified.state === "verified"
+      claim_boundary: verified.anchor_state === "verified"
         ? "Base receipt and proof-root event verified by the backend."
         : "Transaction is not yet independently verified; do not claim Base evidence.",
     };
