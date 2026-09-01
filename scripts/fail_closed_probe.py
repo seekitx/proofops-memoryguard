@@ -34,25 +34,29 @@ def main() -> None:
     health_status, health = request_json(
         Request(f"{args.base_url.rstrip('/')}/health/ready", method="GET")
     )
-    run_status, run = request_json(
-        Request(
-            f"{args.base_url.rstrip('/')}/api/agent/runs",
-            data=json.dumps(
-                {
-                    "subject_id": args.subject,
-                    "session_id": f"deletion-{uuid.uuid4()}",
-                    "chain_id": 84532,
-                    "target": TARGET,
-                    "method": "payInvoice",
-                    "amount_usd": 4200,
-                    "evidence_mode": "demo_fixture",
-                    "idempotency_key": f"deletion-{uuid.uuid4()}",
-                }
-            ).encode(),
-            headers={"Content-Type": "application/json"},
-            method="POST",
+    payload = {
+        "subject_id": args.subject,
+        "session_id": f"deletion-{uuid.uuid4()}",
+        "chain_id": 84532,
+        "target": TARGET,
+        "method": "payInvoice",
+        "amount_usd": 4200,
+        "evidence_mode": "demo_fixture",
+        "idempotency_key": f"deletion-{uuid.uuid4()}",
+    }
+
+    def post(path: str) -> tuple[int, dict[str, object]]:
+        return request_json(
+            Request(
+                f"{args.base_url.rstrip('/')}{path}",
+                data=json.dumps(payload).encode(),
+                headers={"Content-Type": "application/json"},
+                method="POST",
+            )
         )
-    )
+
+    decision_status, decision = post("/api/decisions")
+    run_status, run = post("/api/agent/runs")
     memory = health.get("memory") or {}
     if not isinstance(memory, dict):
         memory = {}
@@ -61,6 +65,9 @@ def main() -> None:
         and health.get("status") == "degraded"
         and memory.get("backend") == "sibyl_unavailable"
         and memory.get("production_eligible") is False
+        and decision_status == 503
+        and decision.get("error") == "MEMORY_BACKEND_UNAVAILABLE"
+        and decision.get("executable") is False
         and run_status == 503
         and run.get("error") == "MEMORY_BACKEND_UNAVAILABLE"
         and run.get("executable") is False
@@ -77,6 +84,8 @@ def main() -> None:
                 ),
                 "health_status": health_status,
                 "health": health,
+                "decision_status": decision_status,
+                "decision": decision,
                 "run_status": run_status,
                 "run": run,
             },
