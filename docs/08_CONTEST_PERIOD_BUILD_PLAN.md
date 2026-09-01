@@ -7,15 +7,17 @@ opened. It is a useful prototype, but it cannot honestly be presented as the fin
 contest build. The window is now open; all Agent/runtime changes below must land as
 substantive, auditable in-window commits.
 
-## P0 — turn the memory service into a real Agent
+## P0 — turn the memory service into a real Agent — source implemented, runtime unverified
 
-Add a `MemoryGuardAgent` Module with two narrow Seams:
+The in-window source now adds a `MemoryGuardAgent` Module with two narrow Seams:
 
 - `ModelPort`: produces an explanation/plan from redacted decision context, but has
   no authority to change a verdict;
-- `ActionPort`: receives only a finalized, capability-bound action. `DENY`,
-  `NEEDS_HUMAN`, model failure, memory failure, stale policy, and stale memory never
-  call it.
+- `RunLedgerPort`: persists Agent state and executor-generated tool traces in Sibyl.
+
+The action set is intentionally closed inside the Agent rather than exposed as a
+general-purpose `ActionPort`. It contains only non-executable review preparation and
+operator escalation. There is no pay, sign, transfer, or broadcast Adapter.
 
 The Agent flow must be visible in the demo:
 
@@ -24,10 +26,13 @@ The Agent flow must be visible in the demo:
 3. Session A proposes “await human finalization”; Session B chooses “block and
    escalate” because Sibyl recalled the dispute.
 4. The event stream shows which tool was considered/called or suppressed.
-5. A model can explain but cannot grant permission or rewrite causal memory.
+5. A model can request an optional safe evidence brief, but cannot grant permission,
+   rewrite causal memory, or inject operator instructions.
 
-Acceptance: removing Sibyl prevents the Agent from choosing the claimed guarded
-action. A deterministic service with “Agent” in its name is not enough.
+Source acceptance is represented by `src/proofops_memoryguard/agent.py` and
+`docs/09_AGENT_INTERFACE_DECISION.md`. Runtime acceptance still requires a real
+remote model, fresh processes, and the deletion capture. A deterministic development
+planner with “Agent” in its name is not presented as contest runtime proof.
 
 ## P0 — real fresh-session and deletion evidence
 
@@ -42,9 +47,9 @@ action. A deterministic service with “Agent” in its name is not enough.
 
 ## P0 — auditable Git history
 
-1. Owner reviews and records the pre-build boundary without falsifying dates.
-2. After the window opens, implement the Agent loop, event stream, and process-level
-   evidence in several logical commits.
+1. The transparent pre-build boundary was committed and pushed as `c96325a`.
+2. After the window opened, implement the Agent loop and event stream in logical
+   commits; process-level evidence remains pending.
 3. Push each reviewable commit to the public repository.
 4. Record the exact public HEAD in `submission/status.json` and deployment metadata.
 5. Check every README source link on GitHub; local untracked files do not count.

@@ -12,14 +12,23 @@ REQUIRED_FILES = (
     "README.md",
     "LICENSE",
     "src/proofops_memoryguard/module.py",
+    "src/proofops_memoryguard/agent.py",
+    "src/proofops_memoryguard/adapters/agent_ledger.py",
+    "src/proofops_memoryguard/adapters/model.py",
+    "src/proofops_memoryguard/adapters/safety_actions.py",
     "src/proofops_memoryguard/adapters/sibyl.py",
     "contracts/src/MemoryProofAnchor.sol",
     "apps/web/index.html",
     "docs/04_PRIOR_WORK.md",
     "docs/07_MANUAL_COMPLETION_GATES.md",
+    "docs/09_AGENT_INTERFACE_DECISION.md",
 )
 BLOCKING_CLAIMS = (
     "registration_confirmed",
+    "private_build_page_access",
+    "build_page_team_and_builders",
+    "build_page_partner_stacks",
+    "memory_implementation_note",
     "repository_head_pushed",
     "prior_work_boundary_reviewed",
     "contest_period_implementation",
@@ -30,6 +39,7 @@ BLOCKING_CLAIMS = (
     "demo_video",
     "public_posts",
     "contest_submission",
+    "build_page_marked_ready",
 )
 
 

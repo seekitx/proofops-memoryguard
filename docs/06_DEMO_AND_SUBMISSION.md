@@ -19,8 +19,9 @@ try to erase it.
 
 - Display the generated subject and Session A ID.
 - Establish the trusted baseline.
-- Evaluate the `$4,200` intent and show `READY`, `executable: false`, and its causal
-  baseline ID.
+- Run the Agent on the `$4,200` intent and show `READY`, `AWAIT_FINALIZE`,
+  mandatory `human_review.prepare`, the model-selected optional causal brief,
+  `executable: false`, and its causal baseline ID.
 - Submit the open dispute with the malicious note.
 - Show `partially_accepted`, accepted structured fields, quarantined `raw_text`, and
   injection reason codes.
@@ -29,10 +30,14 @@ try to erase it.
 
 - Stop the Agent/API process after Session A, then restart it on the same persistent
   Sibyl database. Do not reuse a Python object or in-process cache.
+- Pass Session A's evidence manifest to `session_b.py`; the script must fail unless
+  the runtime IDs differ and action fingerprints match. The manifest is comparison
+  evidence only and is never an Agent memory input.
 - Open Session B and show the new process/session IDs, server UTC time, exact public
   in-window commit, and unchanged action fingerprint.
-- Evaluate again and pause on `DENY`, `cross_session: true`, and the exact causal
-  dispute observation ID.
+- Run the same Agent goal again and pause on `DENY`, `BLOCK_AND_ESCALATE`, the
+  suppressed review tool, the called escalation tool, `cross_session: true`, and the
+  exact causal dispute observation ID.
 
 ### 2:10–2:45 — deletion test and source
 
@@ -67,8 +72,9 @@ confirmation.
 ### What is innovative
 
 Most Agent memory demos optimize convenience. MemoryGuard treats forgetting as an
-authorization vulnerability. The model can explain a decision, but exact typed
-memory and deterministic policy own authority. Every behavioral change names the
+authorization vulnerability. The model may select an optional safe evidence
+artifact, but exact typed memory and deterministic policy own authority. Raw model
+prose is not persisted as operator guidance. Every behavioral change names the
 memory that caused it, and removing Sibyl removes the behavior.
 
 ### Technical highlights
@@ -77,7 +83,9 @@ memory that caused it, and removing Sibyl removes the behavior.
 - no production memory fallback;
 - source-labeled observation quarantine and instruction hashing;
 - domain-separated observation, intent, memory, policy, and decision roots;
-- three-call `observe / decide / finalize` deep Module Interface;
+- deep `MemoryGuardAgent.run / inspect / resume` Interface over the
+  `observe / decide / finalize` safety kernel;
+- real-model production Adapter, closed safe-tool executor, and Sibyl Agent run ledger;
 - manually approved Base wallet plan and backend sender/attester/receipt verification;
 - explicit synthetic-data, prior-work, and partner-claim boundaries.
 

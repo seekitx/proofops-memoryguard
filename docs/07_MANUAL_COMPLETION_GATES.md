@@ -17,7 +17,7 @@ winners September 13–15. Recheck the live site before relying on these dates.
 |---|---|---|---|
 | Registration/team | **User confirmed registered** | Keep the private build-page link/account confirmation privately | Public page alone or lost build-page access |
 | Contest-period implementation | **Window open; in progress** | Substantive Agent/runtime work in reviewable in-window commits | Pre-build files committed later and relabeled |
-| Real Agent behavior | Missing | Agent invokes decision/action tools; fresh-session recall changes its chosen action | Memory service or chat shell only |
+| Real Agent behavior | **Source implemented; runtime unverified** | Real remote model + Agent invokes decision/safety tools; fresh-process recall changes its chosen action | Deterministic dev planner, memory service, or chat shell only |
 | Prior Work boundary | Awaiting owner review | Pre-build snapshot and in-window delta are both explicit | Filesystem/Git dates imply a false build story |
 | Local dependency install | Not run | Exact official SDK installs from clean environment | README exists but runtime was never started |
 | Python tests | Supplied, not run | Focused suites pass with captured output | Presence of tests is called “passing” |
@@ -33,7 +33,7 @@ winners September 13–15. Recheck the live site before relying on these dates.
 | Demo video | Missing | Public unedited 2–5 minute URL | Edited montage or fake deletion result |
 | Two public posts | Missing | Two public URLs with currently required tags | Draft text only |
 | Private build-page submission | Missing | Dashboard confirmation | Public repo alone |
-| Final repo push/history | Local work not pushed | Reviewable contest-period commits on public repo | One opaque dump or unpushed changes |
+| Final repo push/history | Pre-build baseline pushed; Agent commit pending | Reviewable contest-period commits on public repo | One opaque dump or unpushed changes |
 
 ## Owner decisions before any irreversible action
 
@@ -42,7 +42,7 @@ winners September 13–15. Recheck the live site before relying on these dates.
 - choose Base Sepolia or mainnet after partner eligibility is confirmed;
 - approve contract deployment and every wallet prompt;
 - approve public video/posts and any customer/PMF claim;
-- review and authorize commits/push to the public repository;
+- review the public commit history and Prior Work wording before final submission;
 - submit through the contest account.
 
 No private key, wallet seed, service token, or customer dispute text should be put in
