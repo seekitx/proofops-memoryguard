@@ -27,6 +27,19 @@ class Settings:
     decision_ttl_seconds: int = field(
         default_factory=lambda: int(os.getenv("DECISION_TTL_SECONDS", "600"))
     )
+    agent_model_mode: str = field(
+        default_factory=lambda: os.getenv("AGENT_MODEL_MODE", "deterministic")
+    )
+    agent_model_url: str = field(default_factory=lambda: os.getenv("AGENT_MODEL_URL", ""))
+    agent_model_api_key: str = field(
+        default_factory=lambda: os.getenv("AGENT_MODEL_API_KEY", "")
+    )
+    agent_model_name: str = field(
+        default_factory=lambda: os.getenv("AGENT_MODEL_NAME", "")
+    )
+    agent_model_timeout_seconds: float = field(
+        default_factory=lambda: float(os.getenv("AGENT_MODEL_TIMEOUT_SECONDS", "20"))
+    )
     public_base_url: str = field(
         default_factory=lambda: os.getenv("PUBLIC_BASE_URL", "http://localhost:8000").rstrip("/")
     )
@@ -81,3 +94,14 @@ class Settings:
                 raise ValueError("PUBLIC_BASE_URL must use HTTPS in production")
             if self.sibyl_tenant_id == "proofops-memoryguard-demo":
                 raise ValueError("set a deployment-specific SIBYL_TENANT_ID in production")
+            if self.agent_model_mode != "remote":
+                raise ValueError("production requires AGENT_MODEL_MODE=remote")
+        if self.agent_model_mode not in {"deterministic", "remote"}:
+            raise ValueError("AGENT_MODEL_MODE must be deterministic or remote")
+        if self.agent_model_mode == "remote":
+            if (
+                not self.agent_model_url
+                or not self.agent_model_api_key
+                or not self.agent_model_name
+            ):
+                raise ValueError("remote Agent model configuration is incomplete")

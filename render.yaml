@@ -26,6 +26,14 @@ services:
         value: /app/.data
       - key: SIBYL_TENANT_ID
         sync: false
+      - key: AGENT_MODEL_MODE
+        value: remote
+      - key: AGENT_MODEL_URL
+        sync: false
+      - key: AGENT_MODEL_API_KEY
+        sync: false
+      - key: AGENT_MODEL_NAME
+        sync: false
       - key: BASE_CHAIN_ID
         value: "84532"
       - key: BASE_NETWORK

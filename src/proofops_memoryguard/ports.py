@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Protocol
+from typing import Any, ContextManager, Protocol
 
 from .models import (
     AnchorPlan,
@@ -10,6 +10,7 @@ from .models import (
     StoredObservation,
     SubjectMemory,
 )
+from .agent_models import AgentRun, ModelPlan
 
 
 class MemoryPort(Protocol):
@@ -41,3 +42,38 @@ class AnchorPort(Protocol):
     def plan(self, decision: DecisionDraft) -> AnchorPlan | None: ...
 
     def verify(self, decision: DecisionDraft, tx_hash: str) -> AnchorVerification: ...
+
+
+class ModelPort(Protocol):
+    @property
+    def production_kind(self) -> str: ...
+
+    def health(self) -> dict[str, Any]: ...
+
+    def plan(self, *, context: dict[str, Any], allowed_tools: tuple[str, ...]) -> ModelPlan: ...
+
+
+class RunLedgerPort(Protocol):
+    @property
+    def production_kind(self) -> str: ...
+
+    def health(self) -> dict[str, Any]: ...
+
+    def claim(self, run_id: str) -> ContextManager[None]: ...
+
+    def save(self, run: AgentRun) -> None: ...
+
+    def load(self, run_id: str) -> AgentRun | None: ...
+
+
+class SafetyActionPort(Protocol):
+    @property
+    def production_kind(self) -> str: ...
+
+    def health(self) -> dict[str, Any]: ...
+
+    def prepare_review(self, decision: DecisionDraft) -> dict[str, Any]: ...
+
+    def create_escalation(self, decision: DecisionDraft) -> dict[str, Any]: ...
+
+    def prepare_evidence_brief(self, decision: DecisionDraft) -> dict[str, Any]: ...
