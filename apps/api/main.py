@@ -15,9 +15,14 @@ from fastapi.staticfiles import StaticFiles
 
 from proofops_memoryguard.adapters import (
     BaseAnchorAdapter,
+    DeterministicModelAdapter,
     DisabledAnchorAdapter,
+    HttpModelAdapter,
     build_sibyl_adapter,
+    build_sibyl_run_ledger,
+    build_sibyl_safety_actions,
 )
+from proofops_memoryguard.agent import MemoryGuardAgent
 from proofops_memoryguard.errors import (
     DecisionNotFoundError,
     FinalizationError,
@@ -58,6 +63,40 @@ def _build_guard(settings: Settings) -> MemoryGuard:
     )
 
 
+def _build_agent(
+    settings: Settings,
+    guard: MemoryGuard,
+    runtime_instance_id: str,
+) -> MemoryGuardAgent:
+    ledger = build_sibyl_run_ledger(
+        path=settings.sibyl_memory_path,
+        tenant_id=settings.sibyl_tenant_id,
+    )
+    actions = build_sibyl_safety_actions(
+        path=settings.sibyl_memory_path,
+        tenant_id=settings.sibyl_tenant_id,
+    )
+    if settings.agent_model_mode == "remote":
+        model = HttpModelAdapter(
+            url=settings.agent_model_url,
+            api_key=settings.agent_model_api_key,
+            model=settings.agent_model_name,
+            timeout_seconds=settings.agent_model_timeout_seconds,
+        )
+        if settings.app_env == "production":
+            model.probe()
+    else:
+        model = DeterministicModelAdapter()
+    return MemoryGuardAgent(
+        guard=guard,
+        model=model,
+        ledger=ledger,
+        actions=actions,
+        runtime_instance_id=runtime_instance_id,
+        production=settings.app_env == "production",
+    )
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     settings = Settings()
@@ -65,6 +104,12 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     settings.validate()
     app.state.settings = settings
     app.state.guard = _build_guard(settings)
+    app.state.runtime_instance_id = f"runtime_{uuid.uuid4().hex[:20]}"
+    app.state.agent = _build_agent(
+        settings,
+        app.state.guard,
+        app.state.runtime_instance_id,
+    )
     yield
 
 
@@ -89,7 +134,11 @@ def get_guard() -> MemoryGuard:
     return app.state.guard
 
 
-app.include_router(build_router(get_guard))
+def get_agent() -> MemoryGuardAgent:
+    return app.state.agent
+
+
+app.include_router(build_router(get_guard, get_agent))
 app.mount("/assets", StaticFiles(directory=WEB_ROOT / "assets"), name="assets")
 
 
@@ -177,8 +226,15 @@ async def health_live() -> dict[str, str]:
 @app.get("/health/ready")
 async def health_ready() -> JSONResponse:
     memory = get_guard().backend_status
-    content = {"status": "ready" if memory.get("available") else "degraded", "memory": memory}
-    return JSONResponse(status_code=200 if memory.get("available") else 503, content=content)
+    agent = get_agent().backend_status
+    dependencies = (memory, agent["model"], agent["run_ledger"], agent["safe_actions"])
+    available = all(item.get("available") for item in dependencies)
+    content = {
+        "status": "ready" if available else "degraded",
+        "memory": memory,
+        "agent": agent,
+    }
+    return JSONResponse(status_code=200 if available else 503, content=content)
 
 
 @app.get("/api/runtime")
@@ -188,6 +244,11 @@ async def runtime() -> dict[str, Any]:
     return {
         "app_env": settings.app_env,
         "memory": memory,
+        "agent": {
+            **get_agent().backend_status,
+            "runtime_instance_id": app.state.runtime_instance_id,
+            "payment_tool_registered": False,
+        },
         "sibyl_is_load_bearing": memory.get("backend") == "sibyl_memory",
         "production_fallback": False,
         "base": {

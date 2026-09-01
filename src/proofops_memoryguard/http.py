@@ -7,6 +7,8 @@ from fastapi import APIRouter
 from pydantic import BaseModel, Field
 
 from .models import EvidenceMode, Observation, ObservationKind, PaymentIntent
+from .agent import MemoryGuardAgent
+from .agent_models import AgentHumanSignal, GuardedPaymentGoal
 from .module import MemoryGuard
 
 EVM_ADDRESS_PATTERN = r"^0x[a-fA-F0-9]{40}$"
@@ -41,7 +43,15 @@ class FinalizeBody(BaseModel):
     confirmation_tx_hash: str | None = Field(default=None, pattern=TX_HASH_PATTERN)
 
 
-def build_router(get_guard: Callable[[], MemoryGuard]) -> APIRouter:
+class AgentResumeBody(BaseModel):
+    kind: Literal["cancel", "prepare_anchor", "anchor_transaction_observed"]
+    confirmation_tx_hash: str | None = Field(default=None, pattern=TX_HASH_PATTERN)
+
+
+def build_router(
+    get_guard: Callable[[], MemoryGuard],
+    get_agent: Callable[[], MemoryGuardAgent],
+) -> APIRouter:
     router = APIRouter(prefix="/api", tags=["memoryguard"])
 
     @router.post("/observations")
@@ -74,6 +84,32 @@ def build_router(get_guard: Callable[[], MemoryGuard]) -> APIRouter:
             evidence_mode=EvidenceMode(body.evidence_mode),
         )
         return guard.decide(intent).to_dict()
+
+    @router.post("/agent/runs")
+    async def run_agent(body: DecisionBody) -> dict[str, Any]:
+        intent = PaymentIntent(
+            subject_id=body.subject_id,
+            session_id=body.session_id,
+            chain_id=body.chain_id,
+            target=body.target,
+            method=body.method,
+            amount_usd=body.amount_usd,
+            idempotency_key=body.idempotency_key,
+            evidence_mode=EvidenceMode(body.evidence_mode),
+        )
+        return get_agent().run(GuardedPaymentGoal(intent=intent)).to_dict()
+
+    @router.get("/agent/runs/{run_id}")
+    async def inspect_agent(run_id: str) -> dict[str, Any]:
+        return get_agent().inspect(run_id).to_dict()
+
+    @router.post("/agent/runs/{run_id}/resume")
+    async def resume_agent(run_id: str, body: AgentResumeBody) -> dict[str, Any]:
+        signal = AgentHumanSignal(
+            kind=body.kind,
+            confirmation_tx_hash=body.confirmation_tx_hash,
+        )
+        return get_agent().resume(run_id, signal).to_dict()
 
     @router.post("/decisions/{decision_id}/finalize")
     async def finalize(decision_id: str, body: FinalizeBody) -> dict[str, Any]:

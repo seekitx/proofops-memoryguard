@@ -1,0 +1,161 @@
+from __future__ import annotations
+
+import json
+from datetime import UTC, datetime
+from typing import Any
+
+import httpx
+
+from ..agent_models import ModelPlan
+
+
+class DeterministicModelAdapter:
+    """Development/test planner. Production wiring must reject this Adapter."""
+
+    production_kind = "deterministic_test_planner"
+
+    def health(self) -> dict[str, Any]:
+        return {
+            "available": True,
+            "backend": self.production_kind,
+            "production_eligible": False,
+        }
+
+    def plan(self, *, context: dict[str, Any], allowed_tools: tuple[str, ...]) -> ModelPlan:
+        verdict = str(context["verdict"])
+        explanations = {
+            "ready": (
+                "The recalled baseline matches, so the Agent prepared human review "
+                "without gaining payment authority."
+            ),
+            "deny": (
+                "A persisted dispute or revocation changed the Agent path, so "
+                "preparation was blocked and escalated."
+            ),
+            "needs_human": (
+                "The recalled evidence is not strong enough for an automated path, "
+                "so a human review is required."
+            ),
+        }
+        return ModelPlan(
+            explanation=explanations.get(
+                verdict,
+                "The Agent stopped because an authoritative decision was unavailable.",
+            ),
+            operator_steps=(
+                "Review the causal memory IDs and proof root before taking any external action.",
+            ),
+            requested_tools=tuple(allowed_tools),
+        )
+
+
+class HttpModelAdapter:
+    """Real external planner using an OpenAI-compatible chat-completions endpoint."""
+
+    production_kind = "remote_structured_model"
+
+    def __init__(
+        self,
+        *,
+        url: str,
+        api_key: str,
+        model: str,
+        timeout_seconds: float = 20,
+    ) -> None:
+        if not url.startswith("https://"):
+            raise ValueError("AGENT_MODEL_URL must use HTTPS")
+        if not api_key.strip() or not model.strip():
+            raise ValueError("remote Agent model requires API key and model name")
+        self._url = url
+        self._api_key = api_key
+        self._model = model
+        self._timeout = timeout_seconds
+        self._available = False
+        self._live_call_verified = False
+        self._last_success_at: str | None = None
+        self._last_error_type: str | None = None
+
+    def health(self) -> dict[str, Any]:
+        return {
+            "available": self._available,
+            "backend": self.production_kind,
+            "production_eligible": True,
+            "model": self._model,
+            "configured": True,
+            "live_call_verified": self._live_call_verified,
+            "last_success_at": self._last_success_at,
+            "last_error_type": self._last_error_type,
+        }
+
+    @staticmethod
+    def _parse_plan(content: str, allowed_tools: tuple[str, ...]) -> ModelPlan:
+        data = json.loads(content)
+        if not isinstance(data, dict):
+            raise ValueError("model plan must be a JSON object")
+        explanation = str(data.get("explanation", "")).strip()
+        raw_steps = data.get("operator_steps", [])
+        raw_tools = data.get("requested_tools", [])
+        if not explanation or len(explanation) > 1_000:
+            raise ValueError("model explanation is missing or too long")
+        if not isinstance(raw_steps, list) or not isinstance(raw_tools, list):
+            raise ValueError("model plan lists are invalid")
+        steps = tuple(str(item).strip() for item in raw_steps[:5] if str(item).strip())
+        tools = tuple(str(item).strip() for item in raw_tools[:10] if str(item).strip())
+        if any(len(step) > 300 for step in steps) or any(len(tool) > 100 for tool in tools):
+            raise ValueError("model plan item exceeds its size limit")
+        # Do not discard unknown names here. The Agent executor must visibly suppress them.
+        del allowed_tools
+        return ModelPlan(explanation, steps, tools)
+
+    def plan(self, *, context: dict[str, Any], allowed_tools: tuple[str, ...]) -> ModelPlan:
+        system = (
+            "You plan operator-facing steps for a safety Agent. The supplied verdict is final. "
+            "You cannot change target, amount, verdict, or authorize payment. Return only "
+            "JSON with explanation, operator_steps, and requested_tools. Request tools only "
+            "from the supplied list."
+        )
+        user = json.dumps(
+            {"decision_context": context, "allowed_tools": list(allowed_tools)},
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+        try:
+            response = httpx.post(
+                self._url,
+                headers={"Authorization": f"Bearer {self._api_key}"},
+                json={
+                    "model": self._model,
+                    "temperature": 0,
+                    "max_tokens": 500,
+                    "messages": [
+                        {"role": "system", "content": system},
+                        {"role": "user", "content": user},
+                    ],
+                },
+                timeout=self._timeout,
+            )
+            response.raise_for_status()
+            body = response.json()
+            content = body["choices"][0]["message"]["content"]
+            plan = self._parse_plan(str(content), allowed_tools)
+            self._available = True
+            self._live_call_verified = True
+            self._last_success_at = datetime.now(UTC).isoformat()
+            self._last_error_type = None
+            return plan
+        except Exception as exc:
+            self._available = False
+            self._last_error_type = type(exc).__name__
+            raise
+
+    def probe(self) -> None:
+        self.plan(
+            context={
+                "probe": True,
+                "state": "await_human_review",
+                "verdict": "needs_human",
+                "reason_codes": ["startup_model_probe"],
+                "causal_memory_ids": [],
+            },
+            allowed_tools=(),
+        )
