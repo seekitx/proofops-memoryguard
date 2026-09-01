@@ -37,7 +37,7 @@ winners September 13–15. Recheck the live site before relying on these dates.
 | Two public posts | Missing | Two public URLs with currently required tags | Draft text only |
 | Private build-page fields | **All fields currently empty; verified memory draft ready for approval** | Saved repo, deletion impact, walkthrough, and honest primitives now; video/posts after publication | Draft text or private-link possession alone |
 | Private build-page submission | Not marked ready | Dashboard confirmation | Public repo alone |
-| Final repo push/history | Public contest-period runtime build pushed through `5442f65`; evidence documentation is the current change | Reviewable contest-period commits on public repo | One opaque dump or unpushed changes |
+| Final repo push/history | **Receipt hardening `ea561f8` and honest evidence `be6532c` pushed; final status sync pending** | Reviewable contest-period commits on public repo and local/remote HEAD equality after the final sync | One opaque dump or unpushed changes |
 
 ## Owner decisions before any irreversible action
 
