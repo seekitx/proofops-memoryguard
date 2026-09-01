@@ -1,0 +1,74 @@
+{
+  "schema_version": "1.0",
+  "updated_at": "2026-09-01T03:16:25Z",
+  "claims": {
+    "registration_confirmed": {
+      "state": "verified",
+      "evidence": "user_confirmed_in_codex_2026-09-01"
+    },
+    "repository_public": {
+      "state": "observed",
+      "evidence": "https://github.com/seekitx/proofops-memoryguard"
+    },
+    "repository_head_pushed": {
+      "state": "missing",
+      "evidence": null
+    },
+    "prior_work_boundary_reviewed": {
+      "state": "human_required",
+      "evidence": "docs/04_PRIOR_WORK.md"
+    },
+    "contest_period_implementation": {
+      "state": "blocked_until_window",
+      "evidence": null
+    },
+    "real_agent_behavior": {
+      "state": "missing",
+      "evidence": null
+    },
+    "sibyl_source_integration": {
+      "state": "implemented_unrun",
+      "evidence": "src/proofops_memoryguard/adapters/sibyl.py"
+    },
+    "fresh_session_runtime": {
+      "state": "unverified",
+      "evidence": null
+    },
+    "deletion_test": {
+      "state": "unverified",
+      "evidence": null
+    },
+    "base_contract": {
+      "state": "implemented_uncompiled",
+      "evidence": "contracts/src/MemoryProofAnchor.sol"
+    },
+    "base_exercised_integration": {
+      "state": "not_claimed",
+      "evidence": null
+    },
+    "virtuals_integration": {
+      "state": "not_claimed",
+      "evidence": null
+    },
+    "pmf_bonus": {
+      "state": "not_claimed",
+      "evidence": null
+    },
+    "public_deployment": {
+      "state": "missing",
+      "evidence": null
+    },
+    "demo_video": {
+      "state": "missing",
+      "evidence": null
+    },
+    "public_posts": {
+      "state": "missing",
+      "evidence": []
+    },
+    "contest_submission": {
+      "state": "human_required",
+      "evidence": null
+    }
+  }
+}

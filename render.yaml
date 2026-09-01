@@ -1,0 +1,38 @@
+# Applying this Blueprint may create a paid persistent disk. Review Render pricing
+# before deployment; this file is configuration only and has not been applied.
+services:
+  - type: web
+    name: proofops-memoryguard
+    runtime: docker
+    plan: starter
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health/ready
+    autoDeployTrigger: commit
+    disk:
+      name: memoryguard-data
+      mountPath: /app/.data
+      sizeGB: 1
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: PUBLIC_BASE_URL
+        sync: false
+      - key: GITHUB_REPO_URL
+        value: https://github.com/seekitx/proofops-memoryguard
+      - key: SIBYL_MEMORY_PATH
+        value: /app/.data/sibyl-memory.db
+      - key: DATA_DIR
+        value: /app/.data
+      - key: SIBYL_TENANT_ID
+        sync: false
+      - key: BASE_CHAIN_ID
+        value: "84532"
+      - key: BASE_NETWORK
+        value: base-sepolia
+      - key: BASE_RPC_URL
+        value: https://sepolia.base.org
+      - key: BASE_ANCHOR_ADDRESS
+        sync: false
+      - key: CORS_ALLOW_ORIGINS
+        sync: false

@@ -1,0 +1,14 @@
+.git
+.github
+.prior-work
+.venv
+.data
+**/__pycache__
+**/.pytest_cache
+**/.mypy_cache
+**/.ruff_cache
+node_modules
+contracts/artifacts
+contracts/cache
+output
+.env
