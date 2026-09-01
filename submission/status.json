@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-09-01T07:44:14Z",
+  "updated_at": "2026-09-01T08:13:30Z",
   "claims": {
     "registration_confirmed": {
       "state": "verified",
@@ -31,8 +31,8 @@
       "evidence": "https://github.com/seekitx/proofops-memoryguard"
     },
     "repository_head_pushed": {
-      "state": "latest_local_changes_unpushed",
-      "evidence": "origin/main is behind local remote-model commits and the current evidence/documentation changes; update only after post-review push verification"
+      "state": "verified",
+      "evidence": "git rev-parse HEAD and git ls-remote origin refs/heads/main both returned be6532c1d3f64614ca6b661708f90eb20e5a84ba after pushing the receipt-bound implementation and honest legacy-evidence boundary"
     },
     "prior_work_boundary_reviewed": {
       "state": "human_required",
@@ -40,7 +40,7 @@
     },
     "contest_period_implementation": {
       "state": "implemented_and_locally_exercised",
-      "evidence": "public in-window commits 2a2775f8c19ced4f8d463c6da238f6ef4ccb8641, e35748e, 34d908645601f2ff5aef67b159d428ccf68f89ec, and runtime build 0a3b5595618566d97f973a6fec713ec72089edf5; evidence/2026-09-01_RUNTIME_EVIDENCE.json"
+      "evidence": "Public in-window history includes Agent 2a2775f8c19ced4f8d463c6da238f6ef4ccb8641, legacy OpenRouter run build 21f3d4b27bb59bf39337843ea4e7233e2bf98c38, receipt-bound hardening ea561f8256319da168a5a33d6e3e529b128f04e7, and evidence commit be6532c1d3f64614ca6b661708f90eb20e5a84ba"
     },
     "real_agent_behavior": {
       "state": "legacy_remote_model_observed_receipt_bound_rerun_pending",
