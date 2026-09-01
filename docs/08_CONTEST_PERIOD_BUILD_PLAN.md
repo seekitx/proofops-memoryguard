@@ -7,7 +7,7 @@ opened. It is a useful prototype, but it cannot honestly be presented as the fin
 contest build. The window is now open; all Agent/runtime changes below must land as
 substantive, auditable in-window commits.
 
-## P0 — turn the memory service into a real Agent — deterministic path exercised
+## P0 — turn the memory service into a real Agent — remote path exercised
 
 The in-window source now adds a `MemoryGuardAgent` Module with two narrow Seams:
 
@@ -30,19 +30,25 @@ The Agent flow must be visible in the demo:
    rewrite causal memory, or inject operator instructions.
 
 Source acceptance is represented by `src/proofops_memoryguard/agent.py` and
-`docs/09_AGENT_INTERFACE_DECISION.md`. On 2026-09-01, two local API processes
+`docs/09_AGENT_INTERFACE_DECISION.md`. On 2026-09-01, two local API processes first
 exercised the READY-to-DENY tool-path change with `deterministic_test_planner` and an
-official Sibyl runtime. Full contest runtime acceptance still requires a real remote
-model and a continuous A/B/deletion capture. The deterministic exercise is not
-presented as remote-model proof.
+official Sibyl runtime. A later production-configured A/B run made two successful
+strict structured calls to a fixed OpenRouter free model across a full API restart.
+That captured build read generation metadata from runtime health immediately after
+each run. The current schema `1.1` implementation instead stores and trace-binds the
+model receipt inside the Agent run, but its live A/B rerun is pending after
+free-provider empty-response and 429 failures. Full contest acceptance still
+requires that successful rerun and a continuous A/B/deletion capture.
 
 ## P0 — real fresh-session and deletion evidence
 
-Local evidence now records two distinct runtime IDs, the same action fingerprint,
-exact causal recall, and an isolated missing-SDK 503 result. See
-`evidence/2026-09-01_RUNTIME_EVIDENCE.md`. JSON cannot prove the operator's process
-restart or the checked-out source, and the missing-SDK probe did not delete an
-existing database, so the following capture work remains:
+Local and temporary public-HTTPS evidence now records distinct runtime IDs, the same
+action fingerprint, exact causal recall, two successful OpenRouter generation IDs,
+and an isolated missing-SDK 503 result. See
+`evidence/2026-09-01_RUNTIME_EVIDENCE.md` and
+`evidence/2026-09-01_OPENROUTER_HTTPS_EVIDENCE.md`. JSON cannot prove the operator's
+process restart or the checked-out source, and the missing-SDK probe did not delete
+an existing database, so the following capture work remains:
 
 - Display server UTC time and exact in-window Git commit in the product/video.
 - Run Session A, stop the Agent/API process, then start a fresh process on the same

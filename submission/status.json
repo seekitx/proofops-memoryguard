@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-09-01T06:52:03Z",
+  "updated_at": "2026-09-01T07:44:14Z",
   "claims": {
     "registration_confirmed": {
       "state": "verified",
@@ -31,8 +31,8 @@
       "evidence": "https://github.com/seekitx/proofops-memoryguard"
     },
     "repository_head_pushed": {
-      "state": "verified",
-      "evidence": "origin/main includes transparent baseline c96325a, Agent implementation 2a2775f, runtime-evidence hardening 34d908645601f2ff5aef67b159d428ccf68f89ec, tested runtime build 5442f6550c1ca7d4c9d78188804bda2036f85b47, and strengthened evidence gates 0a3b5595618566d97f973a6fec713ec72089edf5"
+      "state": "latest_local_changes_unpushed",
+      "evidence": "origin/main is behind local remote-model commits and the current evidence/documentation changes; update only after post-review push verification"
     },
     "prior_work_boundary_reviewed": {
       "state": "human_required",
@@ -43,8 +43,8 @@
       "evidence": "public in-window commits 2a2775f8c19ced4f8d463c6da238f6ef4ccb8641, e35748e, 34d908645601f2ff5aef67b159d428ccf68f89ec, and runtime build 0a3b5595618566d97f973a6fec713ec72089edf5; evidence/2026-09-01_RUNTIME_EVIDENCE.json"
     },
     "real_agent_behavior": {
-      "state": "deterministic_runtime_verified_remote_model_pending",
-      "evidence": "Two-process A/B exercised verdict-gated review versus escalation through deterministic_test_planner; a real remote model and continuous video remain pending"
+      "state": "legacy_remote_model_observed_receipt_bound_rerun_pending",
+      "evidence": "Legacy OpenRouter free A/B completed strict calls, but generation metadata came from runtime health immediately after each run. Commit ea561f8256319da168a5a33d6e3e529b128f04e7 now persists and trace-binds receipts in AgentRun schema 1.1; a successful live rerun is pending after free-provider empty-response and 429 failures"
     },
     "sibyl_source_integration": {
       "state": "runtime_verified_local",
@@ -60,11 +60,11 @@
     },
     "python_tests": {
       "state": "verified",
-      "evidence": ".venv/bin/python -m pytest: 20 passed in 0.08s on 2026-09-01 after adding eth-hash[pycryptodome]"
+      "evidence": ".venv/bin/python -m pytest: 24 passed in 0.11s on 2026-09-01 after model-receipt binding and tamper rejection were added"
     },
     "fresh_session_runtime": {
-      "state": "local_two_process_evidence_video_missing",
-      "evidence": "Different runtime IDs, same action fingerprint, exact dispute recall, READY to DENY; evidence/2026-09-01_RUNTIME_EVIDENCE.json. JSON does not prove the restart, so the unedited video gate remains open"
+      "state": "local_and_public_https_two_process_legacy_remote_evidence_video_missing",
+      "evidence": "Different runtime IDs, same action fingerprint, exact dispute recall, READY to DENY, and two legacy OpenRouter generation observations; evidence/2026-09-01_OPENROUTER_HTTPS_EVIDENCE.json. Schema 1.1 receipt-bound A/B and the unedited video remain open"
     },
     "deletion_test": {
       "state": "missing_sdk_fail_closed_verified_deletion_video_pending",
@@ -87,8 +87,8 @@
       "evidence": null
     },
     "public_deployment": {
-      "state": "missing",
-      "evidence": null
+      "state": "temporary_public_https_verified_self_hosted",
+      "evidence": "Cloudflare Quick Tunnel returned 200 for /, /proof, and /health/ready and survived an API restart on the same local persistent Sibyl database. The random URL and Mac-hosted process are not durable judge hosting; see evidence/2026-09-01_OPENROUTER_HTTPS_EVIDENCE.json"
     },
     "demo_video": {
       "state": "missing",

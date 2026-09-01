@@ -2,7 +2,9 @@
 
 日期：2026-09-01（正式 build window 内）
 
-状态：已按本文落地源码；尚未编译、未运行测试、未启动真实模型、未做运行证据。
+状态：已按本文落地源码；Python 测试、确定性 A/B、真实 OpenRouter A/B、临时公网
+HTTPS 和隔离 fail-closed 探针均已运行。合约仍未编译，钱包和链上操作仍未进行，
+连续演示视频仍未录制。
 
 ## 三方争论
 
@@ -76,13 +78,11 @@ causal_evidence_brief       CALLED -> SUCCEEDED (if requested by model)
 
 ## 已知未完成门槛
 
-源码已经形成上述边界，但以下证据不能靠源码声称完成：
+源码和已运行证据已经形成上述边界，但以下门槛仍不能声称完成：
 
-- 安装依赖、运行测试和 deletion test；
-- 配置并实际调用真实外部模型；
-- 停掉整个 API 后重启，录制 Session B；
+- 连续录制停掉整个 API、重启并完成 Session B 和隔离删除探针；
 - 部署 Base 合约并由用户钱包签署零金额证明锚定交易；
 - 后端独立验证回执；
-- 公网部署、2–5 分钟未剪辑视频、两条公开帖、build page 最终提交。
+- 稳定公网部署、2–5 分钟未剪辑视频、两条公开帖、build page 最终提交。
 
 这些事项继续由 `submission/status.json` 和 `scripts/submission_gate.py` 作为声明边界。
