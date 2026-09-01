@@ -11,6 +11,10 @@ import httpx
 from ..agent_models import ModelPlan
 
 
+class RemoteModelResponseError(RuntimeError):
+    """Sanitized remote-provider failure without persisting upstream response text."""
+
+
 class DeterministicModelAdapter:
     """Development/test planner. Production wiring must reject this Adapter."""
 
@@ -192,7 +196,21 @@ class HttpModelAdapter:
             )
             response.raise_for_status()
             body = response.json()
-            content = body["choices"][0]["message"]["content"]
+            if not isinstance(body, dict):
+                raise RemoteModelResponseError("remote model response must be an object")
+            error = body.get("error")
+            if error:
+                code = error.get("code") if isinstance(error, dict) else "unknown"
+                raise RemoteModelResponseError(f"remote model provider error code {code}")
+            choices = body.get("choices")
+            if not isinstance(choices, list) or not choices:
+                raise RemoteModelResponseError("remote model response has no choices")
+            first = choices[0]
+            if not isinstance(first, dict) or not isinstance(first.get("message"), dict):
+                raise RemoteModelResponseError("remote model response has no message")
+            content = first["message"].get("content")
+            if not isinstance(content, str) or not content:
+                raise RemoteModelResponseError("remote model response has no content")
             plan = self._parse_plan(str(content), allowed_tools)
             resolved_model = str(body.get("model", "")).strip()
             self._resolved_model = resolved_model or None

@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 from typing import Any
 
+import pytest
+
 from proofops_memoryguard.adapters.model import HttpModelAdapter
 
 
@@ -102,3 +104,31 @@ def test_generic_compatible_endpoint_does_not_send_openrouter_provider(monkeypat
 
     assert "provider" not in captured
     assert captured["response_format"]["type"] == "json_schema"
+
+
+def test_provider_error_is_sanitized_and_fails_closed(monkeypatch) -> None:  # type: ignore[no-untyped-def]
+    def fake_post(*args, **kwargs):  # type: ignore[no-untyped-def]
+        return FakeResponse(
+            {
+                "id": "gen_failed_123",
+                "error": {
+                    "code": 502,
+                    "message": "private provider detail must not be persisted",
+                },
+            }
+        )
+
+    monkeypatch.setattr("proofops_memoryguard.adapters.model.httpx.post", fake_post)
+    adapter = HttpModelAdapter(
+        url="https://openrouter.ai/api/v1/chat/completions",
+        api_key="test-key",
+        model="openrouter/free",
+    )
+
+    with pytest.raises(RuntimeError, match="provider error code 502") as error:
+        adapter.probe()
+
+    assert "private provider detail" not in str(error.value)
+    assert adapter.health()["available"] is False
+    assert adapter.health()["live_call_verified"] is False
+    assert adapter.health()["last_error_type"] == "RemoteModelResponseError"
