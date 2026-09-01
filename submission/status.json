@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-09-01T04:52:36Z",
+  "updated_at": "2026-09-01T06:42:58Z",
   "claims": {
     "registration_confirmed": {
       "state": "verified",
@@ -53,6 +53,14 @@
     "sibyl_runtime_identity": {
       "state": "implemented_unrun",
       "evidence": "34d9086 binds the pinned SDK import and runtime files to distribution RECORD hashes and schema v4; real installed-runtime evidence remains pending"
+    },
+    "local_dependency_install": {
+      "state": "verified",
+      "evidence": "Python 3.11.15 .venv installed project dev dependencies and official sibyl-memory-client==0.7.0 on 2026-09-01"
+    },
+    "python_tests": {
+      "state": "verified",
+      "evidence": ".venv/bin/python -m pytest: 20 passed in 0.09s on 2026-09-01 after adding eth-hash[pycryptodome]"
     },
     "fresh_session_runtime": {
       "state": "unverified",

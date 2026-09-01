@@ -29,14 +29,12 @@ def post(base_url: str, path: str, body: dict[str, object]) -> dict[str, object]
         headers={"Content-Type": "application/json"},
         method="POST",
     )
-    with urlopen(request, timeout=15) as response:  # noqa: S310 - operator-supplied demo URL
+    with urlopen(request, timeout=15) as response:
         return json.loads(response.read())
 
 
 def get(base_url: str, path: str) -> dict[str, object]:
-    with urlopen(  # noqa: S310 - operator-supplied demo URL
-        f"{base_url.rstrip('/')}{path}", timeout=15
-    ) as response:
+    with urlopen(f"{base_url.rstrip('/')}{path}", timeout=15) as response:
         return json.loads(response.read())
 
 

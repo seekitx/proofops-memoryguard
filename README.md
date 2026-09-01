@@ -167,7 +167,7 @@ independently verified action receipt exist.
 The full threat model is in
 [`docs/05_SECURITY_AND_FAIL_CLOSED.md`](docs/05_SECURITY_AND_FAIL_CLOSED.md).
 
-## Tests supplied, not claimed as run
+## Python test evidence
 
 The repository includes focused tests for:
 
@@ -181,9 +181,11 @@ The repository includes focused tests for:
 - adversarial model requests for an unregistered payment tool being suppressed;
 - Agent request idempotency and production Adapter rejection.
 
-Per the repository owner's global rule, this implementation turn did **not** compile
-the contract or run the Python/contract test suites. Their presence is not presented
-as passing evidence.
+On 2026-09-01, the authorized Python 3.11 run completed with `20 passed` using
+`.venv/bin/python -m pytest`. The first run exposed a missing Keccak backend; the
+runtime dependency now explicitly includes `eth-hash[pycryptodome]`, and the clean
+rerun passed. The Solidity contract was **not** compiled or tested, so no contract
+runtime claim is made.
 
 ## Prior Work
 
