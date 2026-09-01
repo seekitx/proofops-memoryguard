@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-09-01T04:01:52Z",
+  "updated_at": "2026-09-01T04:02:55Z",
   "claims": {
     "registration_confirmed": {
       "state": "verified",
@@ -28,7 +28,7 @@
     },
     "repository_head_pushed": {
       "state": "verified",
-      "evidence": "c96325a7d8ae9a3e8dca99091f06e8521c6628f3 transparent pre-build baseline pushed to origin/main"
+      "evidence": "origin/main contains transparent baseline c96325a plus in-window Agent commits 2a2775f and e35748e"
     },
     "prior_work_boundary_reviewed": {
       "state": "human_required",
@@ -36,7 +36,7 @@
     },
     "contest_period_implementation": {
       "state": "implemented_unrun",
-      "evidence": "local in-window commit 2a2775f8c19ced4f8d463c6da238f6ef4ccb8641; public push pending"
+      "evidence": "public in-window commits 2a2775f8c19ced4f8d463c6da238f6ef4ccb8641 and e35748e"
     },
     "real_agent_behavior": {
       "state": "implemented_unrun",
