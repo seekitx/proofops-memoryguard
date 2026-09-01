@@ -217,9 +217,37 @@ def main() -> None:
         dispute.get("memory_root") == result_decision.get("memory_root")
         and dispute.get("memory_version") == result_decision.get("memory_version")
     )
+    tool_trace = result.get("tool_trace") or []
+    if not isinstance(tool_trace, list):
+        tool_trace = []
+    review_suppressed = any(
+        isinstance(event, dict)
+        and event.get("tool") == "human_review.prepare"
+        and event.get("phase") == "suppressed"
+        and event.get("reason_code") == "verdict_deny"
+        for event in tool_trace
+    )
+    escalation_succeeded = any(
+        isinstance(event, dict)
+        and event.get("tool") == "operator_escalation.create"
+        and event.get("phase") == "succeeded"
+        for event in tool_trace
+    )
+    artifacts = result.get("artifacts") or {}
+    if not isinstance(artifacts, dict):
+        artifacts = {}
+    escalation_artifact = artifacts.get("operator_escalation.create") or {}
+    if not isinstance(escalation_artifact, dict):
+        escalation_artifact = {}
+    non_executable_escalation = (
+        result.get("executable") is False
+        and result_decision.get("executable") is False
+        and escalation_artifact.get("executable") is False
+    )
     required = (
         preflight_passed
         and result.get("verdict") == "deny"
+        and result.get("state") == "block_and_escalate"
         and result.get("cross_session") is True
         and dispute_id in result.get("causal_memory_ids", [])
         and before_run.get("action_fingerprint") == result.get("action_fingerprint")
@@ -229,6 +257,9 @@ def main() -> None:
         and subject_bound_to_runs
         and action_bound_to_runs
         and dispute_memory_bound_to_recall
+        and review_suppressed
+        and escalation_succeeded
+        and non_executable_escalation
     )
     print(
         json.dumps(
@@ -259,6 +290,9 @@ def main() -> None:
                 "subject_bound_to_runs": subject_bound_to_runs,
                 "fixed_action_bound_to_runs": action_bound_to_runs,
                 "dispute_memory_bound_to_recall": dispute_memory_bound_to_recall,
+                "review_tool_suppressed": review_suppressed,
+                "escalation_tool_succeeded": escalation_succeeded,
+                "non_executable_escalation": non_executable_escalation,
                 "same_build_commit": same_build_commit,
                 "manifest_digest_matches": manifest_digest_matches,
                 "agent_after": result,
