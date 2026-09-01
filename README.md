@@ -60,6 +60,11 @@ capture must stop and restart the Agent/API on the same persistent Sibyl databas
 | Where are Agent runs persisted? | [`SibylAgentRunAdapter`](src/proofops_memoryguard/adapters/agent_ledger.py) writes run state and executor trace through the official Sibyl SDK. |
 | Can the model pay? | No. [`adapters/model.py`](src/proofops_memoryguard/adapters/model.py) only selects an optional safe artifact from a bounded plan; no payment/sign/broadcast tool or Adapter is registered. Raw model prose is hashed for the trace, not persisted or shown as operator guidance. |
 
+The WARM subject entity is the load-bearing decision memory. COLD events preserve
+audit chronology and the REFERENCE document preserves policy metadata, but this
+version does not claim that COLD/REFERENCE retrieval changes the decision or that it
+implements temporal/time-travel recall.
+
 If Sibyl is deleted, the meaningful behavior disappears. Development wiring returns
 `503 MEMORY_BACKEND_UNAVAILABLE`; production wiring refuses to start without the
 official Adapter. Both outcomes are intentional and neither falls back.
@@ -94,8 +99,12 @@ python3.11 -m venv .venv
 source .venv/bin/activate
 pip install -e ".[dev]"
 cp .env.example .env
+export BUILD_COMMIT="$(git rev-parse HEAD)"  # must be the same full 40-char SHA for A and B
 uvicorn apps.api.main:app --env-file .env --host 127.0.0.1 --port 8000
 ```
+
+Run final evidence only from a clean, committed checkout. `BUILD_COMMIT` must be the
+same full 40-character commit SHA before and after the API restart.
 
 Open <http://localhost:8000>. The default mode uses synthetic `demo_fixture` facts;
 it does **not** represent authenticated customer or vendor data.
@@ -104,15 +113,29 @@ For a process-level fresh-session demonstration, use one opaque subject with two
 separate commands:
 
 ```bash
-python scripts/session_a.py --subject judge-case-001 --evidence-out /tmp/memoryguard-a.json
+DEMO_SUBJECT="judge-$(uuidgen)"  # use a never-before-used subject for each final capture
+python scripts/session_a.py --subject "$DEMO_SUBJECT" --evidence-out /tmp/memoryguard-a.json
 # Stop the whole Agent/API process here, then restart it on the same Sibyl database.
-python scripts/session_b.py --subject judge-case-001 --session-a-evidence /tmp/memoryguard-a.json
+SESSION_A_SHA256=PASTE_THE_SHA256_PRINTED_BY_SESSION_A
+python scripts/session_b.py --subject "$DEMO_SUBJECT" --session-a-evidence /tmp/memoryguard-a.json --session-a-sha256 "$SESSION_A_SHA256"
 ```
 
 The evidence file is used only to compare Session A/B verdicts, process/session IDs,
-the action fingerprint, and the exact causal dispute ID. It is never sent as Agent
-memory or decision input. Only the server-side Sibyl database supplies the dispute
-that changes Session B's behavior.
+the action fingerprint, the exact causal dispute ID, and the visible official Sibyl
+SDK distribution/version/schema. It is never sent as Agent memory or decision input.
+Only the server-side Sibyl database supplies the dispute that changes Session B's
+behavior.
+
+`session_b.py` reports `comparison_checks_passed`, not an official contest pass. The
+manifest digest detects edits after Session A, while the required continuous video
+proves that Session A, the full process restart, and Session B actually happened in
+sequence.
+
+The separate [`scripts/fail_closed_probe.py`](scripts/fail_closed_probe.py) records the
+expected fail-closed `503` result from an isolated development API where the official
+Sibyl dependency is intentionally unavailable. Its output is evidence only after the
+isolated runtime has really been started and the script has passed; the source file
+alone proves nothing.
 
 ## Base proof anchor
 

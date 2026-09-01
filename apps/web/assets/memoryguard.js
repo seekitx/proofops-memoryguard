@@ -123,8 +123,14 @@
     try {
       const runtime = await api("/api/runtime");
       const available = Boolean(runtime.memory && runtime.memory.available);
-      pill.classList.add(available ? "ready" : "failed");
-      pill.querySelector("b").textContent = available ? "Sibyl connected" : "Sibyl unavailable";
+      const verified = available && Boolean(runtime.memory.production_eligible);
+      pill.classList.remove("ready", "failed");
+      pill.classList.add(verified ? "ready" : "failed");
+      const sdk = runtime.memory && runtime.memory.sdk_version;
+      const schema = runtime.memory && runtime.memory.schema_version;
+      pill.querySelector("b").textContent = verified
+        ? `Sibyl ${sdk || "unverified"} · schema ${schema || "unknown"}`
+        : available ? "Sibyl SDK identity unverified" : "Sibyl unavailable";
       if (runtime.base && runtime.base.anchor_configured) {
         byId("baseClaim").textContent = "anchor configured · receipt still required";
       }

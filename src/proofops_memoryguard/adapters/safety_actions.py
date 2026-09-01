@@ -8,6 +8,7 @@ from typing import Any
 from ..canonical import domain_hash
 from ..errors import MemoryBackendUnavailable
 from ..models import DecisionDraft
+from .sibyl_identity import EXPECTED_SIBYL_SCHEMA_VERSION, sibyl_sdk_identity
 
 
 def _review_receipt(decision: DecisionDraft) -> dict[str, Any]:
@@ -130,11 +131,17 @@ class SibylSafetyActionAdapter:
 
     def health(self) -> dict[str, Any]:
         try:
+            identity = sibyl_sdk_identity()
+            schema_version = self._client.schema_version()
+            schema_compatible = schema_version == EXPECTED_SIBYL_SCHEMA_VERSION
             return {
                 "available": True,
                 "backend": self.production_kind,
-                "production_eligible": True,
-                "schema_version": self._client.schema_version(),
+                "production_eligible": identity["sdk_identity_ready"] and schema_compatible,
+                "schema_version": schema_version,
+                "schema_version_expected": EXPECTED_SIBYL_SCHEMA_VERSION,
+                "schema_compatible": schema_compatible,
+                **identity,
             }
         except Exception as exc:  # noqa: BLE001
             return {
