@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from dataclasses import replace
+
 import pytest
 
 from proofops_memoryguard.adapters import (
@@ -16,7 +18,8 @@ from proofops_memoryguard.agent_models import (
     GuardedPaymentGoal,
     ModelPlan,
 )
-from proofops_memoryguard.errors import MemoryConflictError
+from proofops_memoryguard.canonical import domain_hash
+from proofops_memoryguard.errors import MemoryConflictError, MemoryIntegrityError
 from proofops_memoryguard.models import (
     AnchorPlan,
     AnchorState,
@@ -55,6 +58,37 @@ class FailingModel:
     def plan(self, *, context: dict[str, object], allowed_tools: tuple[str, ...]) -> ModelPlan:
         del context, allowed_tools
         raise TimeoutError("model timeout fixture")
+
+
+class ReceiptModel:
+    production_kind = "remote_structured_model"
+
+    def health(self) -> dict[str, object]:
+        return {"available": True, "backend": self.production_kind}
+
+    def plan(self, *, context: dict[str, object], allowed_tools: tuple[str, ...]) -> ModelPlan:
+        return ModelPlan(
+            explanation="Prepare only the authorized safety artifact.",
+            operator_steps=("Review the causal proof.",),
+            requested_tools=allowed_tools,
+            model_receipt={
+                "schema_version": "1.0",
+                "backend": self.production_kind,
+                "configured_model": "provider/model",
+                "resolved_model": "provider/model-20260901",
+                "generation_id": "gen_bound_123",
+                "completion_sha256": "a" * 64,
+                "model_context_hash": domain_hash(
+                    "agent-model-context",
+                    {"context": context, "allowed_tools": list(allowed_tools)},
+                ),
+                "live_call_verified": True,
+                "structured_output_validated": True,
+                "service_tier": "configured_remote",
+                "production_reliability_claimed": False,
+                "completed_at": "2026-09-01T07:39:48+00:00",
+            },
+        )
 
 
 class VerifiedAnchor:
@@ -256,6 +290,63 @@ def test_model_failure_is_explicit_safe_only_and_skips_optional_tool(
     assert "human_review.prepare" in run.artifacts
     assert "causal_evidence_brief.prepare" not in run.artifacts
     assert run.executable is False
+
+
+def test_remote_model_receipt_is_persisted_and_trace_bound(
+    memory: InMemoryMemoryAdapter, policy: dict[str, object]
+) -> None:
+    guard = make_guard(memory, policy)
+    observe(
+        guard,
+        ObservationKind.BASELINE_APPROVED,
+        "session-model-receipt",
+        {
+            "chain_id": 84532,
+            "target": TARGET,
+            "method": "payInvoice",
+            "max_amount_usd": 5000,
+        },
+        "agent-model-receipt-baseline",
+    )
+    ledger = InMemoryRunLedgerAdapter()
+    agent = make_agent(
+        guard,
+        ledger,
+        runtime="runtime-model-receipt",
+        model=ReceiptModel(),
+    )
+    run = agent.run(goal("session-model-receipt", "agent-model-receipt-run"))
+
+    assert run.schema_version == "1.1"
+    assert run.model_receipt is not None
+    assert run.model_receipt["generation_id"] == "gen_bound_123"
+    assert any(
+        event.tool == "model.receipt"
+        and event.phase.value == "succeeded"
+        and event.output_hash is not None
+        for event in run.tool_trace
+    )
+    assert agent.inspect(run.run_id) == run
+
+    tampered = replace(
+        run,
+        model_receipt={**run.model_receipt, "generation_id": "gen_tampered"},
+    )
+    with pytest.raises(MemoryIntegrityError, match="not trace-bound"):
+        agent._validate_run(tampered)
+
+    with pytest.raises(MemoryIntegrityError, match="unsupported"):
+        agent._validate_run(replace(run, schema_version="9"))
+    with pytest.raises(MemoryIntegrityError, match="legacy"):
+        agent._validate_run(replace(run, schema_version="1.0"))
+
+    legacy = replace(
+        make_agent(guard, InMemoryRunLedgerAdapter(), runtime="runtime-legacy").run(
+            goal("session-model-receipt", "agent-model-legacy-run")
+        ),
+        schema_version="1.0",
+    )
+    agent._validate_run(legacy)
 
 
 def test_deny_proof_anchor_stays_blocked_after_agent_prepare_and_verify(

@@ -38,6 +38,7 @@ class ModelPlan:
     explanation: str
     operator_steps: tuple[str, ...]
     requested_tools: tuple[str, ...]
+    model_receipt: dict[str, Any] | None = None
 
 
 @dataclass(frozen=True)
@@ -82,6 +83,7 @@ class AgentRun:
     operator_steps: tuple[str, ...]
     planning_degraded: bool
     model_kind: str
+    model_receipt: dict[str, Any] | None
     model_requested_safe_tools: tuple[str, ...]
     tool_trace: tuple[ToolEvent, ...]
     artifacts: dict[str, Any]
@@ -89,6 +91,7 @@ class AgentRun:
     executable: bool = False
     created_at: datetime = field(default_factory=utc_now)
     updated_at: datetime = field(default_factory=utc_now)
+    schema_version: str = "1.1"
 
     @property
     def verdict(self) -> Verdict:
@@ -96,7 +99,7 @@ class AgentRun:
 
     def to_dict(self) -> dict[str, Any]:
         return {
-            "schema_version": "1.0",
+            "schema_version": self.schema_version,
             "run_id": self.run_id,
             "request_hash": self.request_hash,
             "runtime_instance_id": self.runtime_instance_id,
@@ -113,6 +116,7 @@ class AgentRun:
             "operator_steps": list(self.operator_steps),
             "planning_degraded": self.planning_degraded,
             "model_kind": self.model_kind,
+            "model_receipt": self.model_receipt,
             "model_requested_safe_tools": list(self.model_requested_safe_tools),
             "tool_trace": [event.to_dict() for event in self.tool_trace],
             "artifacts": self.artifacts,
@@ -136,6 +140,9 @@ class AgentRun:
             operator_steps=tuple(str(item) for item in data.get("operator_steps", ())),
             planning_degraded=bool(data.get("planning_degraded", False)),
             model_kind=str(data["model_kind"]),
+            model_receipt=(
+                dict(data["model_receipt"]) if isinstance(data.get("model_receipt"), dict) else None
+            ),
             model_requested_safe_tools=tuple(
                 str(item) for item in data.get("model_requested_safe_tools", ())
             ),
@@ -147,6 +154,7 @@ class AgentRun:
             executable=bool(data["executable"]),
             created_at=_parse_time(data["created_at"]),
             updated_at=_parse_time(data["updated_at"]),
+            schema_version=str(data.get("schema_version", "1.0")),
         )
 
 

@@ -261,16 +261,13 @@ class MemoryGuardAgent:
 
     def _validate_run(self, run: AgentRun) -> None:
         validate_decision(run.decision)
-        if (
-            run.run_id != self._stored_run_id(run.decision)
-            or run.request_hash != self._stored_request_hash(run.decision)
-        ):
+        if run.run_id != self._stored_run_id(
+            run.decision
+        ) or run.request_hash != self._stored_request_hash(run.decision):
             raise MemoryIntegrityError("Agent run identity does not match its request")
         if run.executable or run.action_fingerprint != self._action_fingerprint(run.decision):
             raise MemoryIntegrityError("Agent run action boundary is invalid")
-        if [event.sequence for event in run.tool_trace] != list(
-            range(1, len(run.tool_trace) + 1)
-        ):
+        if [event.sequence for event in run.tool_trace] != list(range(1, len(run.tool_trace) + 1)):
             raise MemoryIntegrityError("Agent run tool trace sequence is invalid")
         if self._production and run.model_kind != "remote_structured_model":
             raise MemoryIntegrityError("production Agent run did not use the remote model")
@@ -292,6 +289,7 @@ class MemoryGuardAgent:
         known_tools = {
             "memoryguard.decide",
             "model.plan",
+            "model.receipt",
             "agent.cancel",
             "proof_anchor.prepare",
             "proof_anchor.verify",
@@ -307,8 +305,7 @@ class MemoryGuardAgent:
             ):
                 raise MemoryIntegrityError("Agent run trace hash is invalid")
             if event.tool not in known_tools and (
-                event.phase != ToolPhase.SUPPRESSED
-                or event.reason_code != "tool_not_registered"
+                event.phase != ToolPhase.SUPPRESSED or event.reason_code != "tool_not_registered"
             ):
                 raise MemoryIntegrityError("Agent run trace contains an executable unknown tool")
             if event.tool in _REGISTERED_TOOLS and event.phase in {
@@ -325,6 +322,81 @@ class MemoryGuardAgent:
                 and event.tool not in run.artifacts
             ):
                 raise MemoryIntegrityError("Agent run anchor trace has no artifact")
+
+        if run.schema_version not in {"1.0", "1.1"}:
+            raise MemoryIntegrityError("Agent run schema version is unsupported")
+        receipt_events = [event for event in run.tool_trace if event.tool == "model.receipt"]
+        if run.schema_version == "1.0":
+            if run.model_receipt is not None or receipt_events:
+                raise MemoryIntegrityError("legacy Agent run contains a model receipt")
+        else:
+            if run.planning_degraded and run.model_receipt is not None:
+                raise MemoryIntegrityError("degraded Agent run contains a model receipt")
+            if run.model_receipt is not None:
+                receipt = run.model_receipt
+                required_strings = (
+                    "backend",
+                    "configured_model",
+                    "resolved_model",
+                    "generation_id",
+                    "completion_sha256",
+                    "model_context_hash",
+                    "completed_at",
+                )
+                if any(
+                    not isinstance(receipt.get(key), str) or not receipt[key]
+                    for key in required_strings
+                ):
+                    raise MemoryIntegrityError("Agent run model receipt is incomplete")
+                completion_hash = str(receipt["completion_sha256"])
+                if len(completion_hash) != 64 or any(
+                    char not in "0123456789abcdef" for char in completion_hash
+                ):
+                    raise MemoryIntegrityError("Agent run model receipt hash is invalid")
+                if (
+                    receipt.get("backend") != run.model_kind
+                    or receipt.get("live_call_verified") is not True
+                    or receipt.get("structured_output_validated") is not True
+                    or receipt.get("production_reliability_claimed") is not False
+                ):
+                    raise MemoryIntegrityError("Agent run model receipt boundary is invalid")
+                expected_context_hash = domain_hash(
+                    "agent-model-context",
+                    {
+                        "context": self._model_context(run.decision, base_state),
+                        "allowed_tools": list(allowed_tools),
+                    },
+                )
+                if receipt.get("model_context_hash") != expected_context_hash:
+                    raise MemoryIntegrityError("Agent run model receipt context is invalid")
+                expected_receipt_hash = domain_hash(
+                    "agent-tool-output:model.receipt",
+                    receipt,
+                )
+                expected_receipt_input_hash = domain_hash(
+                    "agent-tool-input:model.receipt",
+                    {"run_id": run.run_id, "model_context_hash": expected_context_hash},
+                )
+                successful_plan_events = [
+                    event
+                    for event in run.tool_trace
+                    if event.tool == "model.plan" and event.phase == ToolPhase.SUCCEEDED
+                ]
+                if (
+                    len(receipt_events) != 1
+                    or len(successful_plan_events) != 1
+                    or receipt_events[0].phase != ToolPhase.SUCCEEDED
+                    or receipt_events[0].reason_code != "non_secret_provider_receipt"
+                    or receipt_events[0].input_hash != expected_receipt_input_hash
+                    or receipt_events[0].output_hash != expected_receipt_hash
+                    or receipt_events[0].sequence != successful_plan_events[0].sequence + 1
+                ):
+                    raise MemoryIntegrityError("Agent run model receipt is not trace-bound")
+            else:
+                if receipt_events:
+                    raise MemoryIntegrityError("Agent run has a receipt trace without a receipt")
+                if self._production and not run.planning_degraded:
+                    raise MemoryIntegrityError("production Agent run is missing its model receipt")
 
         allowed_artifacts = {*_REGISTERED_TOOLS, "proof_anchor.prepare", "proof_anchor.verify"}
         if any(name not in allowed_artifacts for name in run.artifacts):
@@ -456,6 +528,18 @@ class MemoryGuardAgent:
                     "explanation_hash": domain_hash("model-explanation", plan.explanation),
                 },
             )
+            if plan.model_receipt is not None:
+                receipt_context_hash = str(plan.model_receipt.get("model_context_hash", ""))
+                trace.add(
+                    "model.receipt",
+                    ToolPhase.SUCCEEDED,
+                    "non_secret_provider_receipt",
+                    {
+                        "run_id": run_id,
+                        "model_context_hash": receipt_context_hash,
+                    },
+                    plan.model_receipt,
+                )
         except Exception as exc:  # noqa: BLE001
             planning_degraded = True
             plan = self._fallback_plan(decision)
@@ -540,6 +624,7 @@ class MemoryGuardAgent:
             operator_steps=operator_steps,
             planning_degraded=planning_degraded,
             model_kind=self._model.production_kind,
+            model_receipt=plan.model_receipt,
             model_requested_safe_tools=tuple(
                 tool for tool in plan.requested_tools if tool in allowed_tools
             ),
@@ -606,11 +691,7 @@ class MemoryGuardAgent:
             trace.add("proof_anchor.prepare", ToolPhase.CONSIDERED, "human_request", payload)
             trace.add("proof_anchor.prepare", ToolPhase.CALLED, "human_request", payload)
             result = self._guard.finalize(run.decision.decision_id)
-            phase = (
-                ToolPhase.FAILED
-                if result.state == AnchorState.FAILED
-                else ToolPhase.SUCCEEDED
-            )
+            phase = ToolPhase.FAILED if result.state == AnchorState.FAILED else ToolPhase.SUCCEEDED
             trace.add(
                 "proof_anchor.prepare",
                 phase,

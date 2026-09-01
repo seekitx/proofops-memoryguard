@@ -6,6 +6,7 @@ from typing import Any
 import pytest
 
 from proofops_memoryguard.adapters.model import HttpModelAdapter
+from proofops_memoryguard.canonical import domain_hash
 
 
 class FakeResponse:
@@ -51,14 +52,15 @@ def test_openrouter_requests_strict_structured_output(monkeypatch) -> None:  # t
         model="openrouter/free",
     )
 
-    adapter.probe()
+    plan = adapter.plan(
+        context={"verdict": "ready"},
+        allowed_tools=("human_review.prepare",),
+    )
 
     assert captured["provider"] == {"require_parameters": True}
     assert captured["response_format"]["type"] == "json_schema"
     assert captured["response_format"]["json_schema"]["strict"] is True
-    assert captured["response_format"]["json_schema"]["schema"][
-        "additionalProperties"
-    ] is False
+    assert captured["response_format"]["json_schema"]["schema"]["additionalProperties"] is False
     assert adapter.health()["resolved_model"] == "nvidia/example:free"
     assert adapter.health()["generation_id"] == "gen_test_123"
     assert len(adapter.health()["completion_sha256"]) == 64
@@ -66,6 +68,28 @@ def test_openrouter_requests_strict_structured_output(monkeypatch) -> None:  # t
     assert adapter.health()["service_tier"] == "free_experimental"
     assert adapter.health()["production_reliability_claimed"] is False
     assert adapter.health()["live_call_verified"] is True
+    assert adapter.health()["production_protocol_eligible"] is True
+    assert adapter.health()["production_eligibility_scope"] == ("configured_https_protocol_only")
+    assert plan.model_receipt == {
+        "schema_version": "1.0",
+        "backend": "remote_structured_model",
+        "configured_model": "openrouter/free",
+        "resolved_model": "nvidia/example:free",
+        "generation_id": "gen_test_123",
+        "completion_sha256": adapter.health()["completion_sha256"],
+        "model_context_hash": domain_hash(
+            "agent-model-context",
+            {
+                "context": {"verdict": "ready"},
+                "allowed_tools": ["human_review.prepare"],
+            },
+        ),
+        "live_call_verified": True,
+        "structured_output_validated": True,
+        "service_tier": "free_experimental",
+        "production_reliability_claimed": False,
+        "completed_at": adapter.health()["last_success_at"],
+    }
 
 
 def test_generic_compatible_endpoint_does_not_send_openrouter_provider(monkeypatch) -> None:  # type: ignore[no-untyped-def]
@@ -104,6 +128,7 @@ def test_generic_compatible_endpoint_does_not_send_openrouter_provider(monkeypat
 
     assert "provider" not in captured
     assert captured["response_format"]["type"] == "json_schema"
+    assert adapter.health()["production_reliability_claimed"] is False
 
 
 def test_provider_error_is_sanitized_and_fails_closed(monkeypatch) -> None:  # type: ignore[no-untyped-def]
