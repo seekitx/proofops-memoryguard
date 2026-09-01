@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import json
 from datetime import UTC, datetime
+from hashlib import sha256
 from typing import Any
+from urllib.parse import urlparse
 
 import httpx
 
@@ -70,10 +72,20 @@ class HttpModelAdapter:
         self._api_key = api_key
         self._model = model
         self._timeout = timeout_seconds
+        self._openrouter = urlparse(url).hostname in {"openrouter.ai", "www.openrouter.ai"}
         self._available = False
         self._live_call_verified = False
         self._last_success_at: str | None = None
         self._last_error_type: str | None = None
+        self._resolved_model: str | None = None
+        self._last_generation_id: str | None = None
+        self._last_completion_sha256: str | None = None
+        self._structured_output_validated = False
+        self._service_tier = (
+            "free_experimental"
+            if self._openrouter and (model == "openrouter/free" or model.endswith(":free"))
+            else "configured_remote"
+        )
 
     def health(self) -> dict[str, Any]:
         return {
@@ -81,8 +93,16 @@ class HttpModelAdapter:
             "backend": self.production_kind,
             "production_eligible": True,
             "model": self._model,
+            "resolved_model": self._resolved_model,
+            "generation_id": self._last_generation_id,
+            "completion_sha256": self._last_completion_sha256,
             "configured": True,
             "live_call_verified": self._live_call_verified,
+            "structured_output_validated": self._structured_output_validated,
+            "structured_output_required": True,
+            "openrouter_require_parameters": self._openrouter,
+            "service_tier": self._service_tier,
+            "production_reliability_claimed": self._service_tier != "free_experimental",
             "last_success_at": self._last_success_at,
             "last_error_type": self._last_error_type,
         }
@@ -91,14 +111,14 @@ class HttpModelAdapter:
     def _parse_plan(content: str, allowed_tools: tuple[str, ...]) -> ModelPlan:
         data = json.loads(content)
         if not isinstance(data, dict):
-            raise ValueError("model plan must be a JSON object")
+            raise TypeError("model plan must be a JSON object")
         explanation = str(data.get("explanation", "")).strip()
         raw_steps = data.get("operator_steps", [])
         raw_tools = data.get("requested_tools", [])
         if not explanation or len(explanation) > 1_000:
             raise ValueError("model explanation is missing or too long")
         if not isinstance(raw_steps, list) or not isinstance(raw_tools, list):
-            raise ValueError("model plan lists are invalid")
+            raise TypeError("model plan lists are invalid")
         steps = tuple(str(item).strip() for item in raw_steps[:5] if str(item).strip())
         tools = tuple(str(item).strip() for item in raw_tools[:10] if str(item).strip())
         if any(len(step) > 300 for step in steps) or any(len(tool) > 100 for tool in tools):
@@ -111,33 +131,75 @@ class HttpModelAdapter:
         system = (
             "You plan operator-facing steps for a safety Agent. The supplied verdict is final. "
             "You cannot change target, amount, verdict, or authorize payment. Return only "
-            "JSON with explanation, operator_steps, and requested_tools. Request tools only "
-            "from the supplied list."
+            "JSON with explanation, operator_steps, and requested_tools. Keep the explanation "
+            "under three short sentences and each operator step under one sentence. Request "
+            "tools only from the supplied list."
         )
         user = json.dumps(
             {"decision_context": context, "allowed_tools": list(allowed_tools)},
             sort_keys=True,
             separators=(",", ":"),
         )
+        response_schema = {
+            "type": "object",
+            "properties": {
+                "explanation": {"type": "string", "maxLength": 1_000},
+                "operator_steps": {
+                    "type": "array",
+                    "items": {"type": "string", "maxLength": 300},
+                    "maxItems": 5,
+                },
+                "requested_tools": {
+                    "type": "array",
+                    "items": {"type": "string", "maxLength": 100},
+                    "maxItems": 10,
+                },
+            },
+            "required": ["explanation", "operator_steps", "requested_tools"],
+            "additionalProperties": False,
+        }
+        payload: dict[str, Any] = {
+            "model": self._model,
+            "temperature": 0,
+            "max_tokens": 1_000,
+            "response_format": {
+                "type": "json_schema",
+                "json_schema": {
+                    "name": "memoryguard_operator_plan",
+                    "strict": True,
+                    "schema": response_schema,
+                },
+            },
+            "messages": [
+                {"role": "system", "content": system},
+                {"role": "user", "content": user},
+            ],
+        }
+        if self._openrouter:
+            payload["provider"] = {"require_parameters": True}
+        self._available = False
+        self._live_call_verified = False
+        self._resolved_model = None
+        self._last_generation_id = None
+        self._last_completion_sha256 = None
+        self._structured_output_validated = False
         try:
             response = httpx.post(
                 self._url,
                 headers={"Authorization": f"Bearer {self._api_key}"},
-                json={
-                    "model": self._model,
-                    "temperature": 0,
-                    "max_tokens": 500,
-                    "messages": [
-                        {"role": "system", "content": system},
-                        {"role": "user", "content": user},
-                    ],
-                },
+                json=payload,
                 timeout=self._timeout,
             )
             response.raise_for_status()
             body = response.json()
             content = body["choices"][0]["message"]["content"]
             plan = self._parse_plan(str(content), allowed_tools)
+            resolved_model = str(body.get("model", "")).strip()
+            self._resolved_model = resolved_model or None
+            generation_id = str(body.get("id", "")).strip()
+            self._last_generation_id = generation_id or None
+            self._last_completion_sha256 = sha256(str(content).encode()).hexdigest()
+            self._structured_output_validated = True
             self._available = True
             self._live_call_verified = True
             self._last_success_at = datetime.now(UTC).isoformat()
@@ -145,6 +207,7 @@ class HttpModelAdapter:
             return plan
         except Exception as exc:
             self._available = False
+            self._live_call_verified = False
             self._last_error_type = type(exc).__name__
             raise
 

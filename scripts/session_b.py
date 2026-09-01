@@ -55,12 +55,45 @@ def runtime_evidence(runtime: dict[str, object]) -> dict[str, object]:
     }
 
 
+def model_evidence(runtime: dict[str, object]) -> dict[str, object]:
+    agent = runtime.get("agent") or {}
+    if not isinstance(agent, dict):
+        agent = {}
+    model = agent.get("model") or {}
+    return dict(model) if isinstance(model, dict) else {}
+
+
+def has_successful_model_trace(run: dict[str, object]) -> bool:
+    trace = run.get("tool_trace") or []
+    return isinstance(trace, list) and any(
+        isinstance(event, dict)
+        and event.get("tool") == "model.plan"
+        and event.get("phase") == "succeeded"
+        for event in trace
+    )
+
+
+def remote_model_checks(run: dict[str, object], model: dict[str, object]) -> bool:
+    return (
+        run.get("model_kind") == "remote_structured_model"
+        and run.get("planning_degraded") is False
+        and has_successful_model_trace(run)
+        and model.get("live_call_verified") is True
+        and model.get("structured_output_validated") is True
+        and bool(model.get("resolved_model"))
+        and bool(model.get("generation_id"))
+        and isinstance(model.get("completion_sha256"), str)
+        and len(str(model.get("completion_sha256"))) == 64
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--base-url", default="http://localhost:8000")
     parser.add_argument("--subject", required=True)
     parser.add_argument("--session-a-evidence", type=Path, required=True)
     parser.add_argument("--session-a-sha256", required=True)
+    parser.add_argument("--require-remote-model", action="store_true")
     args = parser.parse_args()
     session = f"cli-b-{uuid.uuid4()}"
     runtime = get(args.base_url, "/api/runtime")
@@ -72,10 +105,13 @@ def main() -> None:
     before = json.loads(before_bytes)
     before_manifest_run = before.get("agent_before") or {}
     before_sibyl = before.get("sibyl_runtime") or {}
+    before_model = before.get("agent_model_after_run") or {}
     if not isinstance(before_manifest_run, dict):
         before_manifest_run = {}
     if not isinstance(before_sibyl, dict):
         before_sibyl = {}
+    if not isinstance(before_model, dict):
+        before_model = {}
     before_run_id = before_manifest_run.get("run_id")
     if not isinstance(before_run_id, str) or not before_run_id:
         raise SystemExit("Session A evidence has no run_id")
@@ -151,6 +187,10 @@ def main() -> None:
         and session_a_action_bound
         and same_build_commit
         and bool(dispute_id)
+        and (
+            not args.require_remote_model
+            or remote_model_checks(before_run, before_model)
+        )
     )
     if not preflight_passed:
         print(
@@ -192,8 +232,11 @@ def main() -> None:
         headers={"Content-Type": "application/json"},
         method="POST",
     )
-    with urlopen(request, timeout=15) as response:
+    with urlopen(request, timeout=90) as response:
         result = json.loads(response.read())
+    runtime_after_agent = get(args.base_url, "/api/runtime")
+    current_model = model_evidence(runtime_after_agent)
+    session_b_remote_model_checks = remote_model_checks(result, current_model)
     result_decision = result.get("decision") or {}
     if not isinstance(result_decision, dict):
         result_decision = {}
@@ -260,6 +303,7 @@ def main() -> None:
         and review_suppressed
         and escalation_succeeded
         and non_executable_escalation
+        and (not args.require_remote_model or session_b_remote_model_checks)
     )
     print(
         json.dumps(
@@ -272,6 +316,11 @@ def main() -> None:
                 "comparison_preflight_passed": preflight_passed,
                 "session_b_run_created": True,
                 "contest_gate_claimed": False,
+                "remote_model_gate_required": args.require_remote_model,
+                "remote_model_checks_passed": (
+                    remote_model_checks(before_run, before_model)
+                    and session_b_remote_model_checks
+                ),
                 "evidence_note": (
                     "These checks bind two stored runs and detect manifest edits. The continuous "
                     "recording remains required to prove the process restart and contest gate."
@@ -293,6 +342,7 @@ def main() -> None:
                 "review_tool_suppressed": review_suppressed,
                 "escalation_tool_succeeded": escalation_succeeded,
                 "non_executable_escalation": non_executable_escalation,
+                "agent_model_after_run": current_model,
                 "same_build_commit": same_build_commit,
                 "manifest_digest_matches": manifest_digest_matches,
                 "agent_after": result,

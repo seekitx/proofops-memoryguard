@@ -29,7 +29,7 @@ def post(base_url: str, path: str, body: dict[str, object]) -> dict[str, object]
         headers={"Content-Type": "application/json"},
         method="POST",
     )
-    with urlopen(request, timeout=15) as response:
+    with urlopen(request, timeout=90) as response:
         return json.loads(response.read())
 
 
@@ -73,11 +73,44 @@ def runtime_evidence(runtime: dict[str, object]) -> dict[str, object]:
     }
 
 
+def model_evidence(runtime: dict[str, object]) -> dict[str, object]:
+    agent = runtime.get("agent") or {}
+    if not isinstance(agent, dict):
+        agent = {}
+    model = agent.get("model") or {}
+    return dict(model) if isinstance(model, dict) else {}
+
+
+def has_successful_model_trace(run: dict[str, object]) -> bool:
+    trace = run.get("tool_trace") or []
+    return isinstance(trace, list) and any(
+        isinstance(event, dict)
+        and event.get("tool") == "model.plan"
+        and event.get("phase") == "succeeded"
+        for event in trace
+    )
+
+
+def remote_model_checks(run: dict[str, object], model: dict[str, object]) -> bool:
+    return (
+        run.get("model_kind") == "remote_structured_model"
+        and run.get("planning_degraded") is False
+        and has_successful_model_trace(run)
+        and model.get("live_call_verified") is True
+        and model.get("structured_output_validated") is True
+        and bool(model.get("resolved_model"))
+        and bool(model.get("generation_id"))
+        and isinstance(model.get("completion_sha256"), str)
+        and len(str(model.get("completion_sha256"))) == 64
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--base-url", default="http://localhost:8000")
     parser.add_argument("--subject", required=True)
     parser.add_argument("--evidence-out", type=Path, required=True)
+    parser.add_argument("--require-remote-model", action="store_true")
     args = parser.parse_args()
     session = f"cli-a-{uuid.uuid4()}"
     runtime = get(args.base_url, "/api/runtime")
@@ -114,6 +147,21 @@ def main() -> None:
             "idempotency_key": stable_key("cli-before", args.subject),
         },
     )
+    runtime_after_agent = get(args.base_url, "/api/runtime")
+    agent_model = model_evidence(runtime_after_agent)
+    remote_checks_passed = remote_model_checks(before, agent_model)
+    if args.require_remote_model and not remote_checks_passed:
+        print(
+            json.dumps(
+                {
+                    "session_a_remote_model_checks_passed": False,
+                    "agent_before": before,
+                    "agent_model_after_run": agent_model,
+                },
+                indent=2,
+            )
+        )
+        raise SystemExit(1)
     dispute = post(
         args.base_url,
         "/api/observations",
@@ -138,6 +186,9 @@ def main() -> None:
             "amount_usd": 4200,
         },
         "sibyl_runtime": runtime_evidence(runtime),
+        "agent_model_after_run": agent_model,
+        "remote_model_checks_passed": remote_checks_passed,
+        "remote_model_gate_required": args.require_remote_model,
         "baseline": baseline,
         "agent_before": before,
         "dispute": dispute,
