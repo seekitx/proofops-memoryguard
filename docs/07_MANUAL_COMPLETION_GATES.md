@@ -15,7 +15,7 @@ winners September 13–15. Recheck the live site before relying on these dates.
 
 | Gate | Current state | Acceptance evidence | Reject if |
 |---|---|---|---|
-| Registration/team | **User confirmed registered** | Keep the private build-page link/account confirmation privately | Public page alone or lost build-page access |
+| Registration/team | **Registered; private build page opened read-only** | Keep the private build-page link/account confirmation privately | Public page alone or lost build-page access |
 | Contest-period implementation | **Window open; in progress** | Substantive Agent/runtime work in reviewable in-window commits | Pre-build files committed later and relabeled |
 | Real Agent behavior | **Source implemented; runtime unverified** | Real remote model + Agent invokes decision/safety tools; fresh-process recall changes its chosen action | Deterministic dev planner, memory service, or chat shell only |
 | Prior Work boundary | Awaiting owner review | Pre-build snapshot and in-window delta are both explicit | Filesystem/Git dates imply a false build story |
@@ -32,8 +32,9 @@ winners September 13–15. Recheck the live site before relying on these dates.
 | PMF bonus | Missing/not claimed | Public waitlist, pilot, user interviews, or usage artifact | Old SafeHire users/evidence relabeled |
 | Demo video | Missing | Public unedited 2–5 minute URL | Edited montage or fake deletion result |
 | Two public posts | Missing | Two public URLs with currently required tags | Draft text only |
-| Private build-page submission | Missing | Dashboard confirmation | Public repo alone |
-| Final repo push/history | Pre-build baseline pushed; Agent commit pending | Reviewable contest-period commits on public repo | One opaque dump or unpushed changes |
+| Private build-page fields | **All fields currently empty; draft prepared locally** | Saved repo, video, two posts, deletion impact, walkthrough, and honest primitives | Draft text or private-link possession alone |
+| Private build-page submission | Not marked ready | Dashboard confirmation | Public repo alone |
+| Final repo push/history | Public contest-period commits pushed through `6662336` before the current evidence-hardening change | Reviewable contest-period commits on public repo | One opaque dump or unpushed changes |
 
 ## Owner decisions before any irreversible action
 

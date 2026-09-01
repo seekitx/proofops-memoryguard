@@ -65,9 +65,9 @@ ProofOps MemoryGuard — Persistent Risk Memory for Autonomous Agents
 
 MemoryGuard uses load-bearing Sibyl Memory to preserve trusted disputes,
 revocations, and action limits across sessions. It quarantines prompt-injection text,
-changes the same Base action from a non-executable READY draft to causal DENY in a
-fresh session, and can anchor only the redacted decision proof root after user wallet
-confirmation.
+changes the same non-executable payment intent from a READY review to causal DENY in
+a fresh session, and can anchor only the redacted decision proof root after user
+wallet confirmation.
 
 ### What is innovative
 
