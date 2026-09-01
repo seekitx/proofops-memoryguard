@@ -35,15 +35,9 @@ def runtime_evidence(runtime: dict[str, object]) -> dict[str, object]:
         "sdk_import_file_recorded_by_distribution": memory.get(
             "sdk_import_file_recorded_by_distribution"
         ),
-        "sdk_import_file_hash_matches_record": memory.get(
-            "sdk_import_file_hash_matches_record"
-        ),
-        "sdk_required_runtime_files_recorded": memory.get(
-            "sdk_required_runtime_files_recorded"
-        ),
-        "sdk_runtime_file_hashes_match_record": memory.get(
-            "sdk_runtime_file_hashes_match_record"
-        ),
+        "sdk_import_file_hash_matches_record": memory.get("sdk_import_file_hash_matches_record"),
+        "sdk_required_runtime_files_recorded": memory.get("sdk_required_runtime_files_recorded"),
+        "sdk_runtime_file_hashes_match_record": memory.get("sdk_runtime_file_hashes_match_record"),
         "sdk_version_matches_pin": memory.get("sdk_version_matches_pin"),
         "sdk_identity_ready": memory.get("sdk_identity_ready"),
         "schema_version": memory.get("schema_version"),
@@ -73,17 +67,30 @@ def has_successful_model_trace(run: dict[str, object]) -> bool:
     )
 
 
-def remote_model_checks(run: dict[str, object], model: dict[str, object]) -> bool:
+def remote_model_checks(run: dict[str, object]) -> bool:
+    receipt = run.get("model_receipt") or {}
+    trace = run.get("tool_trace") or []
+    receipt_trace_bound = isinstance(trace, list) and any(
+        isinstance(event, dict)
+        and event.get("tool") == "model.receipt"
+        and event.get("phase") == "succeeded"
+        and isinstance(event.get("output_hash"), str)
+        and len(str(event.get("output_hash"))) == 64
+        for event in trace
+    )
     return (
-        run.get("model_kind") == "remote_structured_model"
+        run.get("schema_version") == "1.1"
+        and run.get("model_kind") == "remote_structured_model"
         and run.get("planning_degraded") is False
         and has_successful_model_trace(run)
-        and model.get("live_call_verified") is True
-        and model.get("structured_output_validated") is True
-        and bool(model.get("resolved_model"))
-        and bool(model.get("generation_id"))
-        and isinstance(model.get("completion_sha256"), str)
-        and len(str(model.get("completion_sha256"))) == 64
+        and isinstance(receipt, dict)
+        and receipt.get("live_call_verified") is True
+        and receipt.get("structured_output_validated") is True
+        and bool(receipt.get("resolved_model"))
+        and bool(receipt.get("generation_id"))
+        and isinstance(receipt.get("completion_sha256"), str)
+        and len(str(receipt.get("completion_sha256"))) == 64
+        and receipt_trace_bound
     )
 
 
@@ -93,6 +100,7 @@ def main() -> None:
     parser.add_argument("--subject", required=True)
     parser.add_argument("--session-a-evidence", type=Path, required=True)
     parser.add_argument("--session-a-sha256", required=True)
+    parser.add_argument("--evidence-out", type=Path)
     parser.add_argument("--require-remote-model", action="store_true")
     args = parser.parse_args()
     session = f"cli-b-{uuid.uuid4()}"
@@ -105,13 +113,10 @@ def main() -> None:
     before = json.loads(before_bytes)
     before_manifest_run = before.get("agent_before") or {}
     before_sibyl = before.get("sibyl_runtime") or {}
-    before_model = before.get("agent_model_after_run") or {}
     if not isinstance(before_manifest_run, dict):
         before_manifest_run = {}
     if not isinstance(before_sibyl, dict):
         before_sibyl = {}
-    if not isinstance(before_model, dict):
-        before_model = {}
     before_run_id = before_manifest_run.get("run_id")
     if not isinstance(before_run_id, str) or not before_run_id:
         raise SystemExit("Session A evidence has no run_id")
@@ -145,13 +150,12 @@ def main() -> None:
             "proof_root",
         )
     )
-    session_a_runtime_bound = (
-        before_sibyl.get("runtime_instance_id") == before_run.get("runtime_instance_id")
+    session_a_runtime_bound = before_sibyl.get("runtime_instance_id") == before_run.get(
+        "runtime_instance_id"
     )
-    different_runtime_before_session_b = (
-        bool(before_run.get("runtime_instance_id"))
-        and before_run.get("runtime_instance_id") != current_sibyl.get("runtime_instance_id")
-    )
+    different_runtime_before_session_b = bool(
+        before_run.get("runtime_instance_id")
+    ) and before_run.get("runtime_instance_id") != current_sibyl.get("runtime_instance_id")
     expected_subject_ref = subject_ref(args.subject)
     session_a_subject_bound = (
         before.get("subject_fingerprint") == hashlib.sha256(args.subject.encode()).hexdigest()
@@ -187,10 +191,7 @@ def main() -> None:
         and session_a_action_bound
         and same_build_commit
         and bool(dispute_id)
-        and (
-            not args.require_remote_model
-            or remote_model_checks(before_run, before_model)
-        )
+        and (not args.require_remote_model or remote_model_checks(before_run))
     )
     if not preflight_passed:
         print(
@@ -236,17 +237,16 @@ def main() -> None:
         result = json.loads(response.read())
     runtime_after_agent = get(args.base_url, "/api/runtime")
     current_model = model_evidence(runtime_after_agent)
-    session_b_remote_model_checks = remote_model_checks(result, current_model)
+    session_b_remote_model_checks = remote_model_checks(result)
     result_decision = result.get("decision") or {}
     if not isinstance(result_decision, dict):
         result_decision = {}
     result_intent = result_decision.get("intent") or {}
     if not isinstance(result_intent, dict):
         result_intent = {}
-    runtime_bound_to_runs = (
-        session_a_runtime_bound
-        and current_sibyl.get("runtime_instance_id") == result.get("runtime_instance_id")
-    )
+    runtime_bound_to_runs = session_a_runtime_bound and current_sibyl.get(
+        "runtime_instance_id"
+    ) == result.get("runtime_instance_id")
     subject_bound_to_runs = (
         session_a_subject_bound
         and result_decision.get("subject_ref") == expected_subject_ref
@@ -256,10 +256,9 @@ def main() -> None:
         fixed_action.get(key) == before_intent.get(key) == result_intent.get(key)
         for key in ("chain_id", "target", "method", "amount_usd")
     )
-    dispute_memory_bound_to_recall = (
-        dispute.get("memory_root") == result_decision.get("memory_root")
-        and dispute.get("memory_version") == result_decision.get("memory_version")
-    )
+    dispute_memory_bound_to_recall = dispute.get("memory_root") == result_decision.get(
+        "memory_root"
+    ) and dispute.get("memory_version") == result_decision.get("memory_version")
     tool_trace = result.get("tool_trace") or []
     if not isinstance(tool_trace, list):
         tool_trace = []
@@ -305,51 +304,56 @@ def main() -> None:
         and non_executable_escalation
         and (not args.require_remote_model or session_b_remote_model_checks)
     )
-    print(
-        json.dumps(
-            {
-                "session": session,
-                "runtime_instance_id": result.get("runtime_instance_id"),
-                "sibyl_runtime": current_sibyl,
-                "action_fingerprint": result.get("action_fingerprint"),
-                "comparison_checks_passed": required,
-                "comparison_preflight_passed": preflight_passed,
-                "session_b_run_created": True,
-                "contest_gate_claimed": False,
-                "remote_model_gate_required": args.require_remote_model,
-                "remote_model_checks_passed": (
-                    remote_model_checks(before_run, before_model)
-                    and session_b_remote_model_checks
-                ),
-                "evidence_note": (
-                    "These checks bind two stored runs and detect manifest edits. The continuous "
-                    "recording remains required to prove the process restart and contest gate."
-                ),
-                "session_a_runtime_instance_id": before_run.get("runtime_instance_id"),
-                "same_action_fingerprint": (
-                    before_run.get("action_fingerprint") == result.get("action_fingerprint")
-                ),
-                "different_runtime_instance": (
-                    before_run.get("runtime_instance_id") != result.get("runtime_instance_id")
-                ),
-                "exact_dispute_recalled": dispute_id in result.get("causal_memory_ids", []),
-                "same_sibyl_sdk_metadata": same_sibyl_sdk,
-                "stored_session_a_matches_manifest": stored_a_matches_manifest,
-                "runtime_metadata_bound_to_runs": runtime_bound_to_runs,
-                "subject_bound_to_runs": subject_bound_to_runs,
-                "fixed_action_bound_to_runs": action_bound_to_runs,
-                "dispute_memory_bound_to_recall": dispute_memory_bound_to_recall,
-                "review_tool_suppressed": review_suppressed,
-                "escalation_tool_succeeded": escalation_succeeded,
-                "non_executable_escalation": non_executable_escalation,
-                "agent_model_after_run": current_model,
-                "same_build_commit": same_build_commit,
-                "manifest_digest_matches": manifest_digest_matches,
-                "agent_after": result,
-            },
-            indent=2,
-        )
-    )
+    evidence = {
+        "session": session,
+        "transport": {
+            "base_url": args.base_url.rstrip("/"),
+            "public_https": args.base_url.startswith("https://"),
+            "agent_run_id": result.get("run_id"),
+        },
+        "runtime_instance_id": result.get("runtime_instance_id"),
+        "sibyl_runtime": current_sibyl,
+        "action_fingerprint": result.get("action_fingerprint"),
+        "comparison_checks_passed": required,
+        "comparison_preflight_passed": preflight_passed,
+        "session_b_run_created": True,
+        "contest_gate_claimed": False,
+        "remote_model_gate_required": args.require_remote_model,
+        "remote_model_checks_passed": (
+            remote_model_checks(before_run) and session_b_remote_model_checks
+        ),
+        "evidence_note": (
+            "These checks bind two stored runs and detect manifest edits. The continuous "
+            "recording remains required to prove the process restart and contest gate."
+        ),
+        "session_a_runtime_instance_id": before_run.get("runtime_instance_id"),
+        "same_action_fingerprint": (
+            before_run.get("action_fingerprint") == result.get("action_fingerprint")
+        ),
+        "different_runtime_instance": (
+            before_run.get("runtime_instance_id") != result.get("runtime_instance_id")
+        ),
+        "exact_dispute_recalled": dispute_id in result.get("causal_memory_ids", []),
+        "same_sibyl_sdk_metadata": same_sibyl_sdk,
+        "stored_session_a_matches_manifest": stored_a_matches_manifest,
+        "runtime_metadata_bound_to_runs": runtime_bound_to_runs,
+        "subject_bound_to_runs": subject_bound_to_runs,
+        "fixed_action_bound_to_runs": action_bound_to_runs,
+        "dispute_memory_bound_to_recall": dispute_memory_bound_to_recall,
+        "review_tool_suppressed": review_suppressed,
+        "escalation_tool_succeeded": escalation_succeeded,
+        "non_executable_escalation": non_executable_escalation,
+        "agent_model_after_run": current_model,
+        "same_build_commit": same_build_commit,
+        "manifest_digest_matches": manifest_digest_matches,
+        "agent_after": result,
+    }
+    rendered = json.dumps(evidence, indent=2)
+    if args.evidence_out:
+        args.evidence_out.write_text(rendered, encoding="utf-8")
+        evidence["evidence_out"] = str(args.evidence_out)
+        evidence["session_b_evidence_sha256"] = hashlib.sha256(rendered.encode()).hexdigest()
+    print(json.dumps(evidence, indent=2))
     raise SystemExit(0 if required else 1)
 
 

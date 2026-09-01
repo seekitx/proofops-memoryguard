@@ -53,15 +53,9 @@ def runtime_evidence(runtime: dict[str, object]) -> dict[str, object]:
         "sdk_import_file_recorded_by_distribution": memory.get(
             "sdk_import_file_recorded_by_distribution"
         ),
-        "sdk_import_file_hash_matches_record": memory.get(
-            "sdk_import_file_hash_matches_record"
-        ),
-        "sdk_required_runtime_files_recorded": memory.get(
-            "sdk_required_runtime_files_recorded"
-        ),
-        "sdk_runtime_file_hashes_match_record": memory.get(
-            "sdk_runtime_file_hashes_match_record"
-        ),
+        "sdk_import_file_hash_matches_record": memory.get("sdk_import_file_hash_matches_record"),
+        "sdk_required_runtime_files_recorded": memory.get("sdk_required_runtime_files_recorded"),
+        "sdk_runtime_file_hashes_match_record": memory.get("sdk_runtime_file_hashes_match_record"),
         "sdk_version_matches_pin": memory.get("sdk_version_matches_pin"),
         "sdk_identity_ready": memory.get("sdk_identity_ready"),
         "schema_version": memory.get("schema_version"),
@@ -91,17 +85,30 @@ def has_successful_model_trace(run: dict[str, object]) -> bool:
     )
 
 
-def remote_model_checks(run: dict[str, object], model: dict[str, object]) -> bool:
+def remote_model_checks(run: dict[str, object]) -> bool:
+    receipt = run.get("model_receipt") or {}
+    trace = run.get("tool_trace") or []
+    receipt_trace_bound = isinstance(trace, list) and any(
+        isinstance(event, dict)
+        and event.get("tool") == "model.receipt"
+        and event.get("phase") == "succeeded"
+        and isinstance(event.get("output_hash"), str)
+        and len(str(event.get("output_hash"))) == 64
+        for event in trace
+    )
     return (
-        run.get("model_kind") == "remote_structured_model"
+        run.get("schema_version") == "1.1"
+        and run.get("model_kind") == "remote_structured_model"
         and run.get("planning_degraded") is False
         and has_successful_model_trace(run)
-        and model.get("live_call_verified") is True
-        and model.get("structured_output_validated") is True
-        and bool(model.get("resolved_model"))
-        and bool(model.get("generation_id"))
-        and isinstance(model.get("completion_sha256"), str)
-        and len(str(model.get("completion_sha256"))) == 64
+        and isinstance(receipt, dict)
+        and receipt.get("live_call_verified") is True
+        and receipt.get("structured_output_validated") is True
+        and bool(receipt.get("resolved_model"))
+        and bool(receipt.get("generation_id"))
+        and isinstance(receipt.get("completion_sha256"), str)
+        and len(str(receipt.get("completion_sha256"))) == 64
+        and receipt_trace_bound
     )
 
 
@@ -149,7 +156,7 @@ def main() -> None:
     )
     runtime_after_agent = get(args.base_url, "/api/runtime")
     agent_model = model_evidence(runtime_after_agent)
-    remote_checks_passed = remote_model_checks(before, agent_model)
+    remote_checks_passed = remote_model_checks(before)
     if args.require_remote_model and not remote_checks_passed:
         print(
             json.dumps(
@@ -178,6 +185,11 @@ def main() -> None:
     )
     evidence = {
         "session": session,
+        "transport": {
+            "base_url": args.base_url.rstrip("/"),
+            "public_https": args.base_url.startswith("https://"),
+            "agent_run_id": before.get("run_id"),
+        },
         "subject_fingerprint": hashlib.sha256(args.subject.encode()).hexdigest(),
         "fixed_action": {
             "chain_id": 84532,

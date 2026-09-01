@@ -1,14 +1,17 @@
 from __future__ import annotations
 
 import json
+from dataclasses import replace
 from datetime import UTC, datetime
 from hashlib import sha256
+from threading import Lock
 from typing import Any
 from urllib.parse import urlparse
 
 import httpx
 
 from ..agent_models import ModelPlan
+from ..canonical import domain_hash
 
 
 class RemoteModelResponseError(RuntimeError):
@@ -85,6 +88,7 @@ class HttpModelAdapter:
         self._last_generation_id: str | None = None
         self._last_completion_sha256: str | None = None
         self._structured_output_validated = False
+        self._health_lock = Lock()
         self._service_tier = (
             "free_experimental"
             if self._openrouter and (model == "openrouter/free" or model.endswith(":free"))
@@ -92,24 +96,27 @@ class HttpModelAdapter:
         )
 
     def health(self) -> dict[str, Any]:
-        return {
-            "available": self._available,
-            "backend": self.production_kind,
-            "production_eligible": True,
-            "model": self._model,
-            "resolved_model": self._resolved_model,
-            "generation_id": self._last_generation_id,
-            "completion_sha256": self._last_completion_sha256,
-            "configured": True,
-            "live_call_verified": self._live_call_verified,
-            "structured_output_validated": self._structured_output_validated,
-            "structured_output_required": True,
-            "openrouter_require_parameters": self._openrouter,
-            "service_tier": self._service_tier,
-            "production_reliability_claimed": self._service_tier != "free_experimental",
-            "last_success_at": self._last_success_at,
-            "last_error_type": self._last_error_type,
-        }
+        with self._health_lock:
+            return {
+                "available": self._available,
+                "backend": self.production_kind,
+                "production_eligible": True,
+                "production_protocol_eligible": True,
+                "production_eligibility_scope": "configured_https_protocol_only",
+                "model": self._model,
+                "resolved_model": self._resolved_model,
+                "generation_id": self._last_generation_id,
+                "completion_sha256": self._last_completion_sha256,
+                "configured": True,
+                "live_call_verified": self._live_call_verified,
+                "structured_output_validated": self._structured_output_validated,
+                "structured_output_required": True,
+                "openrouter_require_parameters": self._openrouter,
+                "service_tier": self._service_tier,
+                "production_reliability_claimed": False,
+                "last_success_at": self._last_success_at,
+                "last_error_type": self._last_error_type,
+            }
 
     @staticmethod
     def _parse_plan(content: str, allowed_tools: tuple[str, ...]) -> ModelPlan:
@@ -132,6 +139,10 @@ class HttpModelAdapter:
         return ModelPlan(explanation, steps, tools)
 
     def plan(self, *, context: dict[str, Any], allowed_tools: tuple[str, ...]) -> ModelPlan:
+        model_context_hash = domain_hash(
+            "agent-model-context",
+            {"context": context, "allowed_tools": list(allowed_tools)},
+        )
         system = (
             "You plan operator-facing steps for a safety Agent. The supplied verdict is final. "
             "You cannot change target, amount, verdict, or authorize payment. Return only "
@@ -181,12 +192,13 @@ class HttpModelAdapter:
         }
         if self._openrouter:
             payload["provider"] = {"require_parameters": True}
-        self._available = False
-        self._live_call_verified = False
-        self._resolved_model = None
-        self._last_generation_id = None
-        self._last_completion_sha256 = None
-        self._structured_output_validated = False
+        with self._health_lock:
+            self._available = False
+            self._live_call_verified = False
+            self._resolved_model = None
+            self._last_generation_id = None
+            self._last_completion_sha256 = None
+            self._structured_output_validated = False
         try:
             response = httpx.post(
                 self._url,
@@ -212,21 +224,39 @@ class HttpModelAdapter:
             if not isinstance(content, str) or not content:
                 raise RemoteModelResponseError("remote model response has no content")
             plan = self._parse_plan(str(content), allowed_tools)
-            resolved_model = str(body.get("model", "")).strip()
-            self._resolved_model = resolved_model or None
-            generation_id = str(body.get("id", "")).strip()
-            self._last_generation_id = generation_id or None
-            self._last_completion_sha256 = sha256(str(content).encode()).hexdigest()
-            self._structured_output_validated = True
-            self._available = True
-            self._live_call_verified = True
-            self._last_success_at = datetime.now(UTC).isoformat()
-            self._last_error_type = None
-            return plan
+            resolved_model = str(body.get("model", "")).strip() or None
+            generation_id = str(body.get("id", "")).strip() or None
+            completion_sha256 = sha256(str(content).encode()).hexdigest()
+            completed_at = datetime.now(UTC).isoformat()
+            receipt = {
+                "schema_version": "1.0",
+                "backend": self.production_kind,
+                "configured_model": self._model,
+                "resolved_model": resolved_model,
+                "generation_id": generation_id,
+                "completion_sha256": completion_sha256,
+                "model_context_hash": model_context_hash,
+                "live_call_verified": True,
+                "structured_output_validated": True,
+                "service_tier": self._service_tier,
+                "production_reliability_claimed": False,
+                "completed_at": completed_at,
+            }
+            with self._health_lock:
+                self._resolved_model = resolved_model
+                self._last_generation_id = generation_id
+                self._last_completion_sha256 = completion_sha256
+                self._structured_output_validated = True
+                self._available = True
+                self._live_call_verified = True
+                self._last_success_at = completed_at
+                self._last_error_type = None
+            return replace(plan, model_receipt=receipt)
         except Exception as exc:
-            self._available = False
-            self._live_call_verified = False
-            self._last_error_type = type(exc).__name__
+            with self._health_lock:
+                self._available = False
+                self._live_call_verified = False
+                self._last_error_type = type(exc).__name__
             raise
 
     def probe(self) -> None:
