@@ -7,7 +7,7 @@ opened. It is a useful prototype, but it cannot honestly be presented as the fin
 contest build. The window is now open; all Agent/runtime changes below must land as
 substantive, auditable in-window commits.
 
-## P0 — turn the memory service into a real Agent — source implemented, runtime unverified
+## P0 — turn the memory service into a real Agent — deterministic path exercised
 
 The in-window source now adds a `MemoryGuardAgent` Module with two narrow Seams:
 
@@ -30,11 +30,19 @@ The Agent flow must be visible in the demo:
    rewrite causal memory, or inject operator instructions.
 
 Source acceptance is represented by `src/proofops_memoryguard/agent.py` and
-`docs/09_AGENT_INTERFACE_DECISION.md`. Runtime acceptance still requires a real
-remote model, fresh processes, and the deletion capture. A deterministic development
-planner with “Agent” in its name is not presented as contest runtime proof.
+`docs/09_AGENT_INTERFACE_DECISION.md`. On 2026-09-01, two local API processes
+exercised the READY-to-DENY tool-path change with `deterministic_test_planner` and an
+official Sibyl runtime. Full contest runtime acceptance still requires a real remote
+model and a continuous A/B/deletion capture. The deterministic exercise is not
+presented as remote-model proof.
 
 ## P0 — real fresh-session and deletion evidence
+
+Local evidence now records two distinct runtime IDs, the same action fingerprint,
+exact causal recall, and an isolated missing-SDK 503 result. See
+`evidence/2026-09-01_RUNTIME_EVIDENCE.md`. JSON cannot prove the operator's process
+restart or the checked-out source, and the missing-SDK probe did not delete an
+existing database, so the following capture work remains:
 
 - Display server UTC time and exact in-window Git commit in the product/video.
 - Run Session A, stop the Agent/API process, then start a fresh process on the same
@@ -49,7 +57,8 @@ planner with “Agent” in its name is not presented as contest runtime proof.
 
 1. The transparent pre-build boundary was committed and pushed as `c96325a`.
 2. After the window opened, implement the Agent loop and event stream in logical
-   commits; process-level evidence remains pending.
+   commits; local process behavior is recorded and the continuous capture remains
+   pending.
 3. Push each reviewable commit to the public repository.
 4. Record the exact public HEAD in `submission/status.json` and deployment metadata.
 5. Check every README source link on GitHub; local untracked files do not count.

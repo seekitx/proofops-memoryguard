@@ -8,10 +8,10 @@ memory deletion test.
 
 | Official requirement | MemoryGuard implementation | Final evidence still needed |
 |---|---|---|
-| Persist meaningful context | `SibylMemoryAdapter` writes trusted observations into WARM entities and COLD journal | Runtime capture of Session A write |
-| Recall in a fresh session | `MemoryGuard.decide` performs exact Sibyl lookup; browser Session B has a new session ID and no reused page state | Unedited restart/fresh-session video |
-| Recall changes behavior | Same intent changes from READY draft to DENY after trusted dispute/revocation | Decision diff in video and public proof |
-| Deletion test | Missing/invalid Sibyl Adapter returns `MEMORY_UNAVAILABLE`; no production fallback | Run deletion scenario when testing is authorized |
+| Persist meaningful context | `SibylMemoryAdapter` writes trusted observations into WARM entities and COLD journal; local Session A write observed | Unedited Session A capture and public proof |
+| Recall in a fresh session | `MemoryGuard.decide` performs exact Sibyl lookup; local A/B run observed distinct runtime IDs and exact recall | Unedited restart/fresh-session video |
+| Recall changes behavior | Local deterministic Agent path changed the same intent from READY draft to causal DENY | Decision diff with a real remote model in video and public proof |
+| Deletion/fail-closed test | Missing SDK/Adapter directly returned `503 MEMORY_BACKEND_UNAVAILABLE` for decision and Agent run; no fallback | Continuously record isolated removal/setup; do not relabel it as deletion of an existing database |
 | Public repo and real history | Public repository exists; implementation is split into reviewable commits | Commit and push after owner review |
 | README code pointers | README names exact write/read/finalize files | Re-check links after final file layout |
 | 2–5 minute demo | Single Session A → Session B story is scripted | Record and publish |

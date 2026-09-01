@@ -1,0 +1,61 @@
+{
+  "schema_version": "1.0",
+  "captured_at_utc": "2026-09-01T06:52:03Z",
+  "runtime_build_commit": "0a3b5595618566d97f973a6fec713ec72089edf5",
+  "scope": {
+    "python_tests": true,
+    "two_process_restart_demo": true,
+    "isolated_missing_sibyl_probe": true,
+    "remote_model": false,
+    "continuous_video": false,
+    "contract_compile": false,
+    "wallet_or_chain": false
+  },
+  "python": {
+    "version": "3.11.15",
+    "sibyl_distribution": "sibyl-memory-client",
+    "sibyl_version": "0.7.0",
+    "command": ".venv/bin/python -m pytest",
+    "result": "20 passed in 0.08s"
+  },
+  "restart_demo": {
+    "subject": "judge-03235320-937A-41A5-BECA-11E3498AB4ED",
+    "session_a_runtime_instance_id": "runtime_cb7f21148d894806a90b",
+    "session_b_runtime_instance_id": "runtime_549da928634d444c9aa0",
+    "different_runtime_instance": true,
+    "action_fingerprint": "2f5af98225f0e37ca06d81efd1cc115d83fc01d8695b73ec42b3419c803cf1c7",
+    "same_action_fingerprint": true,
+    "session_a_verdict": "ready",
+    "session_b_verdict": "deny",
+    "session_b_state": "block_and_escalate",
+    "dispute_observation_id": "obs_969afec3064f40828288",
+    "exact_dispute_recalled": true,
+    "cross_session": true,
+    "session_a_evidence_sha256": "13da856b3f373050df59a4c69684eef262be1456ff3a64e7e5b946ae2d6e4335",
+    "sdk_identity_ready": true,
+    "sdk_runtime_file_hashes_match_record": true,
+    "schema_version": 4,
+    "schema_compatible": true,
+    "model_kind": "deterministic_test_planner",
+    "review_tool_suppressed": true,
+    "escalation_tool_succeeded": true,
+    "non_executable_escalation": true,
+    "comparison_checks_passed": true,
+    "contest_gate_claimed": false
+  },
+  "isolated_probe": {
+    "sibyl_import_spec": null,
+    "health_status": 503,
+    "memory_backend": "sibyl_unavailable",
+    "memory_production_eligible": false,
+    "decision_status": 503,
+    "decision_error": "MEMORY_BACKEND_UNAVAILABLE",
+    "decision_executable": false,
+    "agent_run_status": 503,
+    "agent_error": "MEMORY_BACKEND_UNAVAILABLE",
+    "executable": false,
+    "fail_closed_response_observed": true,
+    "deletion_gate_claimed": false
+  },
+  "evidence_boundary": "The A/B output binds stored runs, synthetic facts, SDK identity metadata, a stable action fingerprint, and exact causal recall across two observed runtime IDs. JSON alone does not prove the process restart or checkout identity; an unedited continuous recording is still required. The isolated probe removes the official SDK from a separate runtime and proves 503 fail-closed behavior, not deletion of an existing Sibyl database. The planner was deterministic and is not remote-model evidence."
+}
