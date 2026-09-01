@@ -33,6 +33,48 @@ def post(base_url: str, path: str, body: dict[str, object]) -> dict[str, object]
         return json.loads(response.read())
 
 
+def get(base_url: str, path: str) -> dict[str, object]:
+    with urlopen(  # noqa: S310 - operator-supplied demo URL
+        f"{base_url.rstrip('/')}{path}", timeout=15
+    ) as response:
+        return json.loads(response.read())
+
+
+def runtime_evidence(runtime: dict[str, object]) -> dict[str, object]:
+    memory = runtime.get("memory") or {}
+    agent = runtime.get("agent") or {}
+    if not isinstance(memory, dict):
+        memory = {}
+    if not isinstance(agent, dict):
+        agent = {}
+    return {
+        "runtime_instance_id": agent.get("runtime_instance_id"),
+        "sdk_distribution": memory.get("sdk_distribution"),
+        "sdk_version": memory.get("sdk_version"),
+        "sdk_version_expected": memory.get("sdk_version_expected"),
+        "sdk_import_file_recorded_by_distribution": memory.get(
+            "sdk_import_file_recorded_by_distribution"
+        ),
+        "sdk_import_file_hash_matches_record": memory.get(
+            "sdk_import_file_hash_matches_record"
+        ),
+        "sdk_required_runtime_files_recorded": memory.get(
+            "sdk_required_runtime_files_recorded"
+        ),
+        "sdk_runtime_file_hashes_match_record": memory.get(
+            "sdk_runtime_file_hashes_match_record"
+        ),
+        "sdk_version_matches_pin": memory.get("sdk_version_matches_pin"),
+        "sdk_identity_ready": memory.get("sdk_identity_ready"),
+        "schema_version": memory.get("schema_version"),
+        "schema_version_expected": memory.get("schema_version_expected"),
+        "schema_compatible": memory.get("schema_compatible"),
+        "production_eligible": memory.get("production_eligible"),
+        "build_commit": runtime.get("build_commit"),
+        "server_time_utc": runtime.get("server_time_utc"),
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--base-url", default="http://localhost:8000")
@@ -40,6 +82,7 @@ def main() -> None:
     parser.add_argument("--evidence-out", type=Path, required=True)
     args = parser.parse_args()
     session = f"cli-a-{uuid.uuid4()}"
+    runtime = get(args.base_url, "/api/runtime")
 
     baseline = post(
         args.base_url,
@@ -89,14 +132,34 @@ def main() -> None:
     )
     evidence = {
         "session": session,
-        "runtime_instance_id": before.get("runtime_instance_id"),
-        "action_fingerprint": before.get("action_fingerprint"),
+        "subject_fingerprint": hashlib.sha256(args.subject.encode()).hexdigest(),
+        "fixed_action": {
+            "chain_id": 84532,
+            "target": TARGET,
+            "method": "payInvoice",
+            "amount_usd": 4200,
+        },
+        "sibyl_runtime": runtime_evidence(runtime),
         "baseline": baseline,
         "agent_before": before,
         "dispute": dispute,
     }
-    args.evidence_out.write_text(json.dumps(evidence, indent=2), encoding="utf-8")
-    print(json.dumps({**evidence, "evidence_out": str(args.evidence_out)}, indent=2))
+    rendered = json.dumps(evidence, indent=2)
+    args.evidence_out.write_text(rendered, encoding="utf-8")
+    print(
+        json.dumps(
+            {
+                **evidence,
+                "evidence_out": str(args.evidence_out),
+                "session_a_evidence_sha256": hashlib.sha256(rendered.encode()).hexdigest(),
+                "evidence_note": (
+                    "This digest detects manifest changes after Session A. The continuous "
+                    "screen recording remains the evidence that Session A actually ran."
+                ),
+            },
+            indent=2,
+        )
+    )
 
 
 if __name__ == "__main__":

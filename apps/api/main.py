@@ -45,6 +45,8 @@ def _build_guard(settings: Settings) -> MemoryGuard:
         tenant_id=settings.sibyl_tenant_id,
         policy=policy,
     )
+    if settings.app_env == "production" and not memory.health().get("production_eligible"):
+        raise ValueError("production requires the pinned Sibyl SDK import identity")
     anchor = DisabledAnchorAdapter()
     if settings.base_anchor_address:
         anchor = BaseAnchorAdapter(
@@ -76,6 +78,11 @@ def _build_agent(
         path=settings.sibyl_memory_path,
         tenant_id=settings.sibyl_tenant_id,
     )
+    if settings.app_env == "production":
+        if not ledger.health().get("production_eligible"):
+            raise ValueError("production requires the pinned Sibyl run-ledger SDK identity")
+        if not actions.health().get("production_eligible"):
+            raise ValueError("production requires the pinned Sibyl safety-action SDK identity")
     if settings.agent_model_mode == "remote":
         model = HttpModelAdapter(
             url=settings.agent_model_url,
@@ -225,10 +232,15 @@ async def health_live() -> dict[str, str]:
 
 @app.get("/health/ready")
 async def health_ready() -> JSONResponse:
+    settings: Settings = app.state.settings
     memory = get_guard().backend_status
     agent = get_agent().backend_status
     dependencies = (memory, agent["model"], agent["run_ledger"], agent["safe_actions"])
-    available = all(item.get("available") for item in dependencies)
+    available = all(
+        item.get("available")
+        and (settings.app_env != "production" or item.get("production_eligible"))
+        for item in dependencies
+    )
     content = {
         "status": "ready" if available else "degraded",
         "memory": memory,
