@@ -240,6 +240,13 @@ provider failure and the temporary URL is not durable hosting, so neither result
 replaces the required unedited video or a stable judge URL. See
 [`evidence/2026-09-01_OPENROUTER_HTTPS_EVIDENCE.md`](evidence/2026-09-01_OPENROUTER_HTTPS_EVIDENCE.md).
 
+The current evidence/dashboard hardening commit was revalidated on 2026-09-05 with
+another full local API stop/start, the same persistent Sibyl database, the same
+action fingerprint, exact causal dispute recall, `READY → DENY`, changed safety-tool
+path, and a fresh isolated missing-SDK probe. This deterministic local result and its
+limits are recorded in
+[`evidence/2026-09-05_RUNTIME_REVALIDATION.md`](evidence/2026-09-05_RUNTIME_REVALIDATION.md).
+
 ## Prior Work
 
 The original MemoryGuard foundation was created before the official build window

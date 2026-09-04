@@ -1,0 +1,137 @@
+{
+  "all_checks_passed": true,
+  "build_commit": "7f002fb56c7ce21187047f3e7b00255ef36327ce",
+  "capture_eligible": true,
+  "captured_at_utc": "2026-09-04T16:49:30.256965+00:00",
+  "checks": [
+    {
+      "evidence": {
+        "schema_compatible": true,
+        "sdk_distribution": "sibyl-memory-client",
+        "sdk_version": "0.7.0"
+      },
+      "id": "sdk_identity",
+      "label": "Official Sibyl SDK identity is production eligible",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "memory_version": 1,
+        "status": "accepted"
+      },
+      "id": "baseline_accepted",
+      "label": "Trusted baseline is accepted",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "state": "await_finalize",
+        "verdict": "ready"
+      },
+      "id": "session_a_ready",
+      "label": "Session A produces READY",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "artifact_kind": "non_executable_human_review_card",
+        "executable": false
+      },
+      "id": "non_executable_review",
+      "label": "READY creates only a non-executable review card",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "quarantined_fields": [
+          "raw_text"
+        ],
+        "raw_text_hash_present": true
+      },
+      "id": "prompt_injection_quarantined",
+      "label": "Instruction-like raw text is quarantined and not stored verbatim",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "state": "block_and_escalate",
+        "verdict": "deny"
+      },
+      "id": "session_b_deny",
+      "label": "Fresh Session B produces DENY",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "causal_memory_count": 1,
+        "matches_dispute": true
+      },
+      "id": "exact_causal_memory",
+      "label": "DENY names the exact dispute memory",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "cross_session": true,
+        "different_agent_instance_label": true,
+        "process_restart_proven": false
+      },
+      "id": "cross_session",
+      "label": "A new Agent/Adapter instance recalls the earlier dispute",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "same_action_fingerprint": true
+      },
+      "id": "same_action",
+      "label": "The compared action is identical",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "escalation_succeeded": true,
+        "review_suppressed": true
+      },
+      "id": "tool_path_changed",
+      "label": "Review is suppressed and escalation succeeds",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "observation_status": "review_required",
+        "verdict": "needs_human"
+      },
+      "id": "caller_data_not_trusted",
+      "label": "Caller-supplied baseline cannot authorize READY",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "actual_sdk_uninstall_proven": false,
+        "database_deletion_proven": false,
+        "executable": false,
+        "memory_backend_unavailable_raised": true
+      },
+      "id": "sibyl_unavailable_contract",
+      "label": "Unavailable Sibyl Adapter contract fails closed",
+      "passed": true
+    }
+  ],
+  "checks_passed": 12,
+  "checks_total": 12,
+  "evidence_boundary": "One local 12-check conformance story using new Agent/Adapter instances and the pinned official Sibyl SDK in a single Python process. It is not 12 independent scenarios, a process-restart proof, the required continuous demo video, public hosting, a production-model run, database deletion, Base/Virtuals integration, or PMF evidence.",
+  "git_dirty_at_capture": false,
+  "run_scope": {
+    "independent_scenarios_claimed": false,
+    "model_kind": "deterministic_test_planner",
+    "name": "12-check conformance run",
+    "new_agent_and_adapter_instances": true,
+    "process_restart_proven": false,
+    "production_agent_run": false,
+    "production_memory_guard_invariant_enabled": true,
+    "single_python_process": true
+  },
+  "schema_version": "1.0",
+  "uses_official_sibyl_sdk": true
+}

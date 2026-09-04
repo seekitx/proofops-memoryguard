@@ -326,7 +326,9 @@ def _load_json(path: Path) -> dict[str, Any]:
 async def evidence_summary() -> dict[str, Any]:
     """Return a redacted, claim-aware index of committed local evidence."""
 
-    runtime_evidence = _load_json(EVIDENCE_ROOT / "2026-09-01_RUNTIME_EVIDENCE.json")
+    current_local_evidence = _load_json(
+        EVIDENCE_ROOT / "2026-09-05_RUNTIME_REVALIDATION.json"
+    )
     remote_evidence = _load_json(
         EVIDENCE_ROOT / "2026-09-01_OPENROUTER_HTTPS_EVIDENCE.json"
     )
@@ -334,10 +336,10 @@ async def evidence_summary() -> dict[str, Any]:
     current_runtime = await runtime()
     current_commit = current_runtime.get("build_commit")
     benchmark_commit = benchmark.get("build_commit")
-    historical_commit = runtime_evidence.get("runtime_build_commit")
+    historical_commit = current_local_evidence.get("runtime_build_commit")
     remote_commit = remote_evidence.get("runtime_build_commit")
-    restart = runtime_evidence.get("restart_demo") or {}
-    isolated = runtime_evidence.get("isolated_probe") or {}
+    restart = current_local_evidence.get("process_restart") or {}
+    isolated = current_local_evidence.get("isolated_missing_sdk_probe") or {}
     hardening = remote_evidence.get("post_capture_hardening") or {}
     if not isinstance(restart, dict):
         restart = {}
@@ -424,6 +426,7 @@ async def evidence_summary() -> dict[str, Any]:
                 else []
             ),
             "evidence/2026-09-01_RUNTIME_EVIDENCE.json",
+            "evidence/2026-09-05_RUNTIME_REVALIDATION.json",
             "evidence/2026-09-01_OPENROUTER_HTTPS_EVIDENCE.json",
         ],
     }

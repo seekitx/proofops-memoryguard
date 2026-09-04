@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0",
+  "captured_at_utc": "2026-09-04T16:52:36Z",
+  "runtime_build_commit": "7f002fb56c7ce21187047f3e7b00255ef36327ce",
+  "scope": {
+    "local_process_restart": true,
+    "public_https": false,
+    "continuous_video": false,
+    "model_kind": "deterministic_test_planner",
+    "remote_model_receipt_bound": false,
+    "database_deletion_proven": false,
+    "contest_gate_claimed": false
+  },
+  "process_restart": {
+    "session_a_runtime_instance_id": "runtime_9ca7e40cad2a4e94a1dd",
+    "session_b_runtime_instance_id": "runtime_77b6c333af844871b79d",
+    "different_runtime_instance": true,
+    "same_build_commit": true,
+    "manifest_digest_matches": true,
+    "same_sibyl_sdk_metadata": true,
+    "sdk_distribution": "sibyl-memory-client",
+    "sdk_version": "0.7.0",
+    "schema_version": 4,
+    "session_a_verdict": "ready",
+    "session_a_state": "await_finalize",
+    "session_b_verdict": "deny",
+    "session_b_state": "block_and_escalate",
+    "action_fingerprint": "ac5fe9c7b6b4db2e1e6c996dcee1098a2e9222883dca3e64cc7fe7cab55028a1",
+    "same_action_fingerprint": true,
+    "dispute_observation_id": "obs_07b41dc530a043b98a92",
+    "exact_dispute_recalled": true,
+    "cross_session": true,
+    "review_tool_suppressed": true,
+    "escalation_tool_succeeded": true,
+    "non_executable_escalation": true,
+    "comparison_preflight_passed": true,
+    "comparison_checks_passed": true
+  },
+  "isolated_missing_sdk_probe": {
+    "official_sibyl_sdk_importable": false,
+    "health_status": 503,
+    "memory_backend": "sibyl_unavailable",
+    "decision_status": 503,
+    "decision_error": "MEMORY_BACKEND_UNAVAILABLE",
+    "decision_executable": false,
+    "agent_run_status": 503,
+    "agent_run_error": "MEMORY_BACKEND_UNAVAILABLE",
+    "agent_run_executable": false,
+    "fail_closed_response_observed": true,
+    "deletion_gate_claimed": false
+  },
+  "evidence_boundary": "The operator ran Session A, stopped the API process, started another API process on the same Sibyl database and commit, and ran Session B. The JSON binds the stored runs and detects manifest edits, but only a continuous recording can independently show the restart sequence. The isolated probe used a separate environment where the official SDK was not importable; it does not prove deletion of an existing database. The planner was deterministic, not a receipt-bound remote model."
+}
