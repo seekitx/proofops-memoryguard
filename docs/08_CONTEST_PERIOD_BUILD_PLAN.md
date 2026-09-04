@@ -50,6 +50,10 @@ and an isolated missing-SDK 503 result. See
 process restart or the checked-out source, and the missing-SDK probe did not delete
 an existing database, so the following capture work remains:
 
+On 2026-09-05, the repository also added a 12-check official-SDK judge benchmark and
+an `/evidence` dashboard. These close the public quantitative-evidence gap but do not
+replace the continuous A/B/deletion video.
+
 - Display server UTC time and exact in-window Git commit in the product/video.
 - Run Session A, stop the Agent/API process, then start a fresh process on the same
   persistent Sibyl database.

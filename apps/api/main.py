@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import time
 import uuid
 from collections.abc import AsyncIterator
@@ -32,10 +33,14 @@ from proofops_memoryguard.errors import (
 )
 from proofops_memoryguard.http import build_router
 from proofops_memoryguard.module import MemoryGuard
+from proofops_memoryguard.rate_limit import FixedWindowRateLimiter
 from proofops_memoryguard.settings import Settings
 
 ROOT = Path(__file__).resolve().parents[2]
 WEB_ROOT = ROOT / "apps" / "web"
+EVIDENCE_ROOT = ROOT / "evidence"
+AGENT_RUN_LIMITER = FixedWindowRateLimiter(limit=10, window_seconds=60)
+PUBLIC_WRITE_LIMITER = FixedWindowRateLimiter(limit=60, window_seconds=60)
 
 
 def _build_guard(settings: Settings) -> MemoryGuard:
@@ -90,8 +95,6 @@ def _build_agent(
             model=settings.agent_model_name,
             timeout_seconds=settings.agent_model_timeout_seconds,
         )
-        if settings.app_env == "production":
-            model.probe()
     else:
         model = DeterministicModelAdapter()
     return MemoryGuardAgent(
@@ -162,6 +165,20 @@ async def request_context(request: Request, call_next):  # type: ignore[no-untyp
             status_code=413,
             content={"error": "PAYLOAD_TOO_LARGE", "request_id": request_id},
         )
+    if request.method == "POST" and request.url.path.startswith("/api/"):
+        client_host = request.client.host if request.client else "unknown"
+        limiter = (
+            AGENT_RUN_LIMITER
+            if request.url.path == "/api/agent/runs"
+            else PUBLIC_WRITE_LIMITER
+        )
+        allowed, retry_after = limiter.allow(client_host)
+        if not allowed:
+            return JSONResponse(
+                status_code=429,
+                content={"error": "RATE_LIMITED", "request_id": request_id},
+                headers={"Retry-After": str(retry_after)},
+            )
     response = await call_next(request)
     response.headers["X-Request-ID"] = request_id
     response.headers["X-Response-Time-Ms"] = f"{(time.perf_counter() - started) * 1000:.2f}"
@@ -230,22 +247,44 @@ async def health_live() -> dict[str, str]:
     return {"status": "ok"}
 
 
+def readiness_snapshot(
+    *, app_env: str, memory: dict[str, Any], agent: dict[str, Any]
+) -> tuple[bool, dict[str, Any]]:
+    """Separate optional planner liveness from load-bearing safety stores."""
+
+    hard_dependencies = (memory, agent["run_ledger"], agent["safe_actions"])
+    hard_dependencies_ready = all(
+        item.get("available")
+        and (app_env != "production" or item.get("production_eligible"))
+        for item in hard_dependencies
+    )
+    model = agent["model"]
+    model_config_ready = bool(
+        model.get("production_eligible") if app_env == "production" else model.get("available")
+    )
+    ready = hard_dependencies_ready and model_config_ready
+    return ready, {
+        "status": "ready" if ready else "degraded",
+        "memory": memory,
+        "agent": agent,
+        "model_live": bool(model.get("live_call_verified") or model.get("available")),
+        "model_degraded": not bool(model.get("live_call_verified") or model.get("available")),
+        "safety_core_ready": hard_dependencies_ready,
+        "model_is_authority_dependency": False,
+        "safe_degradation": "deterministic verdict and mandatory safety action remain active",
+    }
+
+
 @app.get("/health/ready")
 async def health_ready() -> JSONResponse:
     settings: Settings = app.state.settings
     memory = get_guard().backend_status
     agent = get_agent().backend_status
-    dependencies = (memory, agent["model"], agent["run_ledger"], agent["safe_actions"])
-    available = all(
-        item.get("available")
-        and (settings.app_env != "production" or item.get("production_eligible"))
-        for item in dependencies
+    available, content = readiness_snapshot(
+        app_env=settings.app_env,
+        memory=memory,
+        agent=agent,
     )
-    content = {
-        "status": "ready" if available else "degraded",
-        "memory": memory,
-        "agent": agent,
-    }
     return JSONResponse(status_code=200 if available else 503, content=content)
 
 
@@ -275,6 +314,121 @@ async def runtime() -> dict[str, Any]:
     }
 
 
+def _load_json(path: Path) -> dict[str, Any]:
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+        return value if isinstance(value, dict) else {}
+    except (OSError, json.JSONDecodeError):
+        return {}
+
+
+@app.get("/api/evidence-summary")
+async def evidence_summary() -> dict[str, Any]:
+    """Return a redacted, claim-aware index of committed local evidence."""
+
+    runtime_evidence = _load_json(EVIDENCE_ROOT / "2026-09-01_RUNTIME_EVIDENCE.json")
+    remote_evidence = _load_json(
+        EVIDENCE_ROOT / "2026-09-01_OPENROUTER_HTTPS_EVIDENCE.json"
+    )
+    benchmark = _load_json(EVIDENCE_ROOT / "2026-09-05_JUDGE_BENCHMARK.json")
+    current_runtime = await runtime()
+    current_commit = current_runtime.get("build_commit")
+    benchmark_commit = benchmark.get("build_commit")
+    historical_commit = runtime_evidence.get("runtime_build_commit")
+    remote_commit = remote_evidence.get("runtime_build_commit")
+    restart = runtime_evidence.get("restart_demo") or {}
+    isolated = runtime_evidence.get("isolated_probe") or {}
+    hardening = remote_evidence.get("post_capture_hardening") or {}
+    if not isinstance(restart, dict):
+        restart = {}
+    if not isinstance(isolated, dict):
+        isolated = {}
+    if not isinstance(hardening, dict):
+        hardening = {}
+
+    return {
+        "schema_version": "1.0",
+        "scope": "Current server state and commit-labelled historical local evidence. A mismatch means the current build has not re-run that historical proof.",
+        "current_runtime": current_runtime,
+        "official_sibyl_benchmark": {
+            "label": "12-check conformance run",
+            "evidence_present": bool(benchmark),
+            "captured_at_utc": benchmark.get("captured_at_utc"),
+            "build_commit": benchmark_commit,
+            "current_runtime_commit": current_commit,
+            "current_build_matches": bool(
+                benchmark_commit and current_commit and benchmark_commit == current_commit
+            ),
+            "git_dirty_at_capture": benchmark.get("git_dirty_at_capture"),
+            "capture_eligible": benchmark.get("capture_eligible"),
+            "checks_passed": benchmark.get("checks_passed"),
+            "checks_total": benchmark.get("checks_total"),
+            "all_checks_passed": benchmark.get("all_checks_passed"),
+            "uses_official_sibyl_sdk": benchmark.get("uses_official_sibyl_sdk"),
+            "run_scope": benchmark.get("run_scope"),
+            "evidence_boundary": benchmark.get("evidence_boundary"),
+        },
+        "fresh_session_local_evidence": {
+            "evidence_class": "historical_process_restart_run",
+            "evidence_build_commit": historical_commit,
+            "current_runtime_commit": current_commit,
+            "current_build_matches": bool(
+                historical_commit and current_commit and historical_commit == current_commit
+            ),
+            "different_runtime_instance": restart.get("different_runtime_instance"),
+            "same_action_fingerprint": restart.get("same_action_fingerprint"),
+            "session_a_verdict": restart.get("session_a_verdict"),
+            "session_b_verdict": restart.get("session_b_verdict"),
+            "exact_dispute_recalled": restart.get("exact_dispute_recalled"),
+            "review_tool_suppressed": restart.get("review_tool_suppressed"),
+            "escalation_tool_succeeded": restart.get("escalation_tool_succeeded"),
+            "comparison_checks_passed": restart.get("comparison_checks_passed"),
+            "continuous_video_complete": False,
+        },
+        "isolated_fail_closed_evidence": {
+            "evidence_class": "historical_missing_sdk_probe",
+            "evidence_build_commit": historical_commit,
+            "current_runtime_commit": current_commit,
+            "current_build_matches": bool(
+                historical_commit and current_commit and historical_commit == current_commit
+            ),
+            "health_status": isolated.get("health_status"),
+            "decision_status": isolated.get("decision_status"),
+            "agent_run_status": isolated.get("agent_run_status"),
+            "fail_closed_response_observed": isolated.get(
+                "fail_closed_response_observed"
+            ),
+            "deletion_gate_claimed": False,
+        },
+        "remote_model_evidence": {
+            "evidence_build_commit": remote_commit,
+            "current_runtime_commit": current_commit,
+            "current_build_matches": bool(
+                remote_commit and current_commit and remote_commit == current_commit
+            ),
+            "legacy_generation_count": len(remote_evidence.get("generations") or []),
+            "receipt_bound_schema": hardening.get("agent_run_schema"),
+            "receipt_bound_live_ab_rerun": hardening.get("receipt_bound_live_ab_rerun"),
+            "production_reliability_claimed": False,
+        },
+        "claim_boundary": {
+            "base_multiplier_claimed": False,
+            "virtuals_multiplier_claimed": False,
+            "pmf_bonus_claimed": False,
+            "contest_gate_claimed_by_json": False,
+        },
+        "source_files": [
+            *(
+                ["evidence/2026-09-05_JUDGE_BENCHMARK.json"]
+                if benchmark
+                else []
+            ),
+            "evidence/2026-09-01_RUNTIME_EVIDENCE.json",
+            "evidence/2026-09-01_OPENROUTER_HTTPS_EVIDENCE.json",
+        ],
+    }
+
+
 @app.get("/", include_in_schema=False)
 async def index() -> FileResponse:
     return FileResponse(WEB_ROOT / "index.html")
@@ -283,3 +437,8 @@ async def index() -> FileResponse:
 @app.get("/proof", include_in_schema=False)
 async def proof_page() -> FileResponse:
     return FileResponse(WEB_ROOT / "proof.html")
+
+
+@app.get("/evidence", include_in_schema=False)
+async def evidence_page() -> FileResponse:
+    return FileResponse(WEB_ROOT / "evidence.html")

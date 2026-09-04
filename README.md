@@ -18,12 +18,17 @@ separately disclosed pre-build baseline. After the official 2026-09-01 00:00 UTC
 window opened, this repository added a substantive `MemoryGuardAgent`: a real model
 Seam, Sibyl-backed run ledger, verdict-gated tool executor, resumable runs, and
 executor-generated inspectable traces. The deterministic Agent path, two-process
-Sibyl recall, and isolated missing-SDK fail-closed behavior have now been exercised
-locally. Remote-model proof, continuous video, Base evidence, hosted demo, posts, and
-PMF artifact are not claimed yet. See
+Sibyl recall, isolated missing-SDK fail-closed behavior, and a 12-check official-SDK
+benchmark have now been exercised locally. A legacy remote-model A/B exists, while
+the receipt-bound live rerun, continuous video, Base evidence, durable hosted demo,
+posts, and PMF artifact are not claimed yet. See
 [manual completion gates](docs/07_MANUAL_COMPLETION_GATES.md).
 
 ## Judge path — under two minutes
+
+The hosted build exposes a redacted evidence dashboard at `/evidence`. It keeps
+automated local checks, live runtime state, and still-missing human/external proof
+visibly separate.
 
 1. Open the demo and establish a trusted `$5,000` target baseline in **Session A**.
 2. Run the guarded Agent on a `$4,200` goal. MemoryGuard returns `READY`; the
@@ -91,7 +96,11 @@ the product never claims that it moved money.
 Development defaults to a clearly labelled deterministic planner so the repository
 can be inspected without a secret. Contest production refuses to start unless
 `AGENT_MODEL_MODE=remote` and a real HTTPS model endpoint, model name, and API key
-are configured. The authorized contest run also exercised strict structured output
+are configured. A configured model provider is not decision authority: if it is
+temporarily unavailable, the Agent records `planning_degraded=true` and still runs
+the deterministic verdict plus mandatory review/escalation action. Sibyl Memory,
+the Sibyl run ledger, and Sibyl safety-action storage remain hard dependencies.
+The authorized contest run also exercised strict structured output
 through an OpenRouter free model across a full API restart; its generation IDs,
 completion hashes, legacy runtime-health binding limitation, and later receipt
 hardening are recorded in
@@ -145,6 +154,20 @@ Sibyl dependency is intentionally unavailable. Its output is evidence only after
 isolated runtime has really been started and the script has passed; the source file
 alone proves nothing.
 
+Run the small, redacted judge benchmark with:
+
+```bash
+python scripts/judge_benchmark.py \
+  --json-out evidence/2026-09-05_JUDGE_BENCHMARK.json \
+  --markdown-out evidence/2026-09-05_JUDGE_BENCHMARK.md
+```
+
+It checks 12 explicit safety properties against the pinned official Sibyl SDK,
+including fresh-runtime `READY → DENY`, exact causal recall, prompt-injection
+quarantine, changed tool path, caller-data rejection, and missing-Sibyl fail closed.
+It is a project-generated engineering check—not an independent evaluation, a user
+study, the required continuous video, or PMF evidence.
+
 ## Base proof anchor
 
 [`MemoryProofAnchor.sol`](contracts/src/MemoryProofAnchor.sol) stores only:
@@ -189,8 +212,10 @@ The repository includes focused tests for:
 - adversarial model requests for an unregistered payment tool being suppressed;
 - Agent request idempotency and production Adapter rejection.
 
-On 2026-09-01, the latest authorized Python 3.11 run completed with `24 passed`
-using `.venv/bin/python -m pytest`. The remote-model evidence path now persists a
+On 2026-09-05, the latest authorized Python run completed with `31 passed` using
+`.venv/bin/python -m pytest`. This includes the 12-check benchmark behavior,
+production readiness under an optional model outage, and the public write-rate
+guard. The remote-model evidence path persists a
 non-secret model receipt in the same Sibyl Agent run and binds it to the tool trace;
 tampering with the generation ID fails the run integrity check. A successful live
 receipt-bound A/B rerun is still pending because the free providers later returned
@@ -250,6 +275,9 @@ We did not label adjacent Base projects as Sibyl winners.
 - [Demo, video, and submission runbook](docs/06_DEMO_AND_SUBMISSION.md)
 - [Manual completion gates](docs/07_MANUAL_COMPLETION_GATES.md)
 - [In-window Agent interface decision](docs/09_AGENT_INTERFACE_DECISION.md)
+- [2026-09-05 official rules refresh](docs/research/SIBYL_OFFICIAL_REFRESH_2026-09-05.md)
+- [Competitive closure plan](docs/10_COMPETITIVE_CLOSURE_PLAN_2026-09-05.md)
+- [Copy-ready submission pack](submission/FINAL_SUBMISSION_PACK.md)
 
 ## License
 

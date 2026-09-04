@@ -22,12 +22,13 @@ winners September 13–15. Recheck the live site before relying on these dates.
 | Real Agent behavior | **Legacy OpenRouter A/B observed; receipt-bound rerun blocked by free-tier failures** | Schema 1.1 receipt-bound generation IDs/output hashes in both Agent runs; repeat in continuous video | Adjacent runtime health is called cryptographic run binding |
 | Prior Work boundary | Awaiting owner review | Pre-build snapshot and in-window delta are both explicit | Filesystem/Git dates imply a false build story |
 | Local dependency install | **Passed on Python 3.11.15** | Official `sibyl-memory-client==0.7.0` and project dev dependencies installed in `.venv` | README exists but runtime was never started |
-| Python tests | **24 passed on 2026-09-01** | `.venv/bin/python -m pytest` completed in 0.11 s after model-receipt binding and tamper rejection were added | Presence of tests is called “passing” |
+| Python tests | **31 passed on 2026-09-05** | `.venv/bin/python -m pytest` completed after the judge benchmark, readiness degradation, and rate-limit tests were added | Presence of tests is called “passing” |
+| Public judge benchmark | **12/12 local checks passed; final clean-commit capture pending** | Committed JSON/Markdown linked from `/evidence`, with `git_dirty_at_capture=false` | Self-generated checks are called independent evaluation or PMF |
 | Contract compile/test | Supplied, not run | Clean Hardhat compile/test output | Source alone is called deployed/verified |
 | Real fresh-session Sibyl run | **Local and public HTTPS two-process behavior observed; schema 1.1 remote rerun and video missing** | One unedited capture of separate A/B processes, same action hash, exact causal DENY, receipt-bound successful remote generations, and visible commit | JSON alone is said to prove the restart/checkout |
 | Missing-Sibyl fail-closed probe | **Passed in isolated environment** | `find_spec` is absent; readiness and Agent run return 503; `executable=false` | The normal environment is mutated or a fallback succeeds |
 | Contest deletion capture | **Not complete** | Continuous recording of the isolated setup/removal and fail-closed result accepted by the live rubric | Missing-SDK probe is relabelled as deletion of an existing database |
-| Public HTTPS deployment | **Temporary Quick Tunnel verified; durable judge URL missing** | Stable public URL, persistent disk or owner-controlled always-on host, and restart/redeploy persistence | Random Quick Tunnel URL is called durable hosting |
+| Public HTTPS deployment | **Render blueprint prepared; payment/deployment not completed; temporary Quick Tunnel is not durable** | Stable public URL, persistent disk, `/evidence`, and restart/redeploy persistence | Blueprint or random Quick Tunnel URL is called durable hosting |
 | Base deployment | Missing | Owner-approved deploy tx and contract address | Old BSC address or config placeholder |
 | Base exercised action | Missing | Wallet-confirmed anchor tx plus verified receipt/event/root | Deploy tx only, pending tx, or screenshot |
 | Base multiplier wording | Blocked on evidence/rule confirmation | Partner rule confirmed plus exercised integration | “Prepared” or testnet ambiguity treated as credit |
@@ -35,9 +36,9 @@ winners September 13–15. Recheck the live site before relying on these dates.
 | PMF bonus | Missing/not claimed | Public waitlist, pilot, user interviews, or usage artifact | Old SafeHire users/evidence relabeled |
 | Demo video | Missing | Public unedited 2–5 minute URL | Edited montage or fake deletion result |
 | Two public posts | Missing | Two public URLs with currently required tags | Draft text only |
-| Private build-page fields | **All fields currently empty; verified memory draft ready for approval** | Saved repo, deletion impact, walkthrough, and honest primitives now; video/posts after publication | Draft text or private-link possession alone |
+| Private build-page fields | **All fields were still empty on 2026-09-05; copy-ready pack exists** | Saved repo, deletion impact, walkthrough, and honest primitives now; video/posts after publication | Draft text or private-link possession alone |
 | Private build-page submission | Not marked ready | Dashboard confirmation | Public repo alone |
-| Final repo push/history | **Receipt hardening `ea561f8` and honest evidence `be6532c` pushed; final status sync pending** | Reviewable contest-period commits on public repo and local/remote HEAD equality after the final sync | One opaque dump or unpushed changes |
+| Final repo push/history | **New evidence/deployment hardening is local and unpushed while under review** | Reviewable contest-period commits on public repo and local/remote HEAD equality after final sync | One opaque dump or unpushed changes |
 
 ## Owner decisions before any irreversible action
 

@@ -104,7 +104,11 @@
     button.disabled = true;
     try {
       const result = await operation();
-      state(name, "COMPLETE", "success");
+      state(
+        name,
+        result && result.planning_degraded ? "SAFE DEGRADED" : "COMPLETE",
+        result && result.planning_degraded ? "working" : "success",
+      );
       output(name, result);
       return result;
     } catch (error) {
@@ -181,11 +185,12 @@
       idempotency_key: `decision-ready_${(await sha256(`${subject}:${sessionId}`)).slice(0, 32)}`,
     };
     const result = await api("/api/agent/runs", { method: "POST", body });
-    if (result.planning_degraded) {
-      throw Object.assign(new Error("External model failed; Agent remained safe-only"), { body: result });
-    }
     if (result.state !== "await_finalize" || !result.artifacts["human_review.prepare"]) {
       throw Object.assign(new Error("Mandatory review artifact was not created"), { body: result });
+    }
+    if (result.planning_degraded) {
+      state("ready", "SAFE DEGRADED", "working");
+      showToast("The optional model plan failed. The deterministic verdict and mandatory review action still completed safely.");
     }
     loadRuntime();
     latestRun = result;
@@ -210,6 +215,9 @@
       intent_hash: result.decision.intent_hash,
       proof_root: result.proof_root,
       note: "The Agent created only non-executable safety artifacts. The optional brief appears only when the model requested it; no payment tool exists.",
+      model_outage_boundary: result.planning_degraded
+        ? "The remote model was unavailable. Sibyl recall, the verdict, and mandatory human_review.prepare remained active."
+        : "The remote model returned a receipt-bound optional plan.",
     };
   }));
 
@@ -258,11 +266,12 @@
       idempotency_key: `decision-deny_${(await sha256(`${subject}:${sessionId}`)).slice(0, 32)}`,
     };
     const result = await api("/api/agent/runs", { method: "POST", body });
-    if (result.planning_degraded) {
-      throw Object.assign(new Error("External model failed; Agent remained safe-only"), { body: result });
-    }
     if (result.state !== "block_and_escalate" || !result.artifacts["operator_escalation.create"]) {
       throw Object.assign(new Error("Mandatory escalation artifact was not created"), { body: result });
+    }
+    if (result.planning_degraded) {
+      state("deny", "SAFE DEGRADED", "working");
+      showToast("The optional model plan failed. The causal DENY and mandatory escalation still completed safely.");
     }
     loadRuntime();
     latestRun = result;
@@ -291,6 +300,9 @@
       intent_hash: result.decision.intent_hash,
       proof_root: result.proof_root,
       conclusion: "The same intent was blocked and the escalation tool replaced the review-preparation tool because Session B recalled Session A's dispute.",
+      model_outage_boundary: result.planning_degraded
+        ? "The remote model was unavailable. Sibyl recall, causal DENY, review suppression, and escalation remained active."
+        : "The remote model returned a receipt-bound optional plan.",
     };
   }));
 

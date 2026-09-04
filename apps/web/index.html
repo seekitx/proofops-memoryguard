@@ -20,6 +20,7 @@
     </a>
     <nav aria-label="Primary navigation">
       <a href="#live-demo">Live demo</a>
+      <a href="/evidence">Judge evidence</a>
       <a href="/proof">Proof inspector</a>
       <a href="https://github.com/seekitx/proofops-memoryguard" target="_blank" rel="noreferrer">GitHub ↗</a>
     </nav>
@@ -33,7 +34,7 @@
         <h1>Forgetting is<br /><em>a security bug.</em></h1>
         <p class="lede">MemoryGuard remembers the dispute an Agent would otherwise forget, quarantines the instruction that tries to rewrite it, and blocks the same payment in a fresh session.</p>
         <div class="hero-actions">
-          <a class="button primary" href="#live-demo">Run the deletion-test story</a>
+          <a class="button primary" href="#live-demo">Run the guarded-memory story</a>
           <a class="button ghost" href="https://hack.sibyllabs.org/rules" target="_blank" rel="noreferrer">Read official rules ↗</a>
         </div>
         <p class="honesty"><span>IN-WINDOW AGENT BUILD</span> Built on a separately committed and disclosed pre-build prototype. Synthetic vendor data only. No payment is sent. Base credit is not claimed until a real anchor receipt is verified.</p>
@@ -187,17 +188,21 @@
     <section class="deletion shell">
       <div class="section-index">03 / THE DELETION TEST</div>
       <div class="deletion-grid">
-        <div><h2>Remove Sibyl.<br />Authority disappears.</h2><p><strong>UNRUN / EXPECTED ONLY.</strong> In development, a missing runtime Adapter returns <code>MEMORY_BACKEND_UNAVAILABLE</code>; in production, missing Sibyl prevents startup. Corrupt persisted proof chains fail with <code>MEMORY_INTEGRITY_FAILED</code>. There is no JSON fallback.</p></div>
+        <div><h2>Remove Sibyl.<br />Authority disappears.</h2><p><strong>VERIFIED IN AN ISOLATED LOCAL PROBE.</strong> A runtime with the official Sibyl SDK intentionally unavailable returned <code>503 MEMORY_BACKEND_UNAVAILABLE</code> for readiness, decision, and Agent run, with <code>executable: false</code> and no fallback. This is not presented as deletion of an existing database; the continuous contest capture is still pending. <a href="/evidence">Inspect the evidence boundary →</a></p></div>
         <div class="terminal" aria-label="Deletion test expected output">
-          <div class="terminal-bar"><span></span><span></span><span></span><b>EXPECTED ONLY · UNRUN</b></div>
-          <pre><i>#</i> illustrative development response — not runtime evidence
-<i>$</i> remove Sibyl Memory Adapter
+          <div class="terminal-bar"><span></span><span></span><span></span><b>LOCAL PROBE OBSERVED · VIDEO PENDING</b></div>
+          <pre><i>#</i> isolated runtime without importable Sibyl SDK
+<i>$</i> GET /health/ready
+<b>503 degraded · backend: sibyl_unavailable</b>
+
 <i>$</i> POST /api/agent/runs
 
 <b>503 MEMORY_BACKEND_UNAVAILABLE</b>
 verdict: memory_unavailable
 executable: false
-fallback: none</pre>
+fallback: none
+
+<i>#</i> contest deletion gate claimed: false</pre>
         </div>
       </div>
     </section>

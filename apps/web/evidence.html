@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Claim-aware MemoryGuard judge evidence: live runtime, Sibyl benchmark, restart comparison, and fail-closed boundaries." />
+  <title>MemoryGuard Judge Evidence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/memoryguard.css" />
+</head>
+<body class="proof-page evidence-page">
+  <div class="noise" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="brand" href="/"><span class="brand-mark">M/G</span><span><strong>ProofOps</strong><small>JUDGE EVIDENCE</small></span></a>
+    <nav><a href="/">← Demo</a><a href="/proof">Proof inspector</a><a href="https://github.com/seekitx/proofops-memoryguard" target="_blank" rel="noreferrer">Source ↗</a></nav>
+  </header>
+  <main class="proof-shell shell">
+    <div class="section-index">PUBLIC / REDACTED / CLAIM-AWARE</div>
+    <h1>Evidence, not adjectives.</h1>
+    <p>This page separates what the current server reports, what committed local evidence measured, and what still requires an unedited video or external action.</p>
+
+    <div class="evidence-status" id="evidenceStatus">Loading the current runtime and committed evidence…</div>
+    <section class="evidence-cards" aria-label="Judge evidence summary">
+      <article><small>LIVE RUNTIME</small><strong id="runtimeState">checking</strong><p id="runtimeDetail">Waiting for the server.</p></article>
+      <article><small>12-CHECK SIBYL CONFORMANCE</small><strong id="benchmarkState">checking</strong><p id="benchmarkDetail">Waiting for committed evidence.</p></article>
+      <article><small>HISTORICAL PROCESS RESTART</small><strong id="restartState">checking</strong><p id="restartDetail">Waiting for committed evidence.</p></article>
+      <article><small>ISOLATED FAIL-CLOSED</small><strong id="failClosedState">checking</strong><p id="failClosedDetail">Waiting for committed evidence.</p></article>
+    </section>
+
+    <section class="claim-matrix">
+      <div>
+        <div class="section-index inverse">WHAT THE RECORD SUPPORTS</div>
+        <ul>
+          <li>Exact Sibyl-backed risk memory changes the same action from READY to DENY.</li>
+          <li>The review tool is suppressed and the escalation tool replaces it.</li>
+          <li>The tested instruction-like payload was quarantined; the design invariant is linked in source and tests.</li>
+          <li>Missing Sibyl returns a non-executable 503 with no alternate memory.</li>
+        </ul>
+      </div>
+      <div class="not-claimed-panel">
+        <div class="section-index inverse">NOT PROVEN BY THIS PAGE</div>
+        <ul>
+          <li>An unedited physical process restart — the contest video must show it.</li>
+          <li>Deletion of an existing production database — the historical probe removed the SDK in isolation.</li>
+          <li>Base or Virtuals multiplier, PMF, production model reliability, or official submission.</li>
+        </ul>
+      </div>
+    </section>
+
+    <details class="evidence-raw">
+      <summary>Open redacted machine-readable summary</summary>
+      <pre id="evidenceRaw">Loading…</pre>
+    </details>
+
+    <div class="proof-rules">
+      <article><strong>Re-run it</strong><p>From a repository checkout, <code>python scripts/judge_benchmark.py</code> creates one public 12-check conformance report with a temporary official Sibyl database.</p></article>
+      <article><strong>Read the boundary</strong><p>JSON can bind outputs to a commit. It cannot prove that a human really stopped and restarted a process on camera.</p></article>
+      <article><strong>Follow the source</strong><p>The README links directly to the Sibyl write, recall, decision, Agent tool gate, and proof verifier.</p></article>
+    </div>
+  </main>
+  <script>
+    (() => {
+      const byId = (id) => document.getElementById(id);
+      const yes = (value) => value === true;
+
+      fetch("/api/evidence-summary", { headers: { "X-Request-ID": `evidence_${crypto.randomUUID()}` } })
+        .then(async (response) => {
+          const body = await response.json();
+          if (!response.ok) throw new Error(body.error || `HTTP ${response.status}`);
+          return body;
+        })
+        .then((body) => {
+          const runtime = body.current_runtime || {};
+          const memory = runtime.memory || {};
+          const agent = runtime.agent || {};
+          const model = agent.model || {};
+          const benchmark = body.official_sibyl_benchmark || {};
+          const restart = body.fresh_session_local_evidence || {};
+          const failClosed = body.isolated_fail_closed_evidence || {};
+
+          byId("evidenceStatus").textContent = body.scope;
+          const sibylReady = Boolean(memory.available && memory.production_eligible);
+          byId("runtimeState").textContent = sibylReady ? "SAFETY CORE READY" : "SAFETY CORE UNAVAILABLE";
+          byId("runtimeDetail").textContent = `${runtime.app_env || "unknown env"} · build ${runtime.build_commit || "unknown"} · ${memory.sdk_distribution || "unknown SDK"} ${memory.sdk_version || ""} · schema ${memory.schema_version || "?"} · model live: ${Boolean(model.live_call_verified)}`;
+
+          const benchmarkValid = yes(benchmark.capture_eligible) && yes(benchmark.uses_official_sibyl_sdk);
+          byId("benchmarkState").textContent = benchmarkValid
+            ? `${benchmark.checks_passed}/${benchmark.checks_total} PASSED`
+            : "NOT CURRENTLY VERIFIED";
+          const benchmarkMatch = yes(benchmark.current_build_matches) ? "CURRENT BUILD MATCH" : "HISTORICAL / CURRENT BUILD NOT RE-RUN";
+          byId("benchmarkDetail").textContent = benchmarkValid
+            ? `${benchmarkMatch} · evidence commit ${benchmark.build_commit}. ${benchmark.evidence_boundary}`
+            : "No clean, committed 12-check conformance capture is available yet.";
+
+          const restartPassed = yes(restart.comparison_checks_passed)
+            && yes(restart.different_runtime_instance)
+            && yes(restart.same_action_fingerprint)
+            && yes(restart.exact_dispute_recalled);
+          byId("restartState").textContent = restartPassed ? "READY → DENY · HISTORICAL" : "NOT VERIFIED";
+          byId("restartDetail").textContent = restartPassed
+            ? `Evidence commit ${restart.evidence_build_commit || "unknown"} · current build match: ${yes(restart.current_build_matches)}. Different runtime IDs, identical action fingerprint, exact causal dispute. Continuous contest video remains pending.`
+            : "The committed comparison did not satisfy every check.";
+
+          byId("failClosedState").textContent = yes(failClosed.fail_closed_response_observed)
+            ? "503 / NO FALLBACK"
+            : "NOT VERIFIED";
+          byId("failClosedDetail").textContent = yes(failClosed.fail_closed_response_observed)
+            ? `Historical evidence commit ${failClosed.evidence_build_commit || "unknown"} · current build match: ${yes(failClosed.current_build_matches)}. The isolated missing-Sibyl runtime returned 503. This is not relabelled as database deletion.`
+            : "Run and capture the isolated probe.";
+          byId("evidenceRaw").textContent = JSON.stringify(body, null, 2);
+        })
+        .catch((error) => {
+          byId("evidenceStatus").textContent = `Evidence endpoint unavailable: ${error.message}`;
+          byId("evidenceRaw").textContent = JSON.stringify({ error: error.message, executable: false }, null, 2);
+        });
+    })();
+  </script>
+</body>
+</html>
