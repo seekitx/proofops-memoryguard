@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-09-01T08:13:30Z",
+  "updated_at": "2026-09-04T16:52:36Z",
   "claims": {
     "registration_confirmed": {
       "state": "verified",
@@ -8,15 +8,15 @@
     },
     "private_build_page_access": {
       "state": "verified_read_only",
-      "evidence": "Private build page opened and inspected read-only on 2026-09-01; edit token intentionally not stored"
+      "evidence": "Private build page opened and inspected read-only again on 2026-09-05 Beijing time; edit token intentionally not stored"
     },
     "build_page_current_milestones": {
       "state": "all_empty",
-      "evidence": "Public repo, demo video, two posts, and memory fields were all unfilled; nothing saved and not marked ready"
+      "evidence": "On 2026-09-05 the public repo, demo video, two posts, and memory milestones were all still empty; primitives and ready were not selected; nothing was saved"
     },
     "build_page_team_and_builders": {
       "state": "human_required",
-      "evidence": null
+      "evidence": "Official public submission instructions require team and partner stacks, but the private page inspected on 2026-09-05 had no separate editable field; organizer clarification may be required"
     },
     "build_page_partner_stacks": {
       "state": "human_required",
@@ -24,15 +24,15 @@
     },
     "memory_implementation_note": {
       "state": "drafted_unsubmitted",
-      "evidence": "docs/06_DEMO_AND_SUBMISSION.md and README.md"
+      "evidence": "submission/FINAL_SUBMISSION_PACK.md, docs/06_DEMO_AND_SUBMISSION.md, and README.md"
     },
     "repository_public": {
       "state": "verified",
       "evidence": "https://github.com/seekitx/proofops-memoryguard"
     },
     "repository_head_pushed": {
-      "state": "verified",
-      "evidence": "git rev-parse HEAD and git ls-remote origin refs/heads/main both returned be6532c1d3f64614ca6b661708f90eb20e5a84ba after pushing the receipt-bound implementation and honest legacy-evidence boundary"
+      "state": "final_sync_pending",
+      "evidence": "Code/evidence hardening commit 7f002fb56c7ce21187047f3e7b00255ef36327ce was created locally and revalidated; generated evidence and final status still require their own commit and push"
     },
     "prior_work_boundary_reviewed": {
       "state": "human_required",
@@ -40,7 +40,7 @@
     },
     "contest_period_implementation": {
       "state": "implemented_and_locally_exercised",
-      "evidence": "Public in-window history includes Agent 2a2775f8c19ced4f8d463c6da238f6ef4ccb8641, legacy OpenRouter run build 21f3d4b27bb59bf39337843ea4e7233e2bf98c38, receipt-bound hardening ea561f8256319da168a5a33d6e3e529b128f04e7, and evidence commit be6532c1d3f64614ca6b661708f90eb20e5a84ba"
+      "evidence": "In-window history includes the Agent interface, receipt-bound model hardening, and code/evidence dashboard commit 7f002fb56c7ce21187047f3e7b00255ef36327ce"
     },
     "real_agent_behavior": {
       "state": "legacy_remote_model_observed_receipt_bound_rerun_pending",
@@ -60,15 +60,19 @@
     },
     "python_tests": {
       "state": "verified",
-      "evidence": ".venv/bin/python -m pytest: 24 passed in 0.11s on 2026-09-01 after model-receipt binding and tamper rejection were added"
+      "evidence": ".venv/bin/python -m pytest: 31 passed in 0.34s on 2026-09-05 Beijing time"
+    },
+    "judge_conformance": {
+      "state": "verified_local_clean_commit",
+      "evidence": "12/12 checks passed against clean commit 7f002fb56c7ce21187047f3e7b00255ef36327ce using the official Sibyl SDK; one single-process conformance story, not 12 independent scenarios or restart/video proof"
     },
     "fresh_session_runtime": {
-      "state": "local_and_public_https_two_process_legacy_remote_evidence_video_missing",
-      "evidence": "Different runtime IDs, same action fingerprint, exact dispute recall, READY to DENY, and two legacy OpenRouter generation observations; evidence/2026-09-01_OPENROUTER_HTTPS_EVIDENCE.json. Schema 1.1 receipt-bound A/B and the unedited video remain open"
+      "state": "local_two_process_revalidated_video_and_receipt_bound_remote_missing",
+      "evidence": "Commit 7f002fb56c7ce21187047f3e7b00255ef36327ce was revalidated across a real local API stop/start with different runtime IDs, same action fingerprint, exact dispute recall, READY to DENY, and changed safety tool path. JSON cannot prove the restart; continuous video and schema 1.1 live remote-model rerun remain open"
     },
     "deletion_test": {
       "state": "missing_sdk_fail_closed_verified_deletion_video_pending",
-      "evidence": "Isolated runtime with no sibyl_memory_client returned 503 for readiness, direct decision, and Agent run with executable=false. Existing database deletion and continuous recording remain pending"
+      "evidence": "Fresh isolated environment without importable sibyl_memory_client returned 503 for readiness, direct decision, and Agent run with executable=false on commit 7f002fb56c7ce21187047f3e7b00255ef36327ce. Existing database deletion and continuous recording remain pending"
     },
     "base_contract": {
       "state": "implemented_uncompiled",
@@ -87,8 +91,8 @@
       "evidence": null
     },
     "public_deployment": {
-      "state": "temporary_public_https_verified_self_hosted",
-      "evidence": "Cloudflare Quick Tunnel returned 200 for /, /proof, and /health/ready and survived an API restart on the same local persistent Sibyl database. The random URL and Mac-hosted process are not durable judge hosting; see evidence/2026-09-01_OPENROUTER_HTTPS_EVIDENCE.json"
+      "state": "render_blueprint_ready_payment_and_creation_pending",
+      "evidence": "Render blueprint uses Docker, Starter plan, a 1GB persistent disk, and /health/ready. Prior browser flow reached Render payment confirmation; no durable service or billing was created. Temporary Cloudflare HTTPS evidence remains historical only"
     },
     "demo_video": {
       "state": "missing",
