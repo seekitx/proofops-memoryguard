@@ -33,7 +33,8 @@ services:
       - key: AGENT_MODEL_API_KEY
         sync: false
       - key: AGENT_MODEL_NAME
-        value: openrouter/free
+        # Pin the free model so the demo does not inherit router-to-router schema variance.
+        value: nvidia/nemotron-3-super-120b-a12b:free
       - key: BASE_CHAIN_ID
         value: "84532"
       - key: BASE_NETWORK
