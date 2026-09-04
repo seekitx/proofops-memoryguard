@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-09-04T16:52:36Z",
+  "updated_at": "2026-09-04T16:59:00Z",
   "claims": {
     "registration_confirmed": {
       "state": "verified",
@@ -11,8 +11,8 @@
       "evidence": "Private build page opened and inspected read-only again on 2026-09-05 Beijing time; edit token intentionally not stored"
     },
     "build_page_current_milestones": {
-      "state": "all_empty",
-      "evidence": "On 2026-09-05 the public repo, demo video, two posts, and memory milestones were all still empty; primitives and ready were not selected; nothing was saved"
+      "state": "repo_and_memory_saved_video_and_posts_missing",
+      "evidence": "On 2026-09-05 the public repo URL, deletion impact, three-line memory walkthrough, recall and entities were saved successfully. Repo and Memory fields show complete; demo video and two posts remain empty; ready remains unmarked"
     },
     "build_page_team_and_builders": {
       "state": "human_required",
@@ -23,8 +23,8 @@
       "evidence": "Only claim partner stacks exercised in the demo"
     },
     "memory_implementation_note": {
-      "state": "drafted_unsubmitted",
-      "evidence": "submission/FINAL_SUBMISSION_PACK.md, docs/06_DEMO_AND_SUBMISSION.md, and README.md"
+      "state": "saved_to_private_build_page",
+      "evidence": "Private build page now contains the copy-reviewed deletion impact and three-line walkthrough; only recall and entities were selected"
     },
     "repository_public": {
       "state": "verified",
