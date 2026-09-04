@@ -24,9 +24,11 @@
     <div class="evidence-status" id="evidenceStatus">Loading the current runtime and committed evidence…</div>
     <section class="evidence-cards" aria-label="Judge evidence summary">
       <article><small>LIVE RUNTIME</small><strong id="runtimeState">checking</strong><p id="runtimeDetail">Waiting for the server.</p></article>
+      <article><small>PUBLIC RENDER + OPENROUTER A/B</small><strong id="publicAbState">checking</strong><p id="publicAbDetail">Waiting for committed public evidence.</p><p><a id="publicSessionA" href="#">Session A ↗</a> · <a id="publicSessionB" href="#">Session B ↗</a></p></article>
       <article><small>12-CHECK SIBYL CONFORMANCE</small><strong id="benchmarkState">checking</strong><p id="benchmarkDetail">Waiting for committed evidence.</p></article>
       <article><small>HISTORICAL PROCESS RESTART</small><strong id="restartState">checking</strong><p id="restartDetail">Waiting for committed evidence.</p></article>
       <article><small>ISOLATED FAIL-CLOSED</small><strong id="failClosedState">checking</strong><p id="failClosedDetail">Waiting for committed evidence.</p></article>
+      <article><small>MANUAL CONTEST GATES</small><strong>VIDEO / POSTS PENDING</strong><p>The machine evidence does not claim the unedited recording, two public posts, Base/Virtuals multipliers, PMF, or final submission.</p></article>
     </section>
 
     <section class="claim-matrix">
@@ -78,12 +80,37 @@
           const model = agent.model || {};
           const benchmark = body.official_sibyl_benchmark || {};
           const restart = body.fresh_session_local_evidence || {};
+          const publicRestart = body.public_render_openrouter_ab || {};
           const failClosed = body.isolated_fail_closed_evidence || {};
 
           byId("evidenceStatus").textContent = body.scope;
           const sibylReady = Boolean(memory.available && memory.production_eligible);
           byId("runtimeState").textContent = sibylReady ? "SAFETY CORE READY" : "SAFETY CORE UNAVAILABLE";
           byId("runtimeDetail").textContent = `${runtime.app_env || "unknown env"} · build ${runtime.build_commit || "unknown"} · ${memory.sdk_distribution || "unknown SDK"} ${memory.sdk_version || ""} · schema ${memory.schema_version || "?"} · model live: ${Boolean(model.live_call_verified)}`;
+
+          const publicRestartPassed = yes(publicRestart.comparison_checks_passed)
+            && yes(publicRestart.remote_model_checks_passed)
+            && yes(publicRestart.different_runtime_instance)
+            && yes(publicRestart.same_action_fingerprint)
+            && yes(publicRestart.exact_dispute_recalled)
+            && yes(publicRestart.review_tool_suppressed)
+            && yes(publicRestart.escalation_tool_succeeded)
+            && yes(publicRestart.non_executable_escalation);
+          byId("publicAbState").textContent = publicRestartPassed
+            ? "READY → DENY · PUBLIC RESTART"
+            : "NOT VERIFIED";
+          const publicMatch = yes(publicRestart.current_build_matches)
+            ? "CURRENT BUILD MATCH"
+            : "HISTORICAL EXACT-BEHAVIOR BUILD / PRESENTATION-ONLY DEPLOY";
+          byId("publicAbDetail").textContent = publicRestartPassed
+            ? `${publicMatch} · evidence build ${publicRestart.evidence_build_commit || "unknown"} · different Render runtime IDs · same action fingerprint · exact causal recall · ${publicRestart.receipt_bound_calls_verified || 0}/2 receipt-bound ${publicRestart.model || "model"} calls. Continuous video remains pending.`
+            : "No committed public restart pair satisfies every comparison and model-receipt check.";
+          if (publicRestart.session_a_run_id) {
+            byId("publicSessionA").href = `/api/agent/runs/${encodeURIComponent(publicRestart.session_a_run_id)}`;
+          }
+          if (publicRestart.session_b_run_id) {
+            byId("publicSessionB").href = `/api/agent/runs/${encodeURIComponent(publicRestart.session_b_run_id)}`;
+          }
 
           const benchmarkValid = yes(benchmark.capture_eligible) && yes(benchmark.uses_official_sibyl_sdk);
           byId("benchmarkState").textContent = benchmarkValid

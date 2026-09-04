@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0",
+  "captured_at_utc": "2026-09-04T17:19:42Z",
+  "evidence_class": "public_render_restart_receipt_bound_ab",
+  "public_base_url": "https://proofops-memoryguard.onrender.com",
+  "build_commit": "5ae0861f96277bba37deae32165139821151e5dc",
+  "model": "nvidia/nemotron-3-super-120b-a12b:free",
+  "service_tier": "free_experimental",
+  "agent_run_schema": "1.1",
+  "production_reliability_claimed": false,
+  "session_a": {
+    "run_id": "run_dd3d78f34f4d5630103a",
+    "runtime_instance_id": "runtime_ca49668ad6704289be9c",
+    "verdict": "ready",
+    "state": "await_finalize",
+    "action_fingerprint": "8b32ebe81cb548c47c07385296faa70bc9cdf49acf41f7728015670818427cc3",
+    "manifest_sha256": "846427e18d476de52c3aa74049f2b3078b584d65f2b4829a788fd9db31c5887c",
+    "generation_id": "gen-1788542307-CmkhR896PBHlrWqdsmf4",
+    "completion_sha256": "64cc85d80563c9e7e11a74e171f50663370aefa25c877dd458adfcf2bef9a4e6",
+    "cross_session": false,
+    "live_model_receipt_verified": true,
+    "structured_output_validated": true
+  },
+  "session_b": {
+    "run_id": "run_d703e9eaaa0204a87f9f",
+    "runtime_instance_id": "runtime_3ebf506298474c8595eb",
+    "verdict": "deny",
+    "state": "block_and_escalate",
+    "action_fingerprint": "8b32ebe81cb548c47c07385296faa70bc9cdf49acf41f7728015670818427cc3",
+    "manifest_sha256": "ef84c559c0fd3ff6ae333369df54234579437a2bc6ef34017cdc58861a37ed98",
+    "generation_id": "gen-1788542374-epLGWkyObrBlqiS7vi58",
+    "completion_sha256": "109d8ba9589cfa1c54301400de349b552155ff06937936d61436fe97d17674cf",
+    "cross_session": true,
+    "causal_dispute_id": "obs_d3af641d7ba34a088b68",
+    "live_model_receipt_verified": true,
+    "structured_output_validated": true
+  },
+  "checks": {
+    "comparison_preflight_passed": true,
+    "comparison_checks_passed": true,
+    "same_build_commit": true,
+    "same_action_fingerprint": true,
+    "different_runtime_instance": true,
+    "exact_dispute_recalled": true,
+    "review_tool_suppressed": true,
+    "escalation_tool_succeeded": true,
+    "non_executable_escalation": true,
+    "remote_model_checks_passed": true
+  },
+  "continuous_video_complete": false,
+  "contest_gate_claimed_by_json": false
+}
