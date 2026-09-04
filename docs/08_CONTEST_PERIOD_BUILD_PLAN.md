@@ -36,9 +36,11 @@ official Sibyl runtime. A later production-configured A/B run made two successfu
 strict structured calls to a fixed OpenRouter free model across a full API restart.
 That captured build read generation metadata from runtime health immediately after
 each run. The current schema `1.1` implementation instead stores and trace-binds the
-model receipt inside the Agent run, but its live A/B rerun is pending after
-free-provider empty-response and 429 failures. Full contest acceptance still
-requires that successful rerun and a continuous A/B/deletion capture.
+model receipt inside the Agent run. Early reruns met free-provider empty-response
+and HTTP failures. On 2026-09-05, the final public Render run pinned a previously
+successful free model and completed the receipt-bound
+A/B across a real service restart. Full contest acceptance still requires a
+continuous A/B/deletion capture.
 
 ## P0 — real fresh-session and deletion evidence
 
@@ -53,6 +55,13 @@ an existing database, so the following capture work remains:
 On 2026-09-05, the repository also added a 12-check official-SDK judge benchmark and
 an `/evidence` dashboard. These close the public quantitative-evidence gap but do not
 replace the continuous A/B/deletion video.
+
+The durable Render deployment is live at
+<https://proofops-memoryguard.onrender.com>. Its final stored Session A/B runs share
+the same action fingerprint and build commit, have different runtime IDs, bind live
+OpenRouter receipts inside schema `1.1` run records, and change the tool path from
+review to escalation. Exact IDs and limitations are in
+`evidence/2026-09-05_RENDER_OPENROUTER_AB.md`.
 
 - Display server UTC time and exact in-window Git commit in the product/video.
 - Run Session A, stop the Agent/API process, then start a fresh process on the same
