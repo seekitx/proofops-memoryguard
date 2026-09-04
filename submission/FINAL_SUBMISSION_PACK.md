@@ -7,6 +7,8 @@ artifact exists. Never paste the private build-page edit URL into the repository
 
 `https://github.com/seekitx/proofops-memoryguard`
 
+Saved to the private build page on 2026-09-05.
+
 ## What breaks when memory is deleted?
 
 Deleting or disconnecting Sibyl removes the trusted dispute that changes the fresh
@@ -28,6 +30,9 @@ payment, signing, or broadcast tool.
 
 - `recall`
 - `entities`
+
+These two primitives and the Memory text were saved to the private build page on
+2026-09-05. The video, posts, and ready action were deliberately left untouched.
 
 Do not select semantic search, temporal/time-travel, summarization, reflection, or
 consolidation for this version.

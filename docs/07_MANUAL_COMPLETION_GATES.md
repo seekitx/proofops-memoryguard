@@ -36,9 +36,9 @@ winners September 13–15. Recheck the live site before relying on these dates.
 | PMF bonus | Missing/not claimed | Public waitlist, pilot, user interviews, or usage artifact | Old SafeHire users/evidence relabeled |
 | Demo video | Missing | Public unedited 2–5 minute URL | Edited montage or fake deletion result |
 | Two public posts | Missing | Two public URLs with currently required tags | Draft text only |
-| Private build-page fields | **All fields were still empty on 2026-09-05; copy-ready pack exists** | Saved repo, deletion impact, walkthrough, and honest primitives now; video/posts after publication | Draft text or private-link possession alone |
+| Private build-page fields | **Repo + Memory fields saved on 2026-09-05; video + two posts missing** | Add published video/posts, recheck wording, then save again | Draft text or private-link possession alone |
 | Private build-page submission | Not marked ready | Dashboard confirmation | Public repo alone |
-| Final repo push/history | **New evidence/deployment hardening is local and unpushed while under review** | Reviewable contest-period commits on public repo and local/remote HEAD equality after final sync | One opaque dump or unpushed changes |
+| Final repo push/history | **Reviewable code/evidence commits pushed; current status must be rechecked after every sync** | Public contest-period commits and local/remote HEAD equality immediately before final submission | One opaque dump or unpushed changes |
 
 ## Owner decisions before any irreversible action
 
