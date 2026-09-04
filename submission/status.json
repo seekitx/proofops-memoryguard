@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-09-04T16:59:00Z",
+  "updated_at": "2026-09-04T17:20:00Z",
   "claims": {
     "registration_confirmed": {
       "state": "verified",
@@ -31,8 +31,8 @@
       "evidence": "https://github.com/seekitx/proofops-memoryguard"
     },
     "repository_head_pushed": {
-      "state": "final_sync_pending",
-      "evidence": "Code/evidence hardening commit 7f002fb56c7ce21187047f3e7b00255ef36327ce was created locally and revalidated; generated evidence and final status still require their own commit and push"
+      "state": "final_evidence_commit_pending",
+      "evidence": "The exact public evidence commit will be recorded immediately after this status/evidence bundle is committed and pushed; live behavior build is 5ae0861f96277bba37deae32165139821151e5dc"
     },
     "prior_work_boundary_reviewed": {
       "state": "human_required",
@@ -43,16 +43,16 @@
       "evidence": "In-window history includes the Agent interface, receipt-bound model hardening, and code/evidence dashboard commit 7f002fb56c7ce21187047f3e7b00255ef36327ce"
     },
     "real_agent_behavior": {
-      "state": "legacy_remote_model_observed_receipt_bound_rerun_pending",
-      "evidence": "Legacy OpenRouter free A/B completed strict calls, but generation metadata came from runtime health immediately after each run. Commit ea561f8256319da168a5a33d6e3e529b128f04e7 now persists and trace-binds receipts in AgentRun schema 1.1; a successful live rerun is pending after free-provider empty-response and 429 failures"
+      "state": "verified_public_receipt_bound_ab",
+      "evidence": "Public Render runs run_dd3d78f34f4d5630103a and run_d703e9eaaa0204a87f9f persisted and trace-bound schema 1.1 OpenRouter receipts on both sides of a real service restart; evidence/2026-09-05_RENDER_OPENROUTER_AB.md"
     },
     "sibyl_source_integration": {
-      "state": "runtime_verified_local",
-      "evidence": "src/proofops_memoryguard/adapters/sibyl.py; evidence/2026-09-01_RUNTIME_EVIDENCE.json"
+      "state": "runtime_verified_local_and_public",
+      "evidence": "src/proofops_memoryguard/adapters/sibyl.py; evidence/2026-09-01_RUNTIME_EVIDENCE.json; evidence/2026-09-05_RENDER_OPENROUTER_AB.md"
     },
     "sibyl_runtime_identity": {
-      "state": "verified_local",
-      "evidence": "A/B runtime reported official sibyl-memory-client 0.7.0, matching installed-distribution RECORD hashes, and schema v4 compatible. Adapter production_eligible=true covers SDK/schema identity only; the deterministic development process is not production. Continuous video remains pending"
+      "state": "verified_local_and_public",
+      "evidence": "Public Render A/B reported official sibyl-memory-client 0.7.0, matching installed-distribution RECORD hashes, schema v4 compatible, different runtime IDs, and the same build commit. Continuous video remains pending"
     },
     "local_dependency_install": {
       "state": "verified",
@@ -67,8 +67,8 @@
       "evidence": "12/12 checks passed against clean commit 7f002fb56c7ce21187047f3e7b00255ef36327ce using the official Sibyl SDK; one single-process conformance story, not 12 independent scenarios or restart/video proof"
     },
     "fresh_session_runtime": {
-      "state": "local_two_process_revalidated_video_and_receipt_bound_remote_missing",
-      "evidence": "Commit 7f002fb56c7ce21187047f3e7b00255ef36327ce was revalidated across a real local API stop/start with different runtime IDs, same action fingerprint, exact dispute recall, READY to DENY, and changed safety tool path. JSON cannot prove the restart; continuous video and schema 1.1 live remote-model rerun remain open"
+      "state": "public_render_restart_and_receipt_bound_ab_verified_video_missing",
+      "evidence": "Build 5ae0861f96277bba37deae32165139821151e5dc completed public READY to DENY A/B across Render restart with different runtime IDs, same action fingerprint, exact dispute recall, changed safety tool path, and successful receipt-bound OpenRouter generations. JSON cannot replace the continuous video"
     },
     "deletion_test": {
       "state": "missing_sdk_fail_closed_verified_deletion_video_pending",
@@ -91,8 +91,8 @@
       "evidence": null
     },
     "public_deployment": {
-      "state": "render_blueprint_ready_payment_and_creation_pending",
-      "evidence": "Render blueprint uses Docker, Starter plan, a 1GB persistent disk, and /health/ready. Prior browser flow reached Render payment confirmation; no durable service or billing was created. Temporary Cloudflare HTTPS evidence remains historical only"
+      "state": "verified_render_https_persistent_restart",
+      "evidence": "https://proofops-memoryguard.onrender.com is live on Render Starter with a 1GB persistent disk; /health/ready and /evidence return 200; a dashboard restart changed runtime IDs while preserving Session A memory for Session B"
     },
     "demo_video": {
       "state": "missing",

@@ -19,14 +19,17 @@ window opened, this repository added a substantive `MemoryGuardAgent`: a real mo
 Seam, Sibyl-backed run ledger, verdict-gated tool executor, resumable runs, and
 executor-generated inspectable traces. The deterministic Agent path, two-process
 Sibyl recall, isolated missing-SDK fail-closed behavior, and a 12-check official-SDK
-benchmark have now been exercised locally. A legacy remote-model A/B exists, while
-the receipt-bound live rerun, continuous video, Base evidence, durable hosted demo,
+benchmark have now been exercised locally. The final receipt-bound OpenRouter A/B
+has passed on a durable Render HTTPS
+deployment across a real service restart. The continuous video, Base evidence,
 posts, and PMF artifact are not claimed yet. See
 [manual completion gates](docs/07_MANUAL_COMPLETION_GATES.md).
 
 ## Judge path — under two minutes
 
-The hosted build exposes a redacted evidence dashboard at `/evidence`. It keeps
+The hosted build is live at
+<https://proofops-memoryguard.onrender.com> and exposes a redacted
+[evidence dashboard](https://proofops-memoryguard.onrender.com/evidence). It keeps
 automated local checks, live runtime state, and still-missing human/external proof
 visibly separate.
 
@@ -102,9 +105,11 @@ the deterministic verdict plus mandatory review/escalation action. Sibyl Memory,
 the Sibyl run ledger, and Sibyl safety-action storage remain hard dependencies.
 The authorized contest run also exercised strict structured output
 through an OpenRouter free model across a full API restart; its generation IDs,
-completion hashes, legacy runtime-health binding limitation, and later receipt
-hardening are recorded in
+completion hashes, and legacy runtime-health binding limitation are recorded in
 [`evidence/2026-09-01_OPENROUTER_HTTPS_EVIDENCE.md`](evidence/2026-09-01_OPENROUTER_HTTPS_EVIDENCE.md).
+The final Render run stores and trace-binds the receipt inside each schema `1.1`
+Agent run; both sides passed after the service restart. See
+[`evidence/2026-09-05_RENDER_OPENROUTER_AB.md`](evidence/2026-09-05_RENDER_OPENROUTER_AB.md).
 A deterministic-planner screenshot is not claimed as real-AI proof.
 
 ## Run locally
@@ -217,9 +222,11 @@ On 2026-09-05, the latest authorized Python run completed with `31 passed` using
 production readiness under an optional model outage, and the public write-rate
 guard. The remote-model evidence path persists a
 non-secret model receipt in the same Sibyl Agent run and binds it to the tool trace;
-tampering with the generation ID fails the run integrity check. A successful live
-receipt-bound A/B rerun is still pending because the free providers later returned
-an empty response and HTTP 429. The first run exposed
+tampering with the generation ID fails the run integrity check. The final public
+Render A/B completed successfully with a pinned OpenRouter free model and a real
+service restart. The generic free router had previously produced invalid JSON and
+HTTP failures; those runs stayed fail-closed, and no production-reliability claim is
+made for the free model. The first run exposed
 a missing Keccak backend; the
 runtime dependency now explicitly includes `eth-hash[pycryptodome]`, and the clean
 rerun passed. The Solidity contract was **not** compiled or tested, so no contract
@@ -234,10 +241,11 @@ returned 503, while the decision and Agent responses also reported
 `executable=false`. Exact values and limitations are recorded in
 [`evidence/2026-09-01_RUNTIME_EVIDENCE.md`](evidence/2026-09-01_RUNTIME_EVIDENCE.md).
 That earlier file is not remote-model evidence. A later production-configured run
-successfully used an OpenRouter free model in both sessions and was reachable through
-a temporary Cloudflare HTTPS tunnel. The free route later showed an intermittent
-provider failure and the temporary URL is not durable hosting, so neither result
-replaces the required unedited video or a stable judge URL. See
+successfully used an OpenRouter free model in both sessions through a temporary
+Cloudflare HTTPS tunnel. It remains historical evidence only. The current stable
+Render deployment and receipt-bound restart run are recorded in
+[`evidence/2026-09-05_RENDER_OPENROUTER_AB.md`](evidence/2026-09-05_RENDER_OPENROUTER_AB.md).
+Neither machine-readable result replaces the required unedited video. See also
 [`evidence/2026-09-01_OPENROUTER_HTTPS_EVIDENCE.md`](evidence/2026-09-01_OPENROUTER_HTTPS_EVIDENCE.md).
 
 The current evidence/dashboard hardening commit was revalidated on 2026-09-05 with

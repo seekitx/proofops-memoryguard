@@ -9,6 +9,15 @@ artifact exists. Never paste the private build-page edit URL into the repository
 
 Saved to the private build page on 2026-09-05.
 
+## Public demo URL
+
+`https://proofops-memoryguard.onrender.com`
+
+The Render Starter service, HTTPS endpoint, 1 GB persistent disk, readiness check,
+and cross-restart Sibyl recall were exercised on 2026-09-05. Public run links and
+the honest evidence boundary are in
+[`evidence/2026-09-05_RENDER_OPENROUTER_AB.md`](../evidence/2026-09-05_RENDER_OPENROUTER_AB.md).
+
 ## What breaks when memory is deleted?
 
 Deleting or disconnecting Sibyl removes the trusted dispute that changes the fresh
