@@ -305,6 +305,25 @@ footer { padding: 28px 0; color: #aaa79f; background: var(--ink); font-size: 9px
 .proof-rules strong { color: var(--acid); font: 500 20px var(--serif); }
 .proof-rules p { margin-top: 10px; color: #aaa79f; font-size: 10px; }
 
+.evidence-status { margin: 40px 0 22px; padding: 14px 16px; color: var(--ink); background: var(--acid); font-size: 10px; }
+.evidence-cards { display: grid; grid-template-columns: repeat(2, 1fr); border: 1px solid #4e4d47; }
+.evidence-cards article { min-height: 190px; padding: 25px; border-right: 1px solid #4e4d47; border-bottom: 1px solid #4e4d47; }
+.evidence-cards article:nth-child(2n) { border-right: 0; }
+.evidence-cards article:nth-last-child(-n + 2) { border-bottom: 0; }
+.evidence-cards small { display: block; color: #8f8d85; font-size: 8px; letter-spacing: 0.12em; }
+.evidence-cards strong { display: block; margin: 20px 0 13px; color: var(--acid); font: 500 27px var(--serif); }
+.evidence-cards p { margin: 0; color: #aaa79f; font-size: 10px; }
+.claim-matrix { display: grid; grid-template-columns: 1fr 1fr; margin-top: 45px; border: 1px solid #4e4d47; }
+.claim-matrix > div { padding: 28px; }
+.claim-matrix > div + div { border-left: 1px solid #4e4d47; }
+.claim-matrix ul { margin: 25px 0 0; padding: 0; list-style: none; }
+.claim-matrix li { padding: 10px 0; border-top: 1px solid #4e4d47; color: #d8d4ca; font: 400 16px/1.45 var(--serif); }
+.claim-matrix li::before { content: "+"; margin-right: 10px; color: var(--acid); font-family: var(--mono); }
+.claim-matrix .not-claimed-panel li::before { content: "×"; color: var(--signal); }
+.evidence-raw { margin-top: 45px; border: 1px solid #4e4d47; }
+.evidence-raw summary { padding: 17px; cursor: pointer; color: var(--acid); font-size: 10px; text-transform: uppercase; }
+.evidence-raw pre { max-height: 560px; margin: 0; padding: 22px; overflow: auto; border-top: 1px solid #4e4d47; color: #d8d4ca; background: #10100e; font-size: 9px; white-space: pre-wrap; word-break: break-word; }
+
 .reveal { animation: rise 600ms ease both; }
 .delay-1 { animation-delay: 130ms; }
 @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
@@ -319,9 +338,12 @@ footer { padding: 28px 0; color: #aaa79f; background: var(--ink); font-size: 9px
   .hero { padding-top: 65px; }
   .hero-proof { max-width: 650px; }
   .scoreband { grid-template-columns: 1fr 1fr; }
-  .principles, .boundary-grid, .proof-rules { grid-template-columns: 1fr; }
+  .principles, .boundary-grid, .proof-rules, .evidence-cards, .claim-matrix { grid-template-columns: 1fr; }
   .principles article, .principles article:not(:first-child), .boundary-grid article, .proof-rules article:not(:first-child) { padding: 24px 0; border-right: 0; border-left: 0; border-bottom: 1px solid var(--line); }
   .case-file { position: static; }
+  .evidence-cards article, .evidence-cards article:nth-child(2n), .evidence-cards article:nth-last-child(-n + 2) { border-right: 0; border-bottom: 1px solid #4e4d47; }
+  .evidence-cards article:last-child { border-bottom: 0; }
+  .claim-matrix > div + div { border-left: 0; border-top: 1px solid #4e4d47; }
 }
 
 @media (max-width: 620px) {
