@@ -332,6 +332,9 @@ async def evidence_summary() -> dict[str, Any]:
     remote_evidence = _load_json(
         EVIDENCE_ROOT / "2026-09-01_OPENROUTER_HTTPS_EVIDENCE.json"
     )
+    public_render_evidence = _load_json(
+        EVIDENCE_ROOT / "2026-09-05_RENDER_OPENROUTER_AB.json"
+    )
     benchmark = _load_json(EVIDENCE_ROOT / "2026-09-05_JUDGE_BENCHMARK.json")
     current_runtime = await runtime()
     current_commit = current_runtime.get("build_commit")
@@ -341,15 +344,25 @@ async def evidence_summary() -> dict[str, Any]:
     restart = current_local_evidence.get("process_restart") or {}
     isolated = current_local_evidence.get("isolated_missing_sdk_probe") or {}
     hardening = remote_evidence.get("post_capture_hardening") or {}
+    public_session_a = public_render_evidence.get("session_a") or {}
+    public_session_b = public_render_evidence.get("session_b") or {}
+    public_checks = public_render_evidence.get("checks") or {}
+    public_render_commit = public_render_evidence.get("build_commit")
     if not isinstance(restart, dict):
         restart = {}
     if not isinstance(isolated, dict):
         isolated = {}
     if not isinstance(hardening, dict):
         hardening = {}
+    if not isinstance(public_session_a, dict):
+        public_session_a = {}
+    if not isinstance(public_session_b, dict):
+        public_session_b = {}
+    if not isinstance(public_checks, dict):
+        public_checks = {}
 
     return {
-        "schema_version": "1.0",
+        "schema_version": "1.1",
         "scope": "Current server state and commit-labelled historical local evidence. A mismatch means the current build has not re-run that historical proof.",
         "current_runtime": current_runtime,
         "official_sibyl_benchmark": {
@@ -387,6 +400,65 @@ async def evidence_summary() -> dict[str, Any]:
             "comparison_checks_passed": restart.get("comparison_checks_passed"),
             "continuous_video_complete": False,
         },
+        "public_render_openrouter_ab": {
+            "evidence_class": public_render_evidence.get("evidence_class"),
+            "captured_at_utc": public_render_evidence.get("captured_at_utc"),
+            "public_base_url": public_render_evidence.get("public_base_url"),
+            "evidence_build_commit": public_render_commit,
+            "current_runtime_commit": current_commit,
+            "current_build_matches": bool(
+                public_render_commit
+                and current_commit
+                and public_render_commit == current_commit
+            ),
+            "session_a_run_id": public_session_a.get("run_id"),
+            "session_b_run_id": public_session_b.get("run_id"),
+            "session_a_runtime_instance_id": public_session_a.get(
+                "runtime_instance_id"
+            ),
+            "session_b_runtime_instance_id": public_session_b.get(
+                "runtime_instance_id"
+            ),
+            "session_a_verdict": public_session_a.get("verdict"),
+            "session_b_verdict": public_session_b.get("verdict"),
+            "same_action_fingerprint": public_checks.get(
+                "same_action_fingerprint"
+            ),
+            "different_runtime_instance": public_checks.get(
+                "different_runtime_instance"
+            ),
+            "exact_dispute_recalled": public_checks.get(
+                "exact_dispute_recalled"
+            ),
+            "review_tool_suppressed": public_checks.get(
+                "review_tool_suppressed"
+            ),
+            "escalation_tool_succeeded": public_checks.get(
+                "escalation_tool_succeeded"
+            ),
+            "non_executable_escalation": public_checks.get(
+                "non_executable_escalation"
+            ),
+            "remote_model_checks_passed": public_checks.get(
+                "remote_model_checks_passed"
+            ),
+            "comparison_checks_passed": public_checks.get(
+                "comparison_checks_passed"
+            ),
+            "model": public_render_evidence.get("model"),
+            "service_tier": public_render_evidence.get("service_tier"),
+            "agent_run_schema": public_render_evidence.get("agent_run_schema"),
+            "receipt_bound_calls_verified": sum(
+                1
+                for session in (public_session_a, public_session_b)
+                if session.get("live_model_receipt_verified") is True
+                and session.get("structured_output_validated") is True
+                and session.get("generation_id")
+                and session.get("completion_sha256")
+            ),
+            "production_reliability_claimed": False,
+            "continuous_video_complete": False,
+        },
         "isolated_fail_closed_evidence": {
             "evidence_class": "historical_missing_sdk_probe",
             "evidence_build_commit": historical_commit,
@@ -403,14 +475,27 @@ async def evidence_summary() -> dict[str, Any]:
             "deletion_gate_claimed": False,
         },
         "remote_model_evidence": {
-            "evidence_build_commit": remote_commit,
-            "current_runtime_commit": current_commit,
-            "current_build_matches": bool(
-                remote_commit and current_commit and remote_commit == current_commit
+            "latest_public_receipt_bound_ab": (
+                "passed"
+                if public_checks.get("comparison_checks_passed") is True
+                and public_checks.get("remote_model_checks_passed") is True
+                else "not_verified"
             ),
-            "legacy_generation_count": len(remote_evidence.get("generations") or []),
-            "receipt_bound_schema": hardening.get("agent_run_schema"),
-            "receipt_bound_live_ab_rerun": hardening.get("receipt_bound_live_ab_rerun"),
+            "latest_public_evidence_build_commit": public_render_commit,
+            "legacy_2026_09_01": {
+                "evidence_build_commit": remote_commit,
+                "current_runtime_commit": current_commit,
+                "current_build_matches": bool(
+                    remote_commit and current_commit and remote_commit == current_commit
+                ),
+                "generation_count": len(remote_evidence.get("generations") or []),
+                "receipt_bound_schema_added_after_capture": hardening.get(
+                    "agent_run_schema"
+                ),
+                "rerun_status_at_that_time": hardening.get(
+                    "receipt_bound_live_ab_rerun"
+                ),
+            },
             "production_reliability_claimed": False,
         },
         "claim_boundary": {
@@ -428,6 +513,7 @@ async def evidence_summary() -> dict[str, Any]:
             "evidence/2026-09-01_RUNTIME_EVIDENCE.json",
             "evidence/2026-09-05_RUNTIME_REVALIDATION.json",
             "evidence/2026-09-01_OPENROUTER_HTTPS_EVIDENCE.json",
+            "evidence/2026-09-05_RENDER_OPENROUTER_AB.json",
         ],
     }
 
