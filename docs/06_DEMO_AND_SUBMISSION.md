@@ -8,6 +8,45 @@ try to erase it.
 
 ## 2–5 minute unedited video
 
+### Render recording preflight
+
+Before recording, open these three tabs and keep them visible:
+
+- <https://proofops-memoryguard.onrender.com>
+- <https://proofops-memoryguard.onrender.com/evidence>
+- the Render service dashboard, so the restart action and recovery are visible.
+
+Use one new subject for the whole take. On this Mac, the project virtual environment
+must supply the HTTPS certificate bundle; do not disable certificate verification.
+
+```bash
+DEMO_SUBJECT="judge-$(uuidgen)"
+SSL_CERT_FILE=/Users/hun/项目/proofops-memoryguard/.venv/lib/python3.11/site-packages/certifi/cacert.pem \
+  .venv/bin/python scripts/session_a.py \
+  --base-url https://proofops-memoryguard.onrender.com \
+  --subject "$DEMO_SUBJECT" \
+  --evidence-out /tmp/memoryguard-recording-a.json \
+  --require-remote-model
+```
+
+Keep the printed `session_a_evidence_sha256`. In the same continuous recording,
+choose **Manual Deploy → Restart service** in Render and wait until
+`/health/ready` returns. Then run:
+
+```bash
+SSL_CERT_FILE=/Users/hun/项目/proofops-memoryguard/.venv/lib/python3.11/site-packages/certifi/cacert.pem \
+  .venv/bin/python scripts/session_b.py \
+  --base-url https://proofops-memoryguard.onrender.com \
+  --subject "$DEMO_SUBJECT" \
+  --session-a-evidence /tmp/memoryguard-recording-a.json \
+  --session-a-sha256 PASTE_SESSION_A_SHA256 \
+  --require-remote-model
+```
+
+Do a private rehearsal first because the OpenRouter model is a free experimental
+service. If it fails, MemoryGuard remains safe but the strict video comparison will
+correctly fail instead of hiding the degraded model call.
+
 ### 0:00–0:25 — problem and boundary
 
 - Show the public repository and hosted page.

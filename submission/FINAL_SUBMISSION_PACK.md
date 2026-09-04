@@ -57,6 +57,32 @@ consolidation for this version.
 [OWNER_TO_ADD_BUILD_LOG_POST]
 ```
 
+## Copy-ready public posts
+
+### Demo video post
+
+```text
+MemoryGuard treats forgetting as an authorization bug. Same $4.2k demo intent: READY → real Render restart → DENY after @sibylcap Memory recalls the exact dispute. Injection text is quarantined; the model gets no pay/sign tool.
+
+Demo: https://proofops-memoryguard.onrender.com
+Video: [PASTE_VIDEO_URL]
+```
+
+### Build log post
+
+```text
+Built ProofOps MemoryGuard for @sibylcap: load-bearing recall, a Sibyl-backed Agent ledger, exact causal memory IDs, fail-closed 503 with no fallback, and receipt-bound OpenRouter planning.
+
+Evidence: https://proofops-memoryguard.onrender.com/evidence
+Repo: https://github.com/seekitx/proofops-memoryguard
+
+Base, Virtuals, and PMF are not claimed.
+```
+
+Publish two distinct public URLs, one per line in the private build page. If a post
+platform has a length limit, keep the claim boundary and move the second link into a
+reply rather than deleting `@sibylcap`.
+
 ## Honest partner and PMF fields
 
 - Base: do not claim unless a product-relevant deployment and executed onchain action
