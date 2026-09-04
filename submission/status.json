@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-09-04T17:23:00Z",
+  "updated_at": "2026-09-04T17:32:00Z",
   "claims": {
     "registration_confirmed": {
       "state": "verified",
@@ -31,8 +31,8 @@
       "evidence": "https://github.com/seekitx/proofops-memoryguard"
     },
     "repository_head_pushed": {
-      "state": "verified_evidence_bundle_pushed",
-      "evidence": "Public evidence bundle commit 00036dace5d0f4549b583dc26c206c11793cab34 is pushed. The live behavior build remains 5ae0861f96277bba37deae32165139821151e5dc so the recorded A/B stays bound to the exact running code; the only later change is this status marker"
+      "state": "verified_public_evidence_page_deployed",
+      "evidence": "Public evidence display commit e23cb704393dae88dae66c0e9b98964f9c4b4088 is pushed and deployed. The recorded A/B remains explicitly bound to exact behavior build 5ae0861f96277bba37deae32165139821151e5dc; later changes are evidence presentation or status only"
     },
     "prior_work_boundary_reviewed": {
       "state": "human_required",
@@ -60,7 +60,7 @@
     },
     "python_tests": {
       "state": "verified",
-      "evidence": ".venv/bin/python -m pytest: 31 passed in 0.34s on 2026-09-05 Beijing time"
+      "evidence": ".venv/bin/python -m pytest: 32 passed in 0.42s on 2026-09-05 Beijing time"
     },
     "judge_conformance": {
       "state": "verified_local_clean_commit",
@@ -92,7 +92,7 @@
     },
     "public_deployment": {
       "state": "verified_render_https_persistent_restart",
-      "evidence": "https://proofops-memoryguard.onrender.com is live on Render Starter with a 1GB persistent disk; /health/ready and /evidence return 200; a dashboard restart changed runtime IDs while preserving Session A memory for Session B"
+      "evidence": "https://proofops-memoryguard.onrender.com is live on Render Starter with a 1GB persistent disk; presentation commit e23cb704393dae88dae66c0e9b98964f9c4b4088 serves /health/ready and /evidence; both historical A/B run URLs remain 200 after the redeploy, proving persistent storage survived"
     },
     "demo_video": {
       "state": "missing",

@@ -217,7 +217,7 @@ The repository includes focused tests for:
 - adversarial model requests for an unregistered payment tool being suppressed;
 - Agent request idempotency and production Adapter rejection.
 
-On 2026-09-05, the latest authorized Python run completed with `31 passed` using
+On 2026-09-05, the latest authorized Python run completed with `32 passed` using
 `.venv/bin/python -m pytest`. This includes the 12-check benchmark behavior,
 production readiness under an optional model outage, and the public write-rate
 guard. The remote-model evidence path persists a
