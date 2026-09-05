@@ -659,7 +659,15 @@ class CaseworkService:
             old = record.get("verification", {})
             if old.get("state") == "VERIFIED":
                 record["last_verified"] = copy.deepcopy(old)
-            record["verification"] = verified
+                if verified.get("state") != "VERIFIED":
+                    # A transient RPC result must not downgrade an already
+                    # verified audit fact. Keep the weaker recheck visible as
+                    # history without changing the current terminal state.
+                    record["last_verification_attempt"] = copy.deepcopy(verified)
+                else:
+                    record["verification"] = verified
+            else:
+                record["verification"] = verified
             task = state.tasks[record["task_id"]]
             decision = state.decisions[record["decision_id"]]
             return {"anchor": record,

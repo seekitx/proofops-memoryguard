@@ -64,6 +64,35 @@ def test_adapter_cannot_replace_case_or_expiry():
     with pytest.raises(CaseworkError): bounded_observation(value)
 
 
+def test_verified_anchor_is_not_downgraded_by_pending_recheck():
+    class Anchor:
+        def __init__(self):
+            self.next_verification = {"state": "VERIFIED", "tx_hash": "0x" + "3" * 64,
+                                      "audit_only": True}
+
+        def plan(self, proof_root, memory_version, chain_id):
+            return {"proof_root": proof_root, "memory_version": memory_version,
+                    "chain_id": chain_id, "audit_only": True}
+
+        def verify(self, plan, tx_hash):
+            return {**self.next_verification, "tx_hash": tx_hash}
+
+    h = Harness(); h.svc.anchor = Anchor(); h.baseline()
+    task_id = h.task()["task"]["task_id"]; h.risk(); decision = h.evaluate(task_id)
+    prepared = h.svc.prepare_anchor(h.actors["reviewer"], h.command(), task_id,
+                                    decision["decision_id"])
+    anchor_id = prepared["anchor"]["anchor_id"]; tx_hash = "0x" + "3" * 64
+
+    first = h.svc.verify_anchor(h.actors["reviewer"], h.command(), anchor_id, tx_hash)
+    assert first["anchor"]["verification"]["state"] == "VERIFIED"
+
+    h.svc.anchor.next_verification = {"state": "PENDING", "tx_hash": tx_hash,
+                                      "audit_only": True}
+    second = h.svc.verify_anchor(h.actors["reviewer"], h.command(), anchor_id, tx_hash)
+    assert second["anchor"]["verification"]["state"] == "VERIFIED"
+    assert second["anchor"]["last_verification_attempt"]["state"] == "PENDING"
+
+
 def test_untrusted_http_duplicate_keys_never_arrive_as_facts():
     transport = httpx.MockTransport(lambda _: httpx.Response(200, content=b'{"state":"open","state":"closed"}'))
     with pytest.raises(CaseworkError):
