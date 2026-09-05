@@ -1,0 +1,31 @@
+{
+  "schema_version": "casework-connectors/1",
+  "sources": [
+    {
+      "source_id": "github_incidents",
+      "kind": "github_issue",
+      "tenant_id": "tenant_demo",
+      "subjects": ["subject_demo"],
+      "independence_group": "github_operator",
+      "repositories": ["seekitx/proofops-memoryguard"],
+      "ttl_seconds": 300,
+      "max_attempts_per_case": 20
+    }
+  ],
+  "policies": [
+    {
+      "tenant_id": "tenant_demo",
+      "scope": {
+        "subject_id": "subject_demo",
+        "chain_id": 84532,
+        "target": "0x1111111111111111111111111111111111111111",
+        "method": "transfer"
+      },
+      "required_sources": ["github_incidents"],
+      "min_independence_groups": 1,
+      "require_for_resolution": true
+    }
+  ],
+  "incidents": [],
+  "virtuals": null
+}

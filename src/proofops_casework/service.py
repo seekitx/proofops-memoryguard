@@ -36,6 +36,7 @@ class CaseworkService:
         if not test_mode and getattr(store, "production_kind", None) != "official_sibyl_casework":
             raise ValueError("Only the official Sibyl store is allowed outside tests")
         self.store = store
+        self.evidence_desk = None
         self.anchor = anchor
         self.actors = actors
         self.model = model
@@ -304,7 +305,13 @@ class CaseworkService:
             if case.status != "OPEN":
                 raise CaseworkError("CASE_NOT_OPEN")
             basis = investigation_basis(snapshot, case_id)
-        mandatory = ("case.inspect", "dependencies.trace")
+        external = self.evidence_desk.report_context(snapshot, case_id, self.clock()) if self.evidence_desk else None
+        if external:
+            if external.get("source_conflicts"):
+                raise CaseworkError("SOURCE_CONFLICT")
+            if not external["coverage_complete"]:
+                raise CaseworkError("SOURCE_COVERAGE_REQUIRED")
+        mandatory = ("case.inspect", "dependencies.trace") + (("evidence.inspect",) if external else ())
         optional = ("precedent.lookup",)
         requested = optional
         receipt = None
@@ -317,6 +324,9 @@ class CaseworkService:
                 "scope_digest": scope_key(case.scope),
                 "affected_task_count": len(affected_tasks(snapshot, case.scope)),
                 "non_authoritative_investigation": True,
+                "source_bundle_root": external["bundle_root"] if external else None,
+                "source_count": len(external["receipts"]) if external else 0,
+                "source_signal_codes": sorted({item["code"] for item in external["review_signals"]}) if external else [],
             }
             try:
                 plan = self.model.plan(context=context, allowed_tools=mandatory + optional)
@@ -340,10 +350,13 @@ class CaseworkService:
         outputs = {"case.inspect": {"case_ids": related_cases or [case_id]},
                    "dependencies.trace": {"affected_tasks": impacted},
                    "precedent.lookup": {"precedent_ids": precedents}}
+        if external:
+            outputs["evidence.inspect"] = external
         trace = [{"tool": name, "phase": "SUCCEEDED",
                   "input_hash": digest("tool-input", {"case_id": case_id, "basis": basis}),
                   "output_hash": digest("tool-output", outputs[name]),
-                  "result_count": len(next(iter(outputs[name].values())))} for name in tools]
+                  "result_count": (len(external["receipts"]) if name == "evidence.inspect"
+                                   else len(next(iter(outputs[name].values()))))} for name in tools]
         trace += [{"tool": "unregistered", "phase": "SUPPRESSED", "request_hash": item}
                   for item in suppressed]
         report = Report(report_id=new_id("report"), case_id=case_id, case_version=case.version,
@@ -354,7 +367,14 @@ class CaseworkService:
         report.report_root = digest("investigation", report.model_dump(mode="json", exclude={"report_root"}))
 
         def change(state, seq):
+            if external:
+                self.evidence_desk.validate_report(state, state.cases[case_id], report, self.clock())
             state.reports[report.report_id] = report
+            if external:
+                state.artifacts[digest("report-sources-key", report.report_id)] = {
+                    "kind": "REPORT_EVIDENCE_BUNDLE", "report_id": report.report_id,
+                    "case_id": case_id, "report_root": report.report_root,
+                    "bundle": copy.deepcopy(external), "authoritative": False}
             return {"report": report.model_dump(mode="json"),
                     "next_step": "REVIEW_PRIOR_REMEDIATION" if report.precedent_ids else "COLLECT_AND_REVIEW_EVIDENCE"}
         return self._mutate(actor, cmd, "case.investigate", {"case_id": case_id}, change,
@@ -367,6 +387,8 @@ class CaseworkService:
         if (report.case_version != case.version or case.status != "OPEN"
                 or report.basis_hash != investigation_basis(state, case.case_id)):
             raise CaseworkError("STALE_INVESTIGATION")
+        if self.evidence_desk:
+            self.evidence_desk.validate_report(state, case, report, self.clock())
         return report
 
     def handoff(self, actor: Actor, cmd: HandoffCommand, case_id: str) -> dict:
@@ -418,11 +440,22 @@ class CaseworkService:
             report = self._valid_report(state, case, handoff.report_id)
             if handoff.case_version != case.version:
                 raise CaseworkError("STALE_HANDOFF")
+            if self.evidence_desk:
+                self.evidence_desk.resolution(state, case, cmd.evidence_digest, self.clock())
             case.status = "RESOLVED"
             case.version += 1
             case.resolution = cmd.resolution
             case.resolved_by = actor.actor_id
             case.resolved_seq = seq
+            if digest("report-sources-key", report.report_id) in state.artifacts:
+                # Bind the review and the actual resolution bundle into future
+                # task bases without rewriting v1 or legacy no-source proofs.
+                state.artifacts[digest("resolution-link", [case_id, case.version])] = {
+                    "kind": "CASE_RESOLUTION_PROOF", "case_id": case_id,
+                    "case_version": case.version, "report_id": report.report_id,
+                    "report_root": report.report_root, "handoff_id": handoff.handoff_id,
+                    "evidence_digest": cmd.evidence_digest, "reviewer_id": actor.actor_id,
+                    "event_seq": seq, "executable": False}
             state.case_history[case_id].append(case.model_copy(deep=True))
             impacted = affected_tasks(state, case.scope)
             for key in impacted:

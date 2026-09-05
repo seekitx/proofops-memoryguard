@@ -1,0 +1,18 @@
+{
+  "schema_version": "casework-connectors/1",
+  "sources": [
+    {"source_id":"github_incidents","kind":"github_issue","tenant_id":"tenant_demo","subjects":["subject_demo"],"independence_group":"github_operator","repositories":["seekitx/proofops-memoryguard"],"ttl_seconds":300,"max_attempts_per_case":20},
+    {"source_id":"base_receipts","kind":"base_transaction","tenant_id":"tenant_demo","subjects":["subject_demo"],"independence_group":"rpc_operator","rpc_url":"https://sepolia.base.org","chain_id":84532,"ttl_seconds":120,"min_confirmations":3,"max_attempts_per_case":20}
+  ],
+  "policies":[{"tenant_id":"tenant_demo","scope":{"subject_id":"subject_demo","chain_id":84532,"target":"0x1111111111111111111111111111111111111111","method":"transfer"},"required_sources":["github_incidents","base_receipts"],"min_independence_groups":2,"require_for_resolution":true}],
+  "incidents":[{"source_id":"security_events","actor_id":"actor_investigator","secret_env":"MEMORYGUARD_INCIDENT_SECRET","scope":{"subject_id":"subject_demo","chain_id":84532,"target":"0x1111111111111111111111111111111111111111","method":"transfer"},"max_clock_skew_seconds":120}],
+  "virtuals":{
+    "tenant_id":"tenant_demo","subjects":["subject_demo"],"chain_id":84532,
+    "client_address":"0x2222222222222222222222222222222222222222",
+    "provider_address":"0x3333333333333333333333333333333333333333",
+    "offering_name":"memoryguard_review","max_budget_micros":100000,
+    "cli_executable":"/operator-owned/acp-wrapper","cli_home":"/operator-owned/acp-home",
+    "cli_sha256":"0000000000000000000000000000000000000000000000000000000000000000",
+    "ttl_seconds":3600
+  }
+}

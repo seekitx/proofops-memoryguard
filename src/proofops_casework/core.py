@@ -118,7 +118,7 @@ def affected_tasks(state: Workspace, scope: Scope) -> list[str]:
 def task_basis(state: Workspace, task_id: str) -> str:
     closure = ancestors(state, task_id)
     scopes = {scope_key(state.tasks[key].intent.scope) for key in closure}
-    return digest("task-basis", {
+    body = {
         "tasks": {key: {
             "intent": state.tasks[key].intent.model_dump(mode="json"),
             "depends_on": state.tasks[key].depends_on,
@@ -130,7 +130,14 @@ def task_basis(state: Workspace, task_id: str) -> str:
                       for key, item in state.baselines.items() if key in scopes},
         "cases": {key: item.model_dump(mode="json")
                   for key, item in state.cases.items() if scope_key(item.scope) in scopes},
-    })
+    }
+
+    links = {key: value for key, value in state.artifacts.items()
+             if value.get("kind") == "CASE_RESOLUTION_PROOF"
+             and value.get("case_id") in body["cases"]}
+    if links:
+        body["resolution_evidence"] = links
+    return digest("task-basis", body)
 
 
 def active_precedents(state: Workspace, case_id: str) -> list[str]:
@@ -156,12 +163,16 @@ def active_precedents(state: Workspace, case_id: str) -> list[str]:
 def investigation_basis(state: Workspace, case_id: str) -> str:
     case = state.cases[case_id]
     tasks = affected_tasks(state, case.scope)
-    return digest("investigation-basis", {
+    body = {
         "case": case.model_dump(mode="json"),
         "affected": {key: task_basis(state, key) for key in tasks},
-        # Capture precedent changes even when there are currently zero tasks.
         "precedents": {key: state.lessons[key] for key in active_precedents(state, case_id)},
-    })
+    }
+    from .source_state import evidence_basis
+    external = evidence_basis(state, case_id)
+    if external:
+        body["external_evidence"] = external
+    return digest("investigation-basis", body)
 
 
 def policy_result(state: Workspace, task_id: str, at: datetime,

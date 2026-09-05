@@ -113,6 +113,6 @@ def test_public_routes_do_not_read_private_business_state():
         assert response.status_code == 200
         assert response.json()["state"] == "NOT_RECORDED"
         runtime = client.get("/api/runtime").json()
-        assert runtime["module"] == "casework-v2.1"
+        assert runtime["module"] == "casework-v2.2"
         assert "principal" not in runtime and "tenant_id" not in runtime
         assert client.post("/api/observations", json={}).status_code == 410
