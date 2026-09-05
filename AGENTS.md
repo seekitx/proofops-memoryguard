@@ -80,3 +80,8 @@ error.
 - Never commit local Sibyl databases, credentials, tokens, cookies, private keys,
   virtual environments, or generated intermediate media. Keep only a reviewed
   final media artifact when it is necessary for the contest submission.
+
+## Casework v2 module
+
+Read `docs/CASEWORK_IMPLEMENTATION.md`, `docs/CASEWORK_SECURITY.md`, and `docs/CASEWORK_RELEASE_GATES.md` before editing `src/proofops_casework`.
+V2 has scoped operator credentials, independent review, immutable historical decisions and explicit reconsideration. Base anchors are audit-only. Do not restore anonymous v1 writes while v2 is enabled. V1 evidence is historical and cannot validate v2.

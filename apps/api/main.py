@@ -35,6 +35,7 @@ from proofops_memoryguard.http import build_router
 from proofops_memoryguard.module import MemoryGuard
 from proofops_memoryguard.rate_limit import FixedWindowRateLimiter
 from proofops_memoryguard.settings import Settings
+from proofops_casework.runtime import register_casework, start_casework
 
 ROOT = Path(__file__).resolve().parents[2]
 WEB_ROOT = ROOT / "apps" / "web"
@@ -120,6 +121,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         app.state.guard,
         app.state.runtime_instance_id,
     )
+    start_casework(app, settings)
     yield
 
 
@@ -136,7 +138,7 @@ app.add_middleware(
     allow_origins=list(startup_settings.cors_origins),
     allow_credentials=False,
     allow_methods=["GET", "POST"],
-    allow_headers=["Content-Type", "X-Request-ID"],
+    allow_headers=["Content-Type", "X-Request-ID", "Authorization"],
 )
 
 
@@ -150,6 +152,7 @@ def get_agent() -> MemoryGuardAgent:
 
 app.include_router(build_router(get_guard, get_agent))
 app.mount("/assets", StaticFiles(directory=WEB_ROOT / "assets"), name="assets")
+register_casework(app, WEB_ROOT)
 
 
 @app.middleware("http")

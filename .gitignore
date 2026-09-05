@@ -17,3 +17,7 @@ contracts/cache/
 contracts/typechain-types/
 .prior-work/
 .DS_Store
+
+# Local casework credentials and installer rollback data
+.casework-private/
+.casework-backups/

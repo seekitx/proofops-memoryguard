@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MemoryGuard | Risk Casework</title>
+<link rel="stylesheet" href="/assets/casework.css"><script src="/assets/casework.js" defer></script></head>
+<body>
+<header><a href="/">PROOFOPS / MEMORYGUARD</a><a href="/evidence">Historical v1 evidence</a></header>
+<main>
+<section class="hero"><div class="eyebrow">PERSISTENT SAFETY · PRECISE RECOVERY</div>
+<h1>Remember the risk.<br>Resume the right work.</h1>
+<p>Pause affected tasks, investigate with durable evidence, hand off to an independent reviewer, and reconsider without reviving stale approvals.</p>
+<div class="boundary">No payment, signing or broadcast tools. Review preparation is non-executable. Partner bonuses require judge verification. Example payloads are synthetic; operator authorization does not prove the truth of a dispute.</div></section>
+<section class="panel"><h2>Operator access</h2><div class="row">
+<label>Credential <input id="token" type="password" autocomplete="off" placeholder="Paste a deployment-issued token"></label>
+<button id="connect" type="button">Connect / switch role</button><button id="logout" type="button">Forget credential</button>
+</div><p id="identity">Disconnected. Credentials stay in this page's memory, never localStorage.</p>
+<div id="status" role="status" aria-live="polite"></div>
+<div class="metrics"><div><span>Memory revision</span><strong id="revision">—</strong></div>
+<div><span>Runtime</span><code id="runtime">—</code></div><div><span>Build</span><code id="build">—</code></div></div></section>
+<section class="panel"><h2>Work queue</h2><p>Only tasks in this operator's allowed subject scope appear.</p>
+<div class="table-scroll"><table><thead><tr><th>Task / target</th><th>Status</th><th>Dependencies / taints</th><th>Latest proof current?</th><th>Inspect</th></tr></thead><tbody id="tasks"></tbody></table></div></section>
+<section class="panel"><h2>Risk &amp; handoff ledger</h2><div id="cases" class="cards"></div><details><summary>Reports and reviewer acknowledgements</summary><pre id="handoffs">No records loaded.</pre></details></section>
+<section class="panel"><h2>Same action, different remembered state</h2><p>Read from persisted decision records, not manufactured browser states. A runtime ID change alone does not prove an OS/service restart.</p>
+<div id="replay-status"></div><div id="replay" class="cards"></div></section>
+<section class="panel"><h2>Command console</h2><p>Use the owner, investigator and reviewer credentials for their respective steps. Subject scope and tenant come from the server registry. This console never supplies authority metadata.</p>
+<label>Operation <select id="operation">
+<option value="bootstrap">Initialize empty workspace</option><option value="baseline">Set / tighten baseline (owner)</option>
+<option value="task">Register task (owner / investigator)</option><option value="case">Open risk case</option>
+<option value="note">Quarantine an external note</option><option value="evaluate">Evaluate task</option>
+<option value="investigate">Investigate case (investigator)</option><option value="handoff">Hand off report (investigator)</option>
+<option value="accept">Accept handoff (reviewer)</option><option value="resolve">Resolve ONE case (reviewer)</option>
+<option value="reconsider">Reconsider task (reviewer)</option><option value="prepare">Prepare non-executable review</option><option value="anchor_prepare">Prepare audit anchor (reviewer)</option><option value="anchor_verify">Verify audit transaction (reviewer)</option>
+</select></label>
+<label>Task / case / handoff ID for the selected operation<input id="resource" placeholder="Paste the resource ID from the ledger"></label>
+<label>Typed payload (command metadata is generated below)<textarea id="payload" rows="12" spellcheck="false"></textarea></label>
+<div class="row"><button id="example" type="button">Load example</button><button id="execute" type="button">Submit command</button><button id="refresh" type="button">Reload memory</button></div>
+<button id="wallet-anchor" type="button" hidden>Send audit anchor — confirm in your wallet</button><p id="wallet-status"></p>
+<details><summary>Last response</summary><pre id="response">No command executed.</pre></details></section>
+<footer>v2 is an authenticated casework slice. The v1 historical restart evidence does not validate this new release. Record new evidence after deployment.</footer>
+</main></body></html>
