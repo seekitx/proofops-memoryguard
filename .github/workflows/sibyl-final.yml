@@ -1,0 +1,44 @@
+name: Sibyl final release gate
+
+on:
+  workflow_dispatch:
+    inputs:
+      contracts:
+        description: Run the locked Hardhat and ABI checks
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  release-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out the requested commit
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: contracts/package-lock.json
+
+      - name: Install Python dependencies
+        run: python -m pip install --upgrade pip && python -m pip install -e ".[dev]"
+
+      - name: Run unified release gate with contracts
+        if: ${{ inputs.contracts }}
+        run: python scripts/sibyl_release_gate.py --execute --contracts --out /tmp/memoryguard-final-release.json
+
+      - name: Run unified release gate without contracts
+        if: ${{ !inputs.contracts }}
+        run: python scripts/sibyl_release_gate.py --execute --out /tmp/memoryguard-final-release.json
