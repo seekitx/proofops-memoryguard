@@ -1,5 +1,9 @@
 # ProofOps MemoryGuard
 
+## Casework v2 — new implementation, separate evidence
+
+The optional `/casework` workbench adds scoped risk propagation, bounded investigation, independent handoff, case-specific resolution and explicit task reconsideration. Historical v1 receipt-bound runs do not validate this new code. No payment, signing or broadcast tool is added to the server. See [implementation](docs/CASEWORK_IMPLEMENTATION.md), [setup](docs/CASEWORK_SETUP.md), and [release gates](docs/CASEWORK_RELEASE_GATES.md). New runtime claims must be earned on the final committed build.
+
 > **Forgetting is a security bug.** MemoryGuard gives high-risk AI Agents a
 > persistent, inspectable reason to stop.
 
