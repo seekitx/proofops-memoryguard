@@ -22,6 +22,19 @@ class PartnerReviewService:
                 or case.scope.subject_id not in actor.subjects):
             raise CaseworkError("ACP_REVIEW_NOT_CONFIGURED_FOR_SCOPE",403)
 
+    def _current(self,state,case,plan):
+        reasons=[]
+        config_matches=plan.get("partner_spec_hash")==digest("virtuals-spec",self.spec.model_dump(mode="json"))
+        if not config_matches: reasons.append("ACP_CONFIG_CHANGED")
+        if parsed_time(plan["expires_at"])<=self.svc.clock(): reasons.append("ACP_PLAN_EXPIRED")
+        if case.version!=plan["case_version"] or case.status!="OPEN": reasons.append("ACP_CASE_CHANGED")
+        try:
+            report=self.svc._valid_report(state,case,plan["report_id"])
+            if report.basis_hash!=plan["basis_hash"]: reasons.append("ACP_BASIS_CHANGED")
+        except CaseworkError as exc:
+            reasons.append(exc.code)
+        return not reasons,reasons,config_matches
+
     def prepare(self,actor,cmd,case_id,report_id):
         authorize(actor,{"investigator"})
         def build(state,seq):
@@ -67,11 +80,8 @@ class PartnerReviewService:
                 raise CaseworkError("ACP_PLAN_NOT_FOUND",404)
             case=self.svc._case(state,actor,plan["case_id"])
             self._allowed(actor,case)
-            config_matches = plan.get("partner_spec_hash") == digest("virtuals-spec", self.spec.model_dump(mode="json"))
-            current=(config_matches and case.status=="OPEN" and case.version==plan["case_version"]
-                     and investigation_basis(state,case.case_id)==plan["basis_hash"]
-                     and parsed_time(plan["expires_at"])>self.svc.clock())
-            return {"plan":copy.deepcopy(plan),"current":current,"config_matches":config_matches,
+            current,reasons,config_matches=self._current(state,case,plan)
+            return {"plan":copy.deepcopy(plan),"current":current,"invalid_reasons":reasons,"config_matches":config_matches,
                     "revision":state.revision,"executable":False}
 
     def verify(self,actor,cmd,plan_id,job_id):
@@ -118,10 +128,8 @@ class PartnerReviewService:
             record["state"]="QUERY_FAILED" if verification.get("state") == "QUERY_FAILED" else "HISTORY_OBSERVED"
             record.setdefault("observations",[]).append({**verification,"observed_at":self.svc.clock().isoformat()})
             case=self.svc._case(state,actor,record["case_id"])
-            current=(case.status=="OPEN" and case.version==record["case_version"]
-                and investigation_basis(state,case.case_id)==record["basis_hash"]
-                and parsed_time(record["expires_at"])>self.svc.clock())
-            return {"verification":verification,"current":current,"partner_bonus_claimed":False,
+            current,reasons,_=self._current(state,case,record)
+            return {"verification":verification,"current":current,"invalid_reasons":reasons,"partner_bonus_claimed":False,
                     "case_status_unchanged":case.status,"resolution_performed":False}
         return self.svc._mutate(actor,cmd,"acp.verify",{"case_id":plan["case_id"],
                             "plan_id":plan_id,"job_id":job_id},save)

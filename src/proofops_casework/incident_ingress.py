@@ -17,6 +17,7 @@ class IncidentIngress:
     def __init__(self, service, config):
         self.svc = service
         self.specs = {s.source_id: s for s in config.incidents}
+        configured_keys = []
         for spec in self.specs.values():
             actor = service.actors.get(spec.actor_id)
             if actor is None:
@@ -25,6 +26,9 @@ class IncidentIngress:
             secret = os.environ.get(spec.secret_env, "")
             if len(secret) < 32:
                 raise ValueError("incident HMAC secret must be independently configured, >=32 characters")
+            if any(hmac.compare_digest(secret.encode(), old.encode()) for old in configured_keys):
+                raise ValueError("incident sources require distinct HMAC secrets")
+            configured_keys.append(secret)
 
     def handle(self, source_id, timestamp, delivery_id, signature, raw: bytes):
         spec = self.specs.get(source_id)
@@ -38,11 +42,15 @@ class IncidentIngress:
         if abs(at.timestamp() - int(timestamp)) > spec.max_clock_skew_seconds:
             raise CaseworkError("INCIDENT_TIMESTAMP_EXPIRED", 401)
         signed = timestamp.encode() + b"." + delivery_id.encode() + b"." + raw
-        expected = "sha256=" + hmac.new(os.environ[spec.secret_env].encode(), signed, hashlib.sha256).hexdigest()
+        secret = os.environ.get(spec.secret_env, "")
+        if len(secret) < 32:
+            raise CaseworkError("INCIDENT_SOURCE_UNAVAILABLE", 503)
+        expected = "sha256=" + hmac.new(secret.encode(), signed, hashlib.sha256).hexdigest()
         if not hmac.compare_digest(signature, expected):
             raise CaseworkError("INCIDENT_AUTHENTICATION_FAILED", 401)
         try:
-            body = IncidentBody.model_validate_json(raw)
+            from .json_boundary import strict_json
+            body = IncidentBody.model_validate(strict_json(raw, max_bytes=16_384))
         except ValueError as exc:
             raise CaseworkError("INCIDENT_SCHEMA_INVALID", 422) from exc
         actor = self.svc.actors[spec.actor_id]
@@ -59,6 +67,8 @@ class IncidentIngress:
                 opened_by=actor.actor_id, opened_seq=seq, evidence_digest=body.evidence_digest)
             state.cases[case.case_id]=case
             state.case_history[case.case_id]=[case.model_copy(deep=True)]
+            if self.svc.evidence_desk:
+                self.svc.evidence_desk.remember_policy(state,case)
             affected=self.svc._invalidate(state,case.scope,f"case:{case.case_id}:v1","SIGNED_INCIDENT")
             record={"kind":"INCIDENT_RECEIPT","case_id":case.case_id,"source_id":source_id,
                     "source_actor":actor.actor_id,"received_at":at.isoformat(),

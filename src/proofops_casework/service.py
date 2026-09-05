@@ -9,6 +9,7 @@ from .core import (CaseworkError, affected_tasks, ancestors, authorize, digest,
                    investigation_basis, new_id, now, policy_result, scope_key,
                    seal, task_basis, validate_workspace, active_precedents,
                    decision_validity, ready_expiry, recovery_plan)
+from .source_guard import require_desk
 from .models import (Actor, Baseline, BaselineCommand, BootstrapCommand, Command,
                      Decision, Handoff, HandoffCommand, NoteCommand, OpenCaseCommand,
                      ReopenCommand, Report, ResolveCommand, RiskCase, Task,
@@ -252,6 +253,8 @@ class CaseworkService:
                             evidence_digest=cmd.evidence_digest)
             state.cases[case.case_id] = case
             state.case_history[case.case_id] = [case.model_copy(deep=True)]
+            if self.evidence_desk:
+                self.evidence_desk.remember_policy(state, case)
             impacted = self._invalidate(state, case.scope, f"case:{case.case_id}:v1", "NEW_RISK")
             return {"case": case.model_dump(mode="json"), "affected_tasks": impacted,
                     "authority": "configured_operator_attestation"}
@@ -271,6 +274,8 @@ class CaseworkService:
             case.evidence_digest = cmd.evidence_digest
             case.resolved_by = case.resolution = case.resolved_seq = None
             state.case_history[case_id].append(case.model_copy(deep=True))
+            if self.evidence_desk:
+                self.evidence_desk.remember_policy(state, case)
             impacted = self._invalidate(state, case.scope, f"case:{case_id}:v{case.version}", "RISK_REOPENED")
             return {"case": case.model_dump(mode="json"), "affected_tasks": impacted}
         return self._mutate(actor, cmd, "case.reopen", {"case_id": case_id,
@@ -300,10 +305,17 @@ class CaseworkService:
                 if previous["request_hash"] != digest("command", request):
                     raise CaseworkError("IDEMPOTENCY_CONFLICT")
                 return copy.deepcopy(previous["response"]) | {"replayed": True, "historical_only": True}
+            prior_attempt = snapshot.artifacts.get(
+                "investigation_" + digest("investigation-attempt", [actor.actor_id, cmd.idempotency_key])[:40])
+            if prior_attempt is not None:
+                if prior_attempt.get("request_hash") != digest("command", request):
+                    raise CaseworkError("IDEMPOTENCY_CONFLICT")
+                raise CaseworkError("INVESTIGATION_IN_PROGRESS_OR_UNCERTAIN", 409)
             if snapshot.revision != cmd.expected_revision:
                 raise CaseworkError("REVISION_CONFLICT")
             if case.status != "OPEN":
                 raise CaseworkError("CASE_NOT_OPEN")
+            require_desk(snapshot, case_id, self.evidence_desk)
             basis = investigation_basis(snapshot, case_id)
         external = self.evidence_desk.report_context(snapshot, case_id, self.clock()) if self.evidence_desk else None
         if external:
@@ -317,7 +329,30 @@ class CaseworkService:
         receipt = None
         planner_status = "DETERMINISTIC"
         suppressed: list[str] = []
+        attempt_id = None
         if self.model is not None:
+            attempt_id = "investigation_" + digest("investigation-attempt", [actor.actor_id, cmd.idempotency_key])[:40]
+            claim_cmd = Command(session_id=cmd.session_id,
+                idempotency_key="claim_" + digest("investigation-claim", cmd.idempotency_key)[:40],
+                expected_revision=cmd.expected_revision)
+            def reserve(current, seq):
+                live = self._case(current, actor, case_id)
+                if live.status != "OPEN" or investigation_basis(current, case_id) != basis:
+                    raise CaseworkError("STALE_INVESTIGATION")
+                current.artifacts[attempt_id] = {"kind": "INVESTIGATION_ATTEMPT", "case_id": case_id,
+                    "attempt_id": attempt_id, "basis_hash": basis, "operator_id": actor.actor_id,
+                    "request_hash": digest("command", request), "state": "PENDING", "requested_at": self.clock().isoformat(), "executable": False}
+                return {"attempt_id": attempt_id, "state": "PENDING"}
+            claim = self._mutate(actor, claim_cmd, "investigation.reserve",
+                    {"case_id": case_id, "attempt_id": attempt_id}, reserve,
+                    relevant_basis=(case_id, basis))
+            if claim.get("replayed"):
+                with self.store.transaction(actor.tenant_id):
+                    current = self._load(actor.tenant_id)
+                    saved = current.idempotency.get(idem)
+                    if saved and saved["request_hash"] == digest("command", request):
+                        return copy.deepcopy(saved["response"]) | {"replayed": True, "historical_only": True}
+                raise CaseworkError("INVESTIGATION_IN_PROGRESS_OR_UNCERTAIN", 409)
             context = {
                 "verdict": "deny", "case_kind": case.kind, "case_id": case.case_id,
                 "case_version": case.version, "evidence_digest": case.evidence_digest,
@@ -370,6 +405,12 @@ class CaseworkService:
             if external:
                 self.evidence_desk.validate_report(state, state.cases[case_id], report, self.clock())
             state.reports[report.report_id] = report
+            if attempt_id is not None:
+                attempt = state.artifacts.get(attempt_id)
+                if not attempt or attempt.get("state") != "PENDING":
+                    raise CaseworkError("INVESTIGATION_ATTEMPT_CHANGED")
+                attempt.update(state="COMPLETED", report_id=report.report_id,
+                               completed_at=self.clock().isoformat())
             if external:
                 state.artifacts[digest("report-sources-key", report.report_id)] = {
                     "kind": "REPORT_EVIDENCE_BUNDLE", "report_id": report.report_id,
@@ -387,6 +428,7 @@ class CaseworkService:
         if (report.case_version != case.version or case.status != "OPEN"
                 or report.basis_hash != investigation_basis(state, case.case_id)):
             raise CaseworkError("STALE_INVESTIGATION")
+        require_desk(state, case.case_id, self.evidence_desk, report)
         if self.evidence_desk:
             self.evidence_desk.validate_report(state, case, report, self.clock())
         return report
@@ -457,6 +499,8 @@ class CaseworkService:
                     "evidence_digest": cmd.evidence_digest, "reviewer_id": actor.actor_id,
                     "event_seq": seq, "executable": False}
             state.case_history[case_id].append(case.model_copy(deep=True))
+            if self.evidence_desk:
+                self.evidence_desk.remember_policy(state, case)
             impacted = affected_tasks(state, case.scope)
             for key in impacted:
                 # Resolution does NOT revive a draft or clear other unresolved taints.

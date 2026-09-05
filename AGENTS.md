@@ -105,3 +105,10 @@ onchain evidence. Never turn a configured source, CLI plan, synthetic benchmark 
 self-recorded capture into a live integration/partner/PMF claim. Keep current and
 historical report snapshots distinct. Keep credentials and backup data out of Git
 and the Docker build context. Do not bypass stale-source or independent-review gates.
+
+## Consolidated Sibyl final candidate
+
+Read `docs/SIBYL_FINAL_RELEASE.md`. Keep source obligations durable across configuration changes;
+new-session continuation reuses the original logical request and never invents OS-restart evidence.
+Do not turn PENDING model/source attempts into blind retries. Local gate results, live integrations,
+video and contest readiness are separate. Existing explicit verification/authorization boundaries remain.

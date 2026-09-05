@@ -11,7 +11,8 @@ from datetime import timedelta
 
 from .core import CaseworkError, authorize, digest, new_id, scope_key
 from .models import Command, HandoffCommand
-from .source_models import CollectCommand, ConnectorConfig
+from .source_models import CollectCommand, ConnectorConfig, MissionCommand
+from .source_guard import effective_policy, has_obligations, remember_policy
 from .source_state import (current_receipts, evidence_basis, evidence_heads, parsed_time,
                             source_conflicts, source_key)
 from .connectors.github_issue import GitHubIssueSource
@@ -38,20 +39,24 @@ class EvidenceDesk:
         return next((p for p in self.config.policies if p.tenant_id == state.tenant_id
                      and scope_key(p.scope) == scope_key(case.scope)), None)
 
+    def remember_policy(self, state, case, source_ids=()):
+        remember_policy(state, case, self.policy(state, case), source_ids)
+
     def context(self, state, case_id, at):
         case = state.cases[case_id]
         policy = self.policy(state, case)
+        floor = effective_policy(state, case, policy)
         receipts, rejected = current_receipts(state, case_id, at, self.specs)
         conflicts = source_conflicts(receipts)
         got = {x["source_id"] for x in receipts}
-        required = set(policy.required_sources if policy else [])
-        relevant = [r for r in receipts if r["source_id"] in required] if policy else receipts
+        required = set(floor["required_sources"])
+        relevant = [r for r in receipts if r["source_id"] in required] if required else receipts
         groups = {r["independence_group"] for r in relevant}
         # Complete coverage means every current head is usable and mutually
         # consistent.  A stale/failed head or conflicting claim is never allowed
         # to proceed as merely "optional" evidence after it entered the case.
         ready = (not rejected and not conflicts and not (required - got)
-                 and (not policy or len(groups) >= policy.min_independence_groups))
+                 and len(groups) >= floor["min_independence_groups"])
         signals = []
         for r in receipts:
             facts = r["facts"]
@@ -68,7 +73,8 @@ class EvidenceDesk:
             "required_sources": sorted(required), "missing_sources": sorted(required - got),
             "declared_independence_groups": len(groups), "coverage_complete": ready,
             "source_conflicts": conflicts,
-            "resolution_requires_sources": policy is not None,
+            "resolution_requires_sources": bool(required or policy),
+            "source_obligations": floor,
             "policy_hash": digest("scope-evidence-policy", policy.model_dump(mode="json") if policy else {}),
             "receipts": [{"receipt_id": r["receipt_id"], "source_id": r["source_id"],
                           "receipt_root": r["receipt_root"], "facts": r["facts"],
@@ -82,7 +88,7 @@ class EvidenceDesk:
     def report_context(self, state, case_id, at):
         # Preserve old no-source reports in explicitly manual scopes. Once a source
         # is used, its current head enters the basis even if it subsequently fails.
-        if not self.policy(state, state.cases[case_id]) and not evidence_heads(state, case_id):
+        if not self.policy(state, state.cases[case_id]) and not has_obligations(state, case_id):
             return None
         return self.context(state, case_id, at)
 
@@ -99,9 +105,9 @@ class EvidenceDesk:
             raise CaseworkError("SOURCE_COVERAGE_REQUIRED")
 
     def resolution(self, state, case, evidence_digest, at):
-        if self.policy(state, case) is None:
+        value = self.report_context(state, case.case_id, at)
+        if value is None:
             return
-        value = self.context(state, case.case_id, at)
         if value["source_conflicts"]:
             raise CaseworkError("SOURCE_CONFLICT")
         if not value["coverage_complete"] or evidence_digest != value["bundle_root"]:
@@ -169,6 +175,7 @@ class EvidenceDesk:
             current = self.svc._case(state, actor, case_id)
             if current.status != "OPEN" or current.version != case.version:
                 raise CaseworkError("SOURCE_CASE_CHANGED")
+            self.remember_policy(state, current, [spec.source_id])
             receipts, _ = current_receipts(state, case_id, self.svc.clock(), self.specs)
             cached = next((r for r in receipts if r["source_id"] == spec.source_id and r["resource"] == resource), None)
             if cached and not cmd.force_refresh:
@@ -203,7 +210,8 @@ class EvidenceDesk:
                         "historical_only": True, "revision": state.revision, "executable": False}
         observed, error = None, None
         try:
-            observed = adapter.fetch(spec, resource, case.scope, self.svc.clock())
+            from .observations import bounded_observation
+            observed = bounded_observation(adapter.fetch(spec, resource, case.scope, self.svc.clock()))
         except CaseworkError as exc:
             error = exc.code
         except Exception:
@@ -275,12 +283,15 @@ class EvidenceDesk:
                 hashes[spec.source_id] = digest("source-spec", spec.model_dump(mode="json"))
             if cmd.reviewer_id:
                 reviewer = self.svc.actors.get(cmd.reviewer_id)
-                if (reviewer is None or reviewer.actor_id == actor.actor_id
+                if (reviewer is None or reviewer.actor_id in {actor.actor_id, case.opened_by}
                         or reviewer.tenant_id != actor.tenant_id or reviewer.role != "reviewer"
                         or case.scope.subject_id not in reviewer.subjects):
                     raise CaseworkError("MISSION_REVIEWER_NOT_ALLOWED", 403)
+            self.remember_policy(state, case, hashes)
             record = {"kind": "EVIDENCE_MISSION", "mission_id": mission_id,
-                      "case_id": case_id, "case_version": case.version,
+                      "origin_session_id": cmd.session_id,
+                      "origin_idempotency_key": cmd.idempotency_key,
+                      "case_id": case_id, "case_version": case.version, "created_seq": seq,
                       "planned_queries": payload["queries"], "reviewer_id": cmd.reviewer_id,
                       "source_policy_hashes": hashes, "operator_id": actor.actor_id,
                       "executable": False, "resolution_performed": False}
@@ -313,7 +324,7 @@ class EvidenceDesk:
             receipt = result.get("receipt")
             ok = result.get("state") in {"OBSERVED", "CACHE_HIT"} or result.get("request",{}).get("state") == "OBSERVED"
             if not ok or not receipt:
-                return {"stage": "COLLECTION_INCOMPLETE", "steps": outputs,
+                return {"mission_id": mission_id, "stage": "COLLECTION_INCOMPLETE", "steps": outputs,
                         "executable": False, "resolution_performed": False}
             revision = result["revision"]
         with self.svc.store.transaction(actor.tenant_id):
@@ -332,7 +343,7 @@ class EvidenceDesk:
             try:
                 self.svc._valid_report(state, case, report["report"]["report_id"])
             except CaseworkError:
-                return {"stage": "REPORT_STALE", "steps": outputs, "report": report,
+                return {"mission_id": mission_id, "stage": "REPORT_STALE", "steps": outputs, "report": report,
                         "resolution_performed": False, "executable": False,
                         "next_step": "Inspect changes and start a new mission idempotency key"}
         handoff = None
@@ -343,3 +354,97 @@ class EvidenceDesk:
                 report_id=report["report"]["report_id"], reviewer_id=cmd.reviewer_id), case_id)
         return {"mission_id": mission_id, "stage": "HANDED_OFF" if handoff else "INVESTIGATED", "steps": outputs,
                 "report": report, "handoff": handoff, "resolution_performed": False, "executable": False}
+
+
+    def list_missions(self, actor):
+        authorize(actor, {"owner", "investigator", "reviewer", "viewer"})
+        with self.svc.store.transaction(actor.tenant_id):
+            state = self.svc._load(actor.tenant_id)
+            plans = [value for value in state.artifacts.values()
+                     if value.get("kind") == "EVIDENCE_MISSION"
+                     and value.get("case_id") in state.cases
+                     and state.cases[value["case_id"]].scope.subject_id in actor.subjects]
+            plans.sort(key=lambda p: (p.get("created_seq", 0), p["mission_id"]), reverse=True)
+            return {"missions": [{"mission_id": p["mission_id"], "case_id": p["case_id"],
+                    "operator_id": p["operator_id"], "case_version": p["case_version"],
+                    "resume_supported": bool(p.get("origin_idempotency_key"))} for p in plans],
+                    "revision": state.revision, "executable": False}
+
+    def inspect_mission(self, actor, mission_id):
+        authorize(actor, {"owner", "investigator", "reviewer", "viewer"})
+        with self.svc.store.transaction(actor.tenant_id):
+            state = self.svc._load(actor.tenant_id)
+            record = state.artifacts.get(mission_id)
+            if not record or record.get("kind") != "EVIDENCE_MISSION":
+                raise CaseworkError("MISSION_NOT_FOUND", 404)
+            case = self.svc._case(state, actor, record["case_id"])
+            steps = []
+            origin = record.get("origin_idempotency_key")
+            for index, query in enumerate(record["planned_queries"]):
+                if origin:
+                    subkey = "mission_" + digest("mission-step", [origin, index])[:40]
+                    fetch_id = "fetch_" + digest("fetch-id", [actor.tenant_id, record["operator_id"], subkey])[:32]
+                    request = state.artifacts.get(fetch_id)
+                    idem = state.idempotency.get(digest("idempotency-key", [record["operator_id"], subkey]))
+                    stage = request.get("state") if request else (idem["response"].get("state") if idem else "NOT_STARTED")
+                else:
+                    stage = "LEGACY_IDENTITY_UNAVAILABLE"
+                steps.append({"index": index, "source_id": query["source_id"], "state": stage})
+            same_case = case.version == record["case_version"] and case.status == "OPEN"
+            config_matches = all(sid in self.specs and
+                digest("source-spec", self.specs[sid].model_dump(mode="json")) == value
+                for sid, value in record["source_policy_hashes"].items())
+            report = None
+            attempt = None
+            if origin:
+                report_key = "mission_" + digest("mission-report", origin)[:40]
+                attempt = state.artifacts.get("investigation_" + digest("investigation-attempt", [record["operator_id"], report_key])[:40])
+                row = state.idempotency.get(digest("idempotency-key", [record["operator_id"], report_key]))
+                if row:
+                    report = row["response"].get("report")
+            report_current = False
+            if report:
+                try:
+                    self.svc._valid_report(state, case, report["report_id"])
+                    report_current = True
+                except CaseworkError:
+                    pass
+            safe_plan = {k: copy.deepcopy(v) for k, v in record.items()
+                         if k not in {"origin_session_id", "origin_idempotency_key"}}
+            return {"mission": safe_plan, "steps": steps, "case_current": same_case,
+                    "config_matches": config_matches, "report_id": report["report_id"] if report else None,
+                    "report_current": report_current, "revision": state.revision,
+                    "resume_supported": bool(origin and record.get("origin_session_id")),
+                    "investigation_state": attempt.get("state") if attempt else "NO_RESERVED_MODEL_ATTEMPT",
+                    "executable": False, "resolution_performed": False}
+
+    def resume_mission(self, actor, cmd, mission_id):
+        authorize(actor, {"investigator"})
+        with self.svc.store.transaction(actor.tenant_id):
+            state = self.svc._load(actor.tenant_id)
+            record = copy.deepcopy(state.artifacts.get(mission_id))
+            if not record or record.get("kind") != "EVIDENCE_MISSION":
+                raise CaseworkError("MISSION_NOT_FOUND", 404)
+            self.svc._case(state, actor, record["case_id"])
+            if record["operator_id"] != actor.actor_id:
+                raise CaseworkError("MISSION_OWNER_MISMATCH", 403)
+            if not record.get("origin_idempotency_key") or not record.get("origin_session_id"):
+                raise CaseworkError("LEGACY_MISSION_REQUIRES_NEW_PLAN", 409)
+        def signal(current, seq):
+            live = current.artifacts.get(mission_id)
+            if live != record:
+                raise CaseworkError("MISSION_PLAN_CHANGED", 409)
+            case = self.svc._case(current, actor, record["case_id"])
+            if case.status != "OPEN" or case.version != record["case_version"]:
+                raise CaseworkError("MISSION_CASE_CHANGED", 409)
+            return {"mission_id": mission_id, "resume_signal_recorded": True,
+                    "session_changed": cmd.session_id != record["origin_session_id"],
+                    "no_restart_claim": True}
+        resumed = self.svc._mutate(actor, cmd, "mission.resume",
+                    {"case_id": record["case_id"], "mission_id": mission_id}, signal)
+        revision = self.svc.overview(actor)["revision"]
+        original = MissionCommand(session_id=record["origin_session_id"],
+            idempotency_key=record["origin_idempotency_key"], expected_revision=revision,
+            queries=record["planned_queries"], reviewer_id=record["reviewer_id"])
+        result = self.mission(actor, original, record["case_id"])
+        return result | {"resume_signal": resumed, "logical_request_reused": True}

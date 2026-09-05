@@ -48,11 +48,11 @@ class BaseAuditAnchor:
     def _rpc(self, method: str, params: list):
         if self._transport is not None:
             return self._transport(method, params)
-        response = httpx.post(self.rpc_url, json={"jsonrpc": "2.0", "id": 1,
-                              "method": method, "params": params}, timeout=10)
-        response.raise_for_status()
-        data = response.json()
-        if not isinstance(data, dict) or data.get("error") or "result" not in data:
+        from .connectors.http_client import BoundedHTTP
+        data, _ = BoundedHTTP(timeout=10).json("POST", self.rpc_url,
+            payload={"jsonrpc": "2.0", "id": 1, "method": method, "params": params})
+        if (data.get("jsonrpc") != "2.0" or type(data.get("id")) is not int
+                or data["id"] != 1 or "error" in data or "result" not in data):
             raise CaseworkError("ANCHOR_RPC_ERROR", 503)
         return data["result"]
 
@@ -112,7 +112,8 @@ class BaseAuditAnchor:
             if block_number <= 0 or not HASH.fullmatch(block_hash):
                 raise CaseworkError("ANCHOR_BLOCK_INVALID", 422)
             canonical = self._rpc("eth_getBlockByNumber", [hex(block_number), False])
-            if not canonical or str(canonical.get("hash", "")).lower() != block_hash.lower():
+            if (not canonical or str(canonical.get("hash", "")).lower() != block_hash.lower()
+                    or int(canonical.get("number", "-1"), 16) != block_number):
                 raise CaseworkError("ANCHOR_BLOCK_NOT_CANONICAL", 409)
             seen = int(self._rpc("eth_blockNumber", []), 16) - block_number + 1
             if seen < self.confirmations:

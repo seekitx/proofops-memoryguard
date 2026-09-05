@@ -8,8 +8,8 @@
   function reset() {
     epoch++; token = ""; pending.clear();
     for (const id of ["source-catalog", "dossier-cards", "impact-nodes", "source-id"]) $(id).replaceChildren();
-    for (const id of ["dossier-json", "partner-result", "impact-edges", "source-status"]) $(id).textContent = "";
-    for (const id of ["bundle-root", "partner-plan", "source-case", "source-resource", "source-queries", "source-reviewer", "partner-report", "partner-job", "impact-task"]) $(id).value = "";
+    for (const id of ["dossier-json", "partner-result", "impact-edges", "source-status", "mission-result"]) $(id).textContent = "";
+    for (const id of ["mission-id", "bundle-root", "partner-plan", "source-case", "source-resource", "source-queries", "source-reviewer", "partner-report", "partner-job", "impact-task"]) $(id).value = "";
     $("source-force").checked = false;
     $("source-identity").textContent = "Disconnected";
   }
@@ -86,6 +86,7 @@
     if ($("source-reviewer").value.trim()) fields.reviewer_id = $("source-reviewer").value.trim();
     const result = await command(casePath() + "/mission", fields);
     $("partner-result").textContent = JSON.stringify(result, null, 2);
+    if (result.mission_id) $("mission-id").value = result.mission_id;
     if (result.report?.report?.report_id) $("partner-report").value = result.report.report.report_id;
     renderDossier(await api(casePath() + "/dossier"));
   });
@@ -103,5 +104,19 @@
     for (const n of data.nodes) { const card = node("article", ""); card.className = "card";
       card.append(node("code", n.task_id), node("h3", n.effective_verdict), node("p", n.proof_invalid_reasons?.join(", ") || "Current proof")); $("impact-nodes").append(card); }
     $("impact-edges").textContent = data.edges.map(e => `${e.from} → ${e.to}`).join("\n");
+  });
+  bind("mission-list", async () => {
+    const data = await api("/api/v2/missions");
+    $("mission-result").textContent = JSON.stringify(data, null, 2);
+    if (data.missions.length) $("mission-id").value = data.missions[0].mission_id;
+  });
+  bind("mission-inspect", async () => {
+    const id = encodeURIComponent($("mission-id").value.trim());
+    $("mission-result").textContent = JSON.stringify(await api(`/api/v2/missions/${id}`), null, 2);
+  });
+  bind("mission-resume", async () => {
+    const id = encodeURIComponent($("mission-id").value.trim());
+    const result = await command(`/api/v2/missions/${id}/resume`, {});
+    $("mission-result").textContent = JSON.stringify(result, null, 2);
   });
 })();

@@ -5,6 +5,7 @@ import json
 import time
 import httpx
 from ..core import CaseworkError
+from ..json_boundary import strict_json
 
 
 class BoundedHTTP:
@@ -28,7 +29,7 @@ class BoundedHTTP:
                         raw.extend(chunk)
                         if len(raw) > self.max_bytes:
                             raise CaseworkError("SOURCE_RESPONSE_TOO_LARGE", 502)
-                    data = json.loads(raw)
+                    data = strict_json(bytes(raw), max_bytes=self.max_bytes)
                     if not isinstance(data, dict):
                         raise CaseworkError("SOURCE_SCHEMA_INVALID", 502)
                     return data, bytes(raw)

@@ -171,11 +171,9 @@ class ConnectorConfig(StrictModel):
 
     @classmethod
     def from_file(cls, path: Path):
-        if path.is_symlink() or path.stat().st_size > 128_000:
-            raise ValueError("invalid connector config file")
-        if path.stat().st_mode & 0o022:
-            raise ValueError("connector policy must not be group/world writable")
-        return cls.model_validate_json(path.read_bytes())
+        from .json_boundary import read_json_file
+        value, _ = read_json_file(path, max_bytes=128_000)
+        return cls.model_validate(value)
 
 
 class CollectCommand(Command):

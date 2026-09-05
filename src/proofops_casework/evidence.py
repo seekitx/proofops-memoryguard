@@ -103,12 +103,11 @@ def public_summary(path: Path | None, *, current_commit: str | None,
     try:
         if not path.is_file():
             return result
-        if path.stat().st_size > 256_000:
-            raise ValueError("capture too large")
-        payload = path.read_bytes()
-        if len(payload) > 256_000:
-            raise ValueError("capture too large")
-        capture = PublicCapture.model_validate_json(payload)
+        from .json_boundary import read_json_file
+        value, payload = read_json_file(path, max_bytes=256_000)
+        capture = PublicCapture.model_validate(value)
+        if capture.captured_at > datetime.now(timezone.utc):
+            raise ValueError("capture timestamp is in the future")
         build_matches = capture.build_commit == current_commit
         source_matches = capture.source_digest == current_source_digest
         passed = all(capture.checks.model_dump().values())

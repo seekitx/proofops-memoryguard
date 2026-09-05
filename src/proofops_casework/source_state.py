@@ -1,7 +1,7 @@
 """Pure receipt/bundle helpers. Artifacts live inside the existing sealed workspace."""
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 from .core import CaseworkError, digest
 
@@ -93,6 +93,7 @@ def current_receipts(state, case_id: str, at: datetime, source_specs: dict) -> t
     for source_id, head in sorted(evidence_heads(state, case_id).items()):
         receipt = state.artifacts.get(head.get("receipt_id", ""))
         spec = source_specs.get(source_id)
+        request = state.artifacts.get(head.get("request_id", ""), {})
         reason = None
         if head.get("state") != "OBSERVED" or receipt is None:
             reason = "SOURCE_NOT_OBSERVED"
@@ -101,8 +102,23 @@ def current_receipts(state, case_id: str, at: datetime, source_specs: dict) -> t
               or receipt.get("source_id") != source_id
               or receipt.get("receipt_id") != head.get("receipt_id")):
             reason = "SOURCE_RECEIPT_BINDING_INVALID"
-        elif spec is None or receipt.get("source_spec_hash") != digest("source-spec", spec.model_dump(mode="json")):
+        elif (spec is None or spec.tenant_id != state.tenant_id
+              or state.cases[case_id].scope.subject_id not in spec.subjects
+              or receipt.get("source_spec_hash") != digest("source-spec", spec.model_dump(mode="json"))):
             reason = "SOURCE_POLICY_CHANGED"
+        elif (request.get("kind") != "SOURCE_REQUEST" or request.get("state") != "OBSERVED"
+              or request.get("case_id") != case_id or request.get("source_id") != source_id
+              or request.get("case_version") != state.cases[case_id].version
+              or request.get("receipt_id") != receipt.get("receipt_id")
+              or request.get("resource") != receipt.get("resource")
+              or request.get("source_spec_hash") != receipt.get("source_spec_hash")
+              or receipt.get("independence_group") != spec.independence_group
+              or receipt.get("authoritative") is not False or receipt.get("executable") is not False):
+            reason = "SOURCE_REQUEST_BINDING_INVALID"
+        elif (parsed_time(receipt.get("fetched_at")) > at
+              or parsed_time(receipt.get("expires_at")) <= parsed_time(receipt.get("fetched_at"))
+              or parsed_time(receipt.get("expires_at")) > parsed_time(receipt.get("fetched_at")) + timedelta(seconds=spec.ttl_seconds)):
+            reason = "SOURCE_FRESHNESS_INVALID"
         elif receipt.get("expires_at") is None or parsed_time(receipt["expires_at"]) <= at:
             reason = "SOURCE_EXPIRED"
         elif receipt.get("receipt_root") != digest("source-receipt", {k:v for k,v in receipt.items() if k != "receipt_root"}):
