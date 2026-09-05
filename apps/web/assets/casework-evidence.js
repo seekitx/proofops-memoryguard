@@ -25,3 +25,13 @@
     $("capture-scope").textContent = error.message;
   }
 })();
+
+(async () => {
+  const el = document.getElementById("source-experiment");
+  if (!el) return;
+  try {
+    const response = await fetch("/api/v2/public-source-experiment", {cache: "no-store"});
+    if (!response.ok) throw new Error("Not available");
+    el.textContent = JSON.stringify(await response.json(), null, 2);
+  } catch (_) { el.textContent = "Source experiment not available. No completed test is claimed."; }
+})();

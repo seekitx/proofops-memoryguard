@@ -29,6 +29,17 @@ def register_casework(app: FastAPI, web_root: Path) -> None:
         return app.state.casework_registry
 
     app.include_router(build_router(service, registry, web_root))
+    from .integration_api import build_integration_router
+    def integration_component(name):
+        service()
+        value = getattr(app.state, name, None)
+        if value is None:
+            raise CaseworkError("CONNECTORS_NOT_READY", 503)
+        return value
+    app.include_router(build_integration_router(service, registry,
+        lambda: integration_component("casework_desk"),
+        lambda: integration_component("casework_partner"),
+        lambda: integration_component("casework_ingress"), web_root))
 
     @app.get("/casework/evidence", include_in_schema=False)
     def judge_evidence_page():
@@ -43,6 +54,14 @@ def register_casework(app: FastAPI, web_root: Path) -> None:
             current_commit=current.build_commit if current else None,
             current_source_digest=getattr(app.state, "casework_source_digest", None))
 
+    @app.get("/api/v2/public-source-experiment")
+    def source_experiment_summary():
+        from .source_public import public_source_experiment
+        current = getattr(app.state, "casework", None)
+        return public_source_experiment(getattr(app.state, "source_experiment_path", None),
+            commit=current.build_commit if current else None,
+            source_digest=getattr(app.state, "casework_source_digest", None))
+
     @app.exception_handler(CaseworkError)
     async def casework_error(_request: Request, exc: CaseworkError):
         return JSONResponse(status_code=exc.status, content={"error": exc.code, "executable": False},
@@ -55,7 +74,7 @@ def register_casework(app: FastAPI, web_root: Path) -> None:
         if enabled and path == "/api/runtime" and request.method == "GET":
             current = getattr(app.state, "casework", None)
             return JSONResponse(status_code=200 if current else 503, content={
-                "module": "casework-v2.1", "build_commit": current.build_commit if current else None,
+                "module": "casework-v2.2", "build_commit": current.build_commit if current else None,
                 "runtime_id": current.runtime_id if current else None,
                 "source_digest": getattr(app.state, "casework_source_digest", None),
                 "production_fallback": False, "payment_tool_registered": False,
@@ -124,6 +143,17 @@ def start_casework(app: FastAPI, settings) -> None:
     app.state.casework_public_evidence_path = Path(evidence_path).resolve() if evidence_path else None
     app.state.casework_registry = registry
     app.state.casework = CaseworkService(store, registry.actors, model=model, build_commit=commit, anchor=anchor)
+    from .source_models import ConnectorConfig
+    from .source_service import EvidenceDesk
+    from .partner_review import PartnerReviewService
+    from .incident_ingress import IncidentIngress
+    source_export = os.environ.get("CASEWORK_SOURCE_EXPERIMENT_PATH")
+    app.state.source_experiment_path = Path(source_export) if source_export else None
+    config_file = os.environ.get("CASEWORK_CONNECTORS_FILE")
+    config = ConnectorConfig.from_file(Path(config_file)) if config_file else ConnectorConfig()
+    app.state.casework_desk = EvidenceDesk(app.state.casework, config)
+    app.state.casework_partner = PartnerReviewService(app.state.casework, config)
+    app.state.casework_ingress = IncidentIngress(app.state.casework, config)
 
 
 def casework_readiness(app: FastAPI) -> dict:
@@ -131,7 +161,7 @@ def casework_readiness(app: FastAPI) -> dict:
     service = getattr(app.state, "casework", None)
     registry = getattr(app.state, "casework_registry", None)
     if service is None or registry is None:
-        return {"ready": False, "status": "degraded", "module": "casework-v2.1",
+        return {"ready": False, "status": "degraded", "module": "casework-v2.2",
                 "error": "CASEWORK_NOT_READY", "executable": False}
     initialized = 0
     try:
@@ -142,9 +172,9 @@ def casework_readiness(app: FastAPI) -> dict:
                 raise CaseworkError("MEMORY_BACKEND_UNAVAILABLE", 503)
             initialized += int(result.get("workspace_initialized", False))
     except Exception:
-        return {"ready": False, "status": "degraded", "module": "casework-v2.1",
+        return {"ready": False, "status": "degraded", "module": "casework-v2.2",
                 "error": "CASEWORK_MEMORY_UNAVAILABLE", "executable": False}
-    return {"ready": True, "status": "ready", "module": "casework-v2.1",
+    return {"ready": True, "status": "ready", "module": "casework-v2.2",
             "memory_backend": service.store.production_kind,
             "build_commit": service.build_commit, "initialized_workspaces": initialized,
             "configured_workspaces": len(tenants), "model_is_authority_dependency": False,

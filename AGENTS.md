@@ -94,3 +94,14 @@ Public v2 evidence is an explicit synthetic export, never a private workspace pr
 Do not label historical/dirty/test-double artifacts current, or perform live model,
 wallet, ACP or deployment actions without the required authorization.
 The existing verification boundary above remains unchanged.
+
+## Casework 2.2 source integration
+
+Before editing sources, missions, MCP or ACP, read `docs/CASEWORK_22_IMPLEMENTATION.md`
+and `docs/CASEWORK_22_INTEGRATIONS.md`. Preserve scoped RBAC and the sole Sibyl
+business store. Source coverage is not fact truth. HMAC ingress may only open risk;
+MCP is read-only; ACP history is non-authoritative and not independently verified
+onchain evidence. Never turn a configured source, CLI plan, synthetic benchmark or
+self-recorded capture into a live integration/partner/PMF claim. Keep current and
+historical report snapshots distinct. Keep credentials and backup data out of Git
+and the Docker build context. Do not bypass stale-source or independent-review gates.

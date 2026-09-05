@@ -1,5 +1,17 @@
 # ProofOps MemoryGuard
 
+## Casework 2.2 — source-aware investigation
+
+This increment adds allowlisted issue/chain evidence, signed incident ingress,
+durable acquisition plans, evidence-bound investigation and resolution, seven
+read-only MCP tools, and request-bound Virtuals ACP history inspection. No job
+creation, funding, signing, or risk-resolution tool is granted to the model.
+Implementation is not live verification. See [implementation](docs/CASEWORK_22_IMPLEMENTATION.md),
+[integration setup and limits](docs/CASEWORK_22_INTEGRATIONS.md), and
+[reviewer guide](docs/CASEWORK_22_JUDGE_GUIDE.md). Run final-build evidence before
+claiming live sources or partner credit; historical v1/2.1 captures do not prove these new integrations.
+
+
 ## Casework 2.1 — release hardening
 
 This increment checks all ancestor expiries, offers read-only recovery order, binds
