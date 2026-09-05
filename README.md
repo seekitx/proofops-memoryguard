@@ -1,5 +1,15 @@
 # ProofOps MemoryGuard
 
+## Current Sibyl candidate — 2.3.0-rc1
+
+Read [the consolidated release plan](docs/SIBYL_FINAL_RELEASE.md) for durable source obligations,
+new-session mission continuation, bounded model attempts, exact partner freshness and the unified
+local acceptance gate. Historical sections below document earlier increments, not current runtime proof.
+All outputs remain non-executable. No new test, model, source, wallet, ACP, video or PMF result is
+claimed merely from this source update. API compatibility id remains `casework-v2.2`; the active
+implementation reports `implementation_version=2.3.0-rc1`.
+
+
 ## Casework 2.2 — source-aware investigation
 
 This increment adds allowlisted issue/chain evidence, signed incident ingress,

@@ -17,6 +17,7 @@ import time
 
 from ..core import CaseworkError, digest
 from ..source_models import _validate_cli_home_path
+from ..json_boundary import strict_json
 
 
 def _validate_cli_home(raw_home: str) -> Path:
@@ -78,7 +79,7 @@ class ACPHistoryReader:
             code=proc.wait(timeout=2)
             if code:
                 raise CaseworkError("ACP_QUERY_FAILED",502)
-            return json.loads(buffers["out"])
+            return strict_json(bytes(buffers["out"]), max_bytes=512_000)
         except CaseworkError:
             raise
         except Exception as exc:
@@ -102,7 +103,8 @@ class ACPHistoryReader:
                 or str(data.get("jobId"))!=job_id or data.get("chainId")!=self.spec.chain_id
                 or data.get("status") not in {"open","budget_set","funded","submitted","completed","rejected","expired"}
                 or not isinstance(data.get("entries"),list)
-                or len(data["entries"])>1000 or data.get("entryCount")!=len(data["entries"])):
+                or len(data["entries"])>1000 or type(data.get("entryCount")) is not int
+                or data.get("entryCount")!=len(data["entries"])):
             raise CaseworkError("ACP_V2_HISTORY_CONTRACT_MISMATCH",502)
         phase_map = {"job.created":"open", "budget.set":"budget_set", "job.funded":"funded",
                      "job.submitted":"submitted", "job.completed":"completed",
@@ -124,7 +126,7 @@ class ACPHistoryReader:
             sender=str(entry.get("from","")).lower()
             content=entry.get("content")
             if not isinstance(content,str) or len(content)>32_000: continue
-            try: message=json.loads(content)
+            try: message=strict_json(content, max_bytes=32_000)
             except ValueError: continue
             if not isinstance(message,dict): continue
             if (sender==self.spec.client_address.lower() and entry.get("contentType")=="requirement"
@@ -149,6 +151,8 @@ class ACPHistoryReader:
             raise CaseworkError("ACP_REQUIREMENTS_NOT_BOUND",409)
         if invalid_review:
             raise CaseworkError("ACP_REVIEW_PAYLOAD_INVALID",502)
+        if len({digest("acp-review-message", item) for item in reviews}) > 1:
+            raise CaseworkError("ACP_PROVIDER_REVIEW_CONFLICT", 409)
         return {"job_id":job_id,"chain_id":self.spec.chain_id,"protocol":"v2","status":data["status"],
                 "request_hash":wanted,"history_digest":digest("acp-history",data),
                 "provider_message_bound":bool(reviews),"review":reviews[-1] if reviews else None,

@@ -12,6 +12,7 @@ import sys
 from urllib.parse import urlsplit
 
 from .connectors.http_client import BoundedHTTP
+from .json_boundary import strict_json
 
 TOOLS = {
     "memoryguard_report_sources": ("/api/v2/reports/{id}/sources", "report_id", "Read the exact historical source bundle used by a report; hashes are not truth"),
@@ -50,6 +51,8 @@ class ReadOnlyMCP:
         if not isinstance(msg,dict) or msg.get("jsonrpc")!="2.0":
             return {"jsonrpc":"2.0","id":None,"error":{"code":-32600,"message":"Invalid request"}}
         method=msg.get("method"); ident=msg.get("id")
+        if not isinstance(method, str):
+            return {"jsonrpc":"2.0", "id":None, "error":{"code":-32600,"message":"Invalid method"}}
         def result(value): return {"jsonrpc":"2.0","id":ident,"result":value}
         def error(code,message): return {"jsonrpc":"2.0","id":ident,"error":{"code":code,"message":message}}
         if "id" not in msg:
@@ -96,7 +99,7 @@ def main():
         if len(line)>65_536:
             print("Oversized MCP message; connection closed.",file=sys.stderr); return 2
         try:
-            response=server.dispatch(json.loads(line))
+            response=server.dispatch(strict_json(line, max_bytes=65_536))
         except (ValueError,TypeError):
             response={"jsonrpc":"2.0","id":None,"error":{"code":-32700,"message":"Parse error"}}
         if response is not None:

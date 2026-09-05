@@ -35,3 +35,13 @@
     el.textContent = JSON.stringify(await response.json(), null, 2);
   } catch (_) { el.textContent = "Source experiment not available. No completed test is claimed."; }
 })();
+
+(async () => {
+  const target = document.getElementById("release-gate");
+  if (!target) return;
+  try {
+    const response = await fetch("/api/v2/public-release", {cache:"no-store"});
+    if (!response.ok) throw new Error("Release record unavailable");
+    target.textContent = JSON.stringify(await response.json(), null, 2);
+  } catch (_) { target.textContent = "Release gate not recorded. No pass is claimed."; }
+})();

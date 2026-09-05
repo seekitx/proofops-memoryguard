@@ -15,8 +15,8 @@ def public_source_experiment(path: Path | None, *, commit: str | None, source_di
               "current_build_commit":commit,"partner_bonus_claimed":False,"executable":False}
     if path is None or not path.is_file(): return boundary|{"state":"NOT_RECORDED"}
     try:
-        if path.is_symlink() or path.stat().st_size>256_000: raise ValueError()
-        value=json.loads(path.read_bytes())
+        from .json_boundary import read_json_file
+        value, _ = read_json_file(path, max_bytes=256_000)
         if (value.get("schema_version")!="casework-source-experiment/1"
                 or value.get("external_network")!="SYNTHETIC_HTTP_TRANSPORT"
                 or value.get("backend") not in {"OFFICIAL_SIBYL","TEST_DOUBLE"}

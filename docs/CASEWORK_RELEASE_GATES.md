@@ -32,4 +32,4 @@ Virtuals native runtime/job, partner multiplier award, customers, PMF, monetary 
 
 ## Rollback
 
-Disable CASEWORK_ENABLED to return to old demo routes. Preserve SDK disk and historical evidence. Installer source rollback does not touch business data and refuses to overwrite edits made after installation. Do not erase actual DB to make a failed test look clean; only isolated probes may delete their own temporary DB.
+First stop public writes and isolate the deployment. Do not disable CASEWORK_ENABLED as a public production rollback: it reopens the legacy anonymous demo write surface. Older code may also ignore newly persisted source obligations. Preserve SDK disk and historical evidence, and review compatibility before restoring writes. See docs/SIBYL_FINAL_RELEASE.md. Installer source rollback does not touch business data and refuses to overwrite edits made after installation. Do not erase actual DB to make a failed test look clean; only isolated probes may delete their own temporary DB.

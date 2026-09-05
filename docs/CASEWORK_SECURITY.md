@@ -37,7 +37,7 @@ The adapter's exact serialization, transaction and close behavior must be verifi
 
 ## Model concurrency and availability
 
-Planning is outside DB lock, then relevant basis is rechecked. A provider outage yields explicitly DEGRADED investigation with deterministic mandatory reads; Sibyl failure halts. Replaying a committed investigation avoids another provider call. Two identical simultaneous uncommitted requests may both call the model before one persisted receipt wins: external cost exactly-once is NOT promised.
+Planning is outside DB lock, then relevant basis is rechecked. A provider outage yields explicitly DEGRADED investigation with deterministic mandatory reads; Sibyl failure halts. Replaying a committed investigation avoids another provider call. The final candidate persists an INVESTIGATION_ATTEMPT before a remote model call. Concurrent identical logical commands return IN_PROGRESS_OR_UNCERTAIN rather than initiating another attempt. A crash keeps that uncertainty visible; a new command is an explicit new attempt. External-provider billing exactly-once is NOT promised. See docs/SIBYL_FINAL_RELEASE.md.
 
 ## Base audit path
 

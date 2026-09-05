@@ -14,6 +14,7 @@ from .service import CaseworkService
 from .store import SibylWorkspaceStore
 from .request_limit import CaseworkBodyLimit
 from .evidence import source_digest, public_summary
+from .version import IMPLEMENTATION_VERSION
 
 
 def register_casework(app: FastAPI, web_root: Path) -> None:
@@ -62,6 +63,14 @@ def register_casework(app: FastAPI, web_root: Path) -> None:
             commit=current.build_commit if current else None,
             source_digest=getattr(app.state, "casework_source_digest", None))
 
+    @app.get("/api/v2/public-release")
+    def release_summary():
+        from .release_evidence import public_release
+        current = getattr(app.state, "casework", None)
+        return public_release(getattr(app.state, "casework_release_path", None),
+            commit=current.build_commit if current else None,
+            source=getattr(app.state, "casework_source_digest", None))
+
     @app.exception_handler(CaseworkError)
     async def casework_error(_request: Request, exc: CaseworkError):
         return JSONResponse(status_code=exc.status, content={"error": exc.code, "executable": False},
@@ -74,7 +83,7 @@ def register_casework(app: FastAPI, web_root: Path) -> None:
         if enabled and path == "/api/runtime" and request.method == "GET":
             current = getattr(app.state, "casework", None)
             return JSONResponse(status_code=200 if current else 503, content={
-                "module": "casework-v2.2", "build_commit": current.build_commit if current else None,
+                "module": "casework-v2.2", "implementation_version": IMPLEMENTATION_VERSION, "build_commit": current.build_commit if current else None,
                 "runtime_id": current.runtime_id if current else None,
                 "source_digest": getattr(app.state, "casework_source_digest", None),
                 "production_fallback": False, "payment_tool_registered": False,
@@ -140,13 +149,15 @@ def start_casework(app: FastAPI, settings) -> None:
             expected_attester=attester, rpc_url=settings.base_rpc_url)
     app.state.casework_source_digest = source_digest(Path(__file__).resolve().parents[2])
     evidence_path = os.environ.get("CASEWORK_PUBLIC_EVIDENCE_FILE")
-    app.state.casework_public_evidence_path = Path(evidence_path).resolve() if evidence_path else None
+    app.state.casework_public_evidence_path = Path(evidence_path) if evidence_path else None
     app.state.casework_registry = registry
     app.state.casework = CaseworkService(store, registry.actors, model=model, build_commit=commit, anchor=anchor)
     from .source_models import ConnectorConfig
     from .source_service import EvidenceDesk
     from .partner_review import PartnerReviewService
     from .incident_ingress import IncidentIngress
+    release_file = os.environ.get("CASEWORK_RELEASE_EVIDENCE_FILE")
+    app.state.casework_release_path = Path(release_file) if release_file else None
     source_export = os.environ.get("CASEWORK_SOURCE_EXPERIMENT_PATH")
     app.state.source_experiment_path = Path(source_export) if source_export else None
     config_file = os.environ.get("CASEWORK_CONNECTORS_FILE")
@@ -161,7 +172,7 @@ def casework_readiness(app: FastAPI) -> dict:
     service = getattr(app.state, "casework", None)
     registry = getattr(app.state, "casework_registry", None)
     if service is None or registry is None:
-        return {"ready": False, "status": "degraded", "module": "casework-v2.2",
+        return {"ready": False, "status": "degraded", "module": "casework-v2.2", "implementation_version": IMPLEMENTATION_VERSION,
                 "error": "CASEWORK_NOT_READY", "executable": False}
     initialized = 0
     try:
@@ -172,9 +183,9 @@ def casework_readiness(app: FastAPI) -> dict:
                 raise CaseworkError("MEMORY_BACKEND_UNAVAILABLE", 503)
             initialized += int(result.get("workspace_initialized", False))
     except Exception:
-        return {"ready": False, "status": "degraded", "module": "casework-v2.2",
+        return {"ready": False, "status": "degraded", "module": "casework-v2.2", "implementation_version": IMPLEMENTATION_VERSION,
                 "error": "CASEWORK_MEMORY_UNAVAILABLE", "executable": False}
-    return {"ready": True, "status": "ready", "module": "casework-v2.2",
+    return {"ready": True, "status": "ready", "module": "casework-v2.2", "implementation_version": IMPLEMENTATION_VERSION,
             "memory_backend": service.store.production_kind,
             "build_commit": service.build_commit, "initialized_workspaces": initialized,
             "configured_workspaces": len(tenants), "model_is_authority_dependency": False,

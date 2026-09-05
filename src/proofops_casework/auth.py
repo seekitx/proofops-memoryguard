@@ -15,11 +15,13 @@ class TokenRegistry:
     """Small deployment-controlled RBAC registry, not an identity-provider service."""
 
     def __init__(self, records: list[dict]):
+        if not isinstance(records, list) or not 1 <= len(records) <= 128:
+            raise ValueError("credential registry needs 1..128 records")
         self.actors: dict[str, Actor] = {}
         self.entries: list[tuple[str, Actor]] = []
         seen: set[str] = set()
         for row in records:
-            if set(row) != {"token_sha256", "principal"}:
+            if not isinstance(row, dict) or set(row) != {"token_sha256", "principal"}:
                 raise ValueError("unexpected credential field")
             token_hash = row["token_sha256"]
             if not isinstance(token_hash, str) or not re.fullmatch(r"[0-9a-f]{64}", token_hash):
@@ -37,12 +39,8 @@ class TokenRegistry:
 
     @classmethod
     def from_file(cls, path: Path) -> "TokenRegistry":
-        stat = path.stat()
-        if os.name == "posix" and stat.st_mode & 0o077:
-            raise ValueError("credential registry permissions must be 0600 or stricter")
-        if stat.st_size > 64_000:
-            raise ValueError("credential registry too large")
-        data = json.loads(path.read_text(encoding="utf-8"))
+        from .json_boundary import read_json_file
+        data, _ = read_json_file(path, max_bytes=64_000, private=True)
         if not isinstance(data, dict) or set(data) != {"credentials"}:
             raise ValueError("invalid credential registry")
         return cls(data["credentials"])

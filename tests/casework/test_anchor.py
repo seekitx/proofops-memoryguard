@@ -17,7 +17,7 @@ def configured():
         test_hasher=lambda s:hashlib.sha256(s.encode()).digest(),test_mode=True)
     plan=anchor.plan("a"*64,3,84532);tx="0x"+"3"*64;block="0x"+"4"*64
     answers.update({"eth_chainId":hex(84532),"eth_blockNumber":hex(101),
-        "eth_getBlockByNumber":{"hash":block},
+        "eth_getBlockByNumber":{"hash":block,"number":hex(100)},
         "eth_getTransactionByHash":{"from":anchor.expected_attester,"to":anchor.contract,
             "input":plan["data"],"value":"0x0","hash":tx,"blockNumber":hex(100),"blockHash":block},
         "eth_getTransactionReceipt":{"transactionHash":tx,"status":"0x1","to":anchor.contract,

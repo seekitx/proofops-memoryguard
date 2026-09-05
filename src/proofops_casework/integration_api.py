@@ -47,6 +47,18 @@ def build_integration_router(get_service: Callable, get_registry: Callable,
     def mission(case_id:Identifier,body:MissionCommand,actor:Auth):
         return get_desk().mission(actor,body,case_id)
 
+    @router.get("/api/v2/missions")
+    def mission_list(actor:Auth):
+        return get_desk().list_missions(actor)
+
+    @router.get("/api/v2/missions/{mission_id}")
+    def mission_state(mission_id:Identifier,actor:Auth):
+        return get_desk().inspect_mission(actor,mission_id)
+
+    @router.post("/api/v2/missions/{mission_id}/resume")
+    def mission_resume(mission_id:Identifier,body:Command,actor:Auth):
+        return get_desk().resume_mission(actor,body,mission_id)
+
     @router.post("/api/v2/cases/{case_id}/partner-review")
     def prepare(case_id:Identifier,body:PreparePartnerCommand,actor:Auth):
         return get_partner().prepare(actor,body,case_id,body.report_id)
