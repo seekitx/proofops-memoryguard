@@ -34,13 +34,30 @@ class SibylWorkspaceStore:
         self.timeout = lock_timeout
         self.thread_lock = threading.RLock()
         self.local = threading.local()
+        self.database_identity: tuple[int, int] | None = None
+
+    def _check_database_identity(self) -> None:
+        # An open SQLite connection can keep reading an unlinked inode. Do not
+        # silently serve that abandoned state after a file deletion/replacement.
+        if self.database_identity is not None:
+            try:
+                stat = self.path.stat()
+            except OSError as exc:
+                raise CaseworkError("MEMORY_FILE_REMOVED_RESTART_REQUIRED", 503) from exc
+            if (stat.st_dev, stat.st_ino) != self.database_identity:
+                raise CaseworkError("MEMORY_FILE_REPLACED_RESTART_REQUIRED", 503)
 
     def _client(self, tenant_id: str):
+        self._check_database_identity()
         clients = getattr(self.local, "clients", None)
         if clients is None:
             clients = self.local.clients = {}
         if tenant_id not in clients:
             clients[tenant_id] = self.client_factory(self.path, tenant_id=tenant_id)
+            stat = self.path.stat()
+            if self.database_identity is None:
+                self.database_identity = (stat.st_dev, stat.st_ino)
+            self._check_database_identity()
         return clients[tenant_id]
 
     @contextmanager
@@ -75,6 +92,7 @@ class SibylWorkspaceStore:
         try:
             client = self._client(tenant_id)
             row = client.get_entity(self.category, digest("workspace-key", tenant_id))
+            self._check_database_identity()
             state = Workspace.model_validate(row["body"])
             validate_workspace(state)
             return state
@@ -93,10 +111,26 @@ class SibylWorkspaceStore:
         try:
             self._client(tenant_id).set_entity(
                 self.category, digest("workspace-key", tenant_id), body, status="active")
+            self._check_database_identity()
+        except CaseworkError:
+            raise
         except Exception as exc:
             # The write MAY have committed before a transport/storage error. Retry
             # with the same idempotency key; never claim an external action happened.
             raise CaseworkError("MEMORY_WRITE_UNCERTAIN", 503) from exc
+
+    def health(self, tenant_id: str) -> dict:
+        """Physical store readiness; no implicit workspace/bootstrap authority."""
+        with self.transaction(tenant_id):
+            version = self._client(tenant_id).schema_version()
+            self._check_database_identity()
+            if version != 4:
+                raise CaseworkError("MEMORY_SCHEMA_UNSUPPORTED", 503)
+            # Detect corrupt state but an explicitly uninitialized tenant is not
+            # an unhealthy service (otherwise hosting may restart before bootstrap).
+            workspace = self.load(tenant_id)
+            return {"available": True, "schema_version": version,
+                    "workspace_initialized": workspace is not None}
 
     def close(self) -> None:
         for client in getattr(self.local, "clients", {}).values():

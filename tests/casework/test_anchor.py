@@ -19,7 +19,7 @@ def configured():
     answers.update({"eth_chainId":hex(84532),"eth_blockNumber":hex(101),
         "eth_getBlockByNumber":{"hash":block},
         "eth_getTransactionByHash":{"from":anchor.expected_attester,"to":anchor.contract,
-            "input":plan["data"],"value":"0x0"},
+            "input":plan["data"],"value":"0x0","hash":tx,"blockNumber":hex(100),"blockHash":block},
         "eth_getTransactionReceipt":{"transactionHash":tx,"status":"0x1","to":anchor.contract,
             "from":anchor.expected_attester,"blockNumber":hex(100),"blockHash":block,
             "logs":[{"address":anchor.contract,"topics":[anchor.event_topic,"0x"+plan["proof_root"],

@@ -133,12 +133,34 @@ def task_basis(state: Workspace, task_id: str) -> str:
     })
 
 
+def active_precedents(state: Workspace, case_id: str) -> list[str]:
+    """Only version-bound, still-resolved lessons can guide (never authorize) work.
+
+    Pre-2.1 lessons have no case_version. They stay in the audit store but are
+    intentionally not treated as current precedents; do not invent provenance.
+    """
+    current = state.cases[case_id]
+    result = []
+    for key, lesson in state.lessons.items():
+        source = state.cases.get(lesson.get("case_id", ""))
+        if (source is not None and source.case_id != case_id
+                and source.status == "RESOLVED"
+                and lesson.get("case_version") == source.version
+                and lesson.get("resolved_seq") == source.resolved_seq
+                and lesson.get("scope_key") == scope_key(current.scope)
+                and lesson.get("kind") == current.kind):
+            result.append(key)
+    return sorted(result)
+
+
 def investigation_basis(state: Workspace, case_id: str) -> str:
     case = state.cases[case_id]
     tasks = affected_tasks(state, case.scope)
     return digest("investigation-basis", {
         "case": case.model_dump(mode="json"),
         "affected": {key: task_basis(state, key) for key in tasks},
+        # Capture precedent changes even when there are currently zero tasks.
+        "precedents": {key: state.lessons[key] for key in active_precedents(state, case_id)},
     })
 
 
@@ -165,12 +187,79 @@ def policy_result(state: Workspace, task_id: str, at: datetime,
             return "NEEDS_HUMAN", ["BASELINE_EXPIRED"], causal, []
         if candidate.intent.amount_minor > baseline.limit_minor:
             return "NEEDS_HUMAN", ["LIMIT_EXCEEDED"], causal, []
-    for parent_id in task.depends_on:
+    for parent_id in (key for key in closure if key != task_id):
         parent = state.tasks[parent_id]
         previous = state.decisions.get(parent.current_decision_id or "")
-        if (parent.status != "READY" or previous is None or previous.expires_at <= at
+        if (parent.status != "READY" or parent.taints or previous is None
+                or previous.verdict != "READY" or previous.task_id != parent_id or previous.expires_at <= at
                 or previous.basis_hash != task_basis(state, parent_id)):
             return "NEEDS_HUMAN", ["DEPENDENCY_REVIEW_REQUIRED"], causal, []
     if task.taints and not explicit_review:
         return "NEEDS_HUMAN", ["EXPLICIT_RECONSIDERATION_REQUIRED"], causal, []
     return "READY", ["CURRENT_POLICY_PASSED", "HUMAN_CONFIRMATION_STILL_REQUIRED"], causal, []
+
+
+def decision_validity(state: Workspace, task_id: str, at: datetime) -> dict:
+    """Re-evaluate time AND policy; a hash check alone is not a live capability."""
+    task = state.tasks[task_id]
+    decision = state.decisions.get(task.current_decision_id or "")
+    verdict, reasons, _, blockers = policy_result(state, task_id, at)
+    invalid = []
+    if decision is None:
+        invalid.append("DECISION_MISSING")
+    else:
+        if decision.expires_at <= at:
+            invalid.append("DECISION_EXPIRED")
+        if decision.basis_hash != task_basis(state, task_id):
+            invalid.append("MEMORY_BASIS_CHANGED")
+        if task.status != decision.verdict:
+            invalid.append("TASK_STATUS_CHANGED")
+        if decision.verdict != verdict or sorted(decision.reason_codes) != sorted(reasons):
+            invalid.append("CURRENT_POLICY_CHANGED")
+    return {"current_proof_valid": not invalid,
+            "review_preparable": not invalid and verdict == "READY",
+            "effective_verdict": verdict, "effective_reason_codes": reasons,
+            "active_blockers": blockers, "proof_invalid_reasons": invalid}
+
+
+def ready_expiry(state: Workspace, task_id: str, at: datetime, default_expiry: datetime) -> datetime:
+    """A child's proof cannot outlive a required baseline or ancestor's proof."""
+    limits = [default_expiry]
+    for key in ancestors(state, task_id):
+        baseline = state.baselines.get(scope_key(state.tasks[key].intent.scope))
+        if baseline is not None:
+            limits.append(baseline.expires_at)
+        if key != task_id:
+            decision = state.decisions.get(state.tasks[key].current_decision_id or "")
+            if decision is not None:
+                limits.append(decision.expires_at)
+    result = min(limits)
+    if result <= at:
+        raise CaseworkError("READY_BASIS_EXPIRED")
+    return result
+
+
+def recovery_plan(state: Workspace, task_id: str, at: datetime) -> dict:
+    """Read-only topological checklist, not an optimizer or a batch permission."""
+    closure = ancestors(state, task_id)
+    rows = []
+    for key in closure:
+        task = state.tasks[key]
+        validity = decision_validity(state, key, at)
+        if validity["review_preparable"]:
+            step = "NO_REVIEW_NEEDED"
+        elif validity["active_blockers"]:
+            step = "INVESTIGATE_AND_RESOLVE_EACH_CASE"
+        elif any(x in validity["effective_reason_codes"] for x in
+                 ("BASELINE_MISSING", "BASELINE_EXPIRED", "LIMIT_EXCEEDED")):
+            step = "OWNER_REVIEW_BASELINE_OR_REQUEST"
+        elif "DEPENDENCY_REVIEW_REQUIRED" in validity["effective_reason_codes"]:
+            step = "REVIEW_ANCESTORS_FIRST"
+        else:
+            step = "EXPLICIT_RECONSIDERATION"
+        rows.append({"task_id": key, "required_predecessors": list(task.depends_on),
+                     "next_step": step, **validity})
+    return {"task_id": task_id, "memory_revision": state.revision,
+            "basis_hash": task_basis(state, task_id), "as_of": at.isoformat(),
+            "ordered_steps": rows, "read_only": True, "executable": False,
+            "note": "Refresh after each command. This checklist never resolves risks or grants authority."}

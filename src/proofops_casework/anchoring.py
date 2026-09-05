@@ -57,7 +57,7 @@ class BaseAuditAnchor:
         return data["result"]
 
     def plan(self, proof_root: str, memory_version: int, chain_id: int) -> dict:
-        if (not ROOT.fullmatch(proof_root) or type(memory_version) is not int
+        if (not ROOT.fullmatch(proof_root) or proof_root == "0" * 64 or type(memory_version) is not int
                 or not 1 <= memory_version < 2**64 or chain_id != self.chain_id):
             raise CaseworkError("ANCHOR_PROOF_OR_CHAIN_INVALID", 422)
         return {"chain_id": self.chain_id, "to": self.contract, "value": "0x0",
@@ -85,6 +85,9 @@ class BaseAuditAnchor:
                 raise CaseworkError("ANCHOR_RECEIPT_BINDING_FAILED", 422)
             transaction = self._rpc("eth_getTransactionByHash", [tx_hash])
             if (not isinstance(transaction, dict)
+                    or str(transaction.get("hash", "")).lower() != tx_hash.lower()
+                    or transaction.get("blockNumber") != receipt.get("blockNumber")
+                    or str(transaction.get("blockHash", "")).lower() != str(receipt.get("blockHash", "")).lower()
                     or str(transaction.get("to", "")).lower() != self.contract
                     or str(transaction.get("from", "")).lower() != self.expected_attester
                     or str(transaction.get("input", "")).lower() != plan["data"].lower()

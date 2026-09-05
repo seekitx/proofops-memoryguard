@@ -7,11 +7,14 @@ from typing import Any, Callable
 
 from .core import (CaseworkError, affected_tasks, ancestors, authorize, digest,
                    investigation_basis, new_id, now, policy_result, scope_key,
-                   seal, task_basis, validate_workspace)
+                   seal, task_basis, validate_workspace, active_precedents,
+                   decision_validity, ready_expiry, recovery_plan)
 from .models import (Actor, Baseline, BaselineCommand, BootstrapCommand, Command,
                      Decision, Handoff, HandoffCommand, NoteCommand, OpenCaseCommand,
                      ReopenCommand, Report, ResolveCommand, RiskCase, Task,
                      TaskCommand, Workspace)
+
+from .receipts import bound_receipt
 
 OWNER = {"owner"}
 OPERATORS = {"owner", "investigator"}
@@ -181,13 +184,23 @@ class CaseworkService:
                                                **task.intent.model_dump(mode="json")}),
             basis_hash=task_basis(state, task.task_id), memory_revision=revision,
             session_id=cmd.session_id, runtime_id=self.runtime_id, process_id=self.process_id,
-            build_commit=self.build_commit, created_at=at, expires_at=at + timedelta(minutes=10),
+            build_commit=self.build_commit, created_at=at, expires_at=(ready_expiry(state, task.task_id, at, at + timedelta(minutes=10))
+                                     if verdict == "READY" else at + timedelta(minutes=10)),
             tool="human_review.prepare" if verdict == "READY" else "operator_escalation.create",
         )
         decision.proof_root = digest("decision", decision.model_dump(mode="json", exclude={"proof_root"}))
         for blocker in blockers:
             task.taints[f"case:{blocker}:v{state.cases[blocker].version}"] = "OPEN_RISK"
         state.decisions[decision.decision_id] = decision
+        if verdict != "READY":
+            artifact_id = digest("escalation-artifact", [task.task_id, decision.decision_id])
+            state.artifacts[artifact_id] = {
+                "artifact_id": artifact_id, "kind": "OPERATOR_ESCALATION",
+                "type": "NON_EXECUTABLE_OPERATOR_ESCALATION", "task_id": task.task_id,
+                "decision_id": decision.decision_id, "proof_root": decision.proof_root,
+                "reason_codes": reasons, "active_blockers": blockers,
+                "created_at": at.isoformat(), "executable": False,
+            }
         task.current_decision_id = decision.decision_id
         task.status = verdict
         if explicit_review and verdict == "READY":
@@ -311,14 +324,7 @@ class CaseworkService:
                 suppressed = [digest("suppressed-tool", name) for name in requested
                               if name not in mandatory + optional]
                 candidate = getattr(plan, "model_receipt", None)
-                needed = {"generation_id", "completion_sha256", "model_context_hash", "resolved_model"}
-                if (not isinstance(candidate, dict) or not needed.issubset(candidate)
-                        or not all(candidate[k] for k in needed)
-                        or candidate.get("live_call_verified") is not True):
-                    raise ValueError("missing model receipt")
-                allowed_receipt = needed | {"backend", "configured_model", "completed_at",
-                                            "live_call_verified", "structured_output_validated"}
-                receipt = {key: candidate[key] for key in allowed_receipt if key in candidate}
+                receipt = bound_receipt(candidate, context, mandatory + optional)
                 planner_status = "REMOTE"
             except Exception:
                 requested = ()
@@ -330,8 +336,7 @@ class CaseworkService:
                   for root in impacted for key in ancestors(snapshot, root)}
         related_cases = sorted(key for key, item in snapshot.cases.items()
                                if item.status == "OPEN" and scope_key(item.scope) in scopes)
-        precedents = sorted(key for key, item in snapshot.lessons.items()
-                            if item["scope_key"] == scope_key(case.scope) and item["kind"] == case.kind)
+        precedents = active_precedents(snapshot, case_id)
         outputs = {"case.inspect": {"case_ids": related_cases or [case_id]},
                    "dependencies.trace": {"affected_tasks": impacted},
                    "precedent.lookup": {"precedent_ids": precedents}}
@@ -427,7 +432,8 @@ class CaseworkService:
                 state.tasks[key].status = "DENY" if observed_verdict == "DENY" else "NEEDS_HUMAN"
             lesson_id = new_id("lesson")
             state.lessons[lesson_id] = {"scope_key": scope_key(case.scope), "kind": case.kind,
-                "case_id": case_id, "report_id": report.report_id, "resolution": cmd.resolution,
+                "case_id": case_id, "case_version": case.version, "resolved_seq": seq,
+                "report_id": report.report_id, "resolution": cmd.resolution,
                 "reviewer_id": actor.actor_id, "evidence_digest": cmd.evidence_digest,
                 "authority": False}
             return {"case": case.model_dump(mode="json"), "affected_tasks": impacted,
@@ -468,10 +474,7 @@ class CaseworkService:
             tasks = []
             for key, task in visible.items():
                 item = task.model_dump(mode="json")
-                previous = state.decisions.get(task.current_decision_id or "")
-                item["current_proof_valid"] = bool(previous and previous.expires_at > self.clock()
-                    and previous.basis_hash == task_basis(state, key)
-                    and task.status == previous.verdict)
+                item.update(decision_validity(state, key, self.clock()))
                 tasks.append(item)
             case_ids = {key for key, case in state.cases.items() if case.scope.subject_id in actor.subjects}
             return {"revision": state.revision, "state_root": state.state_root,
@@ -500,8 +503,19 @@ class CaseworkService:
             decisions.sort(key=lambda item: item.memory_revision)
             return {"task_id": task_id, "current_status": task.status,
                     "decisions": [item.model_dump(mode="json") for item in decisions],
+                    "current_validity": decision_validity(state, task_id, self.clock()),
+                    "safety_artifacts": [copy.deepcopy(item) for item in state.artifacts.values()
+                        if item.get("task_id") == task_id and item.get("executable") is False
+                        and item.get("type") in {"NON_EXECUTABLE_OPERATOR_ESCALATION", "NON_EXECUTABLE_HUMAN_REVIEW"}],
                     "note": "Hash integrity is not proof of real-world truth or a signed model attestation.",
                     "executable": False}
+
+    def recovery(self, actor: Actor, task_id: str) -> dict:
+        authorize(actor, READERS)
+        with self.store.transaction(actor.tenant_id):
+            state = self._load(actor.tenant_id)
+            self._task(state, actor, task_id)
+            return recovery_plan(state, task_id, self.clock())
 
     def case_timeline(self, actor: Actor, case_id: str) -> dict:
         authorize(actor, READERS)
@@ -539,11 +553,35 @@ class CaseworkService:
                 raise CaseworkError("ANCHOR_REQUEST_NOT_FOUND", 404)
             self._task(snapshot, actor, artifact["task_id"])
             plan = copy.deepcopy(artifact["plan"])
-        verified = self.anchor.verify(plan, tx_hash)  # public RPC reads, outside store lock
+            normalized_tx = tx_hash.lower()
+            known_tx = artifact.get("bound_tx_hash") or artifact.get("verification", {}).get("tx_hash")
+            if known_tx and known_tx.lower() != normalized_tx:
+                raise CaseworkError("ANCHOR_TRANSACTION_ALREADY_BOUND")
+            # Reusing the same idempotency key returns its historical receipt; a new
+            # key is required for another actual chain recheck.
+            key = digest("idempotency-key", [actor.actor_id, cmd.idempotency_key])
+            payload = {"task_id": artifact["task_id"], "anchor_id": anchor_id, "tx_hash": normalized_tx}
+            request = {"command": "anchor.verify", "actor": actor.actor_id,
+                       "session": cmd.session_id, "payload": payload}
+            previous = snapshot.idempotency.get(key)
+            if previous:
+                if previous["request_hash"] != digest("command", request):
+                    raise CaseworkError("IDEMPOTENCY_CONFLICT")
+                return copy.deepcopy(previous["response"]) | {"replayed": True, "historical_only": True}
+            if snapshot.revision != cmd.expected_revision:
+                raise CaseworkError("REVISION_CONFLICT")
+        verified = self.anchor.verify(plan, normalized_tx)  # public RPC reads, outside store lock
         def change(state, seq):
             record = state.artifacts.get(anchor_id)
             if record is None or record["plan"] != plan:
                 raise CaseworkError("ANCHOR_REQUEST_CHANGED")
+            known_tx = record.get("bound_tx_hash") or record.get("verification", {}).get("tx_hash")
+            if known_tx and known_tx.lower() != normalized_tx:
+                raise CaseworkError("ANCHOR_TRANSACTION_ALREADY_BOUND")
+            record["bound_tx_hash"] = normalized_tx
+            old = record.get("verification", {})
+            if old.get("state") == "VERIFIED":
+                record["last_verified"] = copy.deepcopy(old)
             record["verification"] = verified
             task = state.tasks[record["task_id"]]
             decision = state.decisions[record["decision_id"]]
@@ -552,4 +590,4 @@ class CaseworkService:
                                           or decision.basis_hash != task_basis(state, task.task_id)),
                     "audit_only": True, "payment_authorized": False}
         return self._mutate(actor, cmd, "anchor.verify", {"task_id": artifact["task_id"],
-                            "anchor_id": anchor_id, "tx_hash": tx_hash}, change)
+                            "anchor_id": anchor_id, "tx_hash": normalized_tx}, change)

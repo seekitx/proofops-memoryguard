@@ -1,8 +1,14 @@
 # Casework v2 setup and validation
 
-## 1. Apply the base-pinned overlay
+## 1. Start from the current source, not the old v2 installer
 
-Use the bundle's root apply.py, dry run first. It requires basecommit d82e729745de1340699527ca7cda99403da9fc8a and exact original file hashes. Do not discard local changes to make it apply; rebase the reviewed patch when needed.
+Casework v2 was integrated in commit `3ff9863dcab45ef4040506bab91492d5ee74575f`.
+Do not reapply the old d82e729 overlay to a checkout that already contains it.
+The 2.1 incremental bundle targets exactly 3ff9863 and must be previewed before apply.
+See [2.1 hardening](CASEWORK_21_HARDENING.md) and
+[capture/release steps](CASEWORK_21_CAPTURE.md). Do not discard local changes or
+force a patch onto a different HEAD. The remaining setup steps below configure
+the same existing application; pushing source alone does not enable v2.
 
 ## 2. Dependencies
 
@@ -90,4 +96,4 @@ Configure runtime `CASEWORK_BASE_ANCHOR_ADDRESS` to the actual new contract and 
 
 Two confirmations are required by the adapter. PENDING is not VERIFIED. A verified application receipt is not the organizer's multiplier decision.
 
-When enabled, `/` redirects to `/casework`, so the obsolete v1 form does not invite calls to disabled writes. Existing `/evidence` is historical v1 and receives an explicit evidence-scope header; prepare a separate final v2 evidence index only after the new real gates pass. For judging, provide a least-privilege viewer credential through an approved private channel or publish a separately reviewed redacted evidence artifact. Never expose owner/reviewer credentials as a public demo shortcut.
+When enabled, `/` redirects to `/casework`, so the obsolete v1 form does not invite calls to disabled writes. Existing `/evidence` is historical v1 and receives an explicit evidence-scope header; use `/casework/evidence` for an explicitly exported 2.1 capture; until a valid capture is configured it reports NOT_RECORDED. For judging, provide a least-privilege viewer credential through an approved private channel or publish a separately reviewed redacted evidence artifact. Never expose owner/reviewer credentials as a public demo shortcut.

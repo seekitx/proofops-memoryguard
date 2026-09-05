@@ -40,6 +40,10 @@ def build_router(get_service: Callable[[], CaseworkService],
         data = get_service().overview(actor)
         return {key: data[key] for key in ("revision", "runtime_id", "build_commit", "memory_backend", "executable")}
 
+    @router.get("/api/v2/tasks/{task_id}/recovery")
+    def recovery(task_id: Identifier, actor: Auth):
+        return get_service().recovery(actor, task_id)
+
     @router.get("/api/v2/cases/{case_id}/timeline")
     def timeline(case_id: Identifier, actor: Auth):
         return get_service().case_timeline(actor, case_id)
