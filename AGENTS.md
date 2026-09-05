@@ -68,3 +68,15 @@ inspection is allowed. Never describe source inspection as runtime verification.
 When test/build troubleshooting is authorized, use `docs/编译踩坑记录.md` as the
 project-specific record and read only the section relevant to the current command or
 error.
+
+## Repository inclusion boundary
+
+- `docs/research/**`, competitor comparisons, and internal research material are
+  excluded from the contest repository by default; include them only with a
+  separate explicit user request.
+- The contest repository should contain runtime source, `README`/contest-facing
+  documentation, deployment files, and judge-checkable evidence required to run
+  or evaluate the submission.
+- Never commit local Sibyl databases, credentials, tokens, cookies, private keys,
+  virtual environments, or generated intermediate media. Keep only a reviewed
+  final media artifact when it is necessary for the contest submission.
