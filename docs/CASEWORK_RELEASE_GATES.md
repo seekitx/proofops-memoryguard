@@ -15,7 +15,7 @@ Source existence alone does not validate production.
 - [ ] Default official-SDK24-scenario benchmark completes; report backend is official.
 - [ ] Two-process probe completes READY→DENY; temporary deletion yields missing-memory failure.
 - [ ] Actual app stop/start on persistent deployment retains workspace, same finalbuild SHA.
-- [ ] Legacy v1 writes are410; historical v1 GET remains readable and labelled historical.
+- [ ] Legacy v1 writes are 410; historical v1 GET remains readable and labelled historical.
 - [ ] Auth scopes, role switches and token redaction validated in browser and server logs.
 - [ ] Desktop/mobile browser walkthrough and errors pass; no localStorage/sessionStorage credentials.
 - [ ] New remote investigation receipt succeeds at least once on finalbuild; outage visibly degrades.
