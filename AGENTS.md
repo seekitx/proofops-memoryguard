@@ -85,3 +85,12 @@ error.
 
 Read `docs/CASEWORK_IMPLEMENTATION.md`, `docs/CASEWORK_SECURITY.md`, and `docs/CASEWORK_RELEASE_GATES.md` before editing `src/proofops_casework`.
 V2 has scoped operator credentials, independent review, immutable historical decisions and explicit reconsideration. Base anchors are audit-only. Do not restore anonymous v1 writes while v2 is enabled. V1 evidence is historical and cannot validate v2.
+
+## Casework 2.1 release rules
+
+Read `docs/CASEWORK_21_HARDENING.md` and `docs/CASEWORK_21_CAPTURE.md`.
+Recovery plans are read-only; re-opened precedent cases invalidate old investigations.
+Public v2 evidence is an explicit synthetic export, never a private workspace proxy.
+Do not label historical/dirty/test-double artifacts current, or perform live model,
+wallet, ACP or deployment actions without the required authorization.
+The existing verification boundary above remains unchanged.

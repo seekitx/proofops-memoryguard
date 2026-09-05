@@ -1,15 +1,17 @@
 "use strict";
 (() => {
-  let credential = "", revision = 0, snapshot = null, anchorPlan = null;
+  let credential = "", revision = 0, snapshot = null, anchorPlan = null, authEpoch = 0;
   const session = `session_${crypto.randomUUID().replaceAll("-", "")}`;
   const $ = (id) => document.getElementById(id);
   const text = (tag, value, cls) => { const e = document.createElement(tag); e.textContent = value; if(cls) e.className = cls; return e; };
   function status(message, error=false) { $("status").textContent=message; $("status").className=error ? "error" : ""; }
   async function api(path, payload) {
     if (!credential) throw new Error("Connect using a deployment-issued credential first.");
+    const epoch = authEpoch;
     const options={headers:{Authorization:`Bearer ${credential}`},cache:"no-store"};
     if (payload !== undefined) { options.method="POST"; options.headers["Content-Type"]="application/json"; options.body=JSON.stringify(payload); }
     const r=await fetch(path, options); const data=await r.json();
+    if (epoch !== authEpoch) throw new Error("Operator session changed; discard stale response.");
     if(!r.ok) throw new Error(`${r.status} ${data.error || "Invalid request"}`);
     return data;
   }
@@ -20,10 +22,16 @@
     $("tasks").replaceChildren();
     d.tasks.forEach(t=>{ const row=document.createElement("tr");
       const id=document.createElement("td"); id.append(text("code",t.task_id),text("code",t.intent.scope.target)); row.append(id);
-      const state=document.createElement("td"); const badge=text("span",t.status,"badge"); badge.dataset.state=t.status; state.append(badge); row.append(state);
+      const state=document.createElement("td"); const badge=text("span",t.status,"badge"); badge.dataset.state=t.status; state.append(badge, text("p", `Current policy: ${t.effective_verdict || t.status}`)); row.append(state);
       row.append(text("td",`${t.depends_on.length} / ${Object.keys(t.taints).length}`),text("td",t.current_proof_valid?"Current":"Stale / absent"));
       const action=document.createElement("td"); const button=text("button","Replay"); button.type="button";
-      button.addEventListener("click",()=>replay(t.task_id).catch(e=>status(e.message,true))); action.append(button); row.append(action); $("tasks").append(row);
+      button.addEventListener("click",()=>replay(t.task_id).catch(e=>status(e.message,true))); action.append(button);
+      const recovery = text("button", "Recovery order"); recovery.type = "button";
+      recovery.addEventListener("click", async () => { try {
+        const result = await api(`/api/v2/tasks/${encodeURIComponent(t.task_id)}/recovery`);
+        $("recovery-result").textContent = JSON.stringify(result, null, 2);
+      } catch (error) { status(error.message, true); } });
+      action.append(recovery); row.append(action); $("tasks").append(row);
     });
     $("cases").replaceChildren(); d.cases.forEach(c=>{const card=text("article","","card"); card.append(text("h3",`${c.kind} · ${c.status}`),text("code",c.case_id),text("p",`Version ${c.version} · ${c.scope.subject_id} · ${c.scope.method}`)); $("cases").append(card);});
     $("handoffs").textContent=JSON.stringify({reports:d.reports,handoffs:d.handoffs},null,2);
@@ -56,18 +64,33 @@
     if(anchorPlan) $("wallet-status").textContent=`Audit only · chain ${anchorPlan.chain_id} · contract ${anchorPlan.to} · value 0 · proof ${anchorPlan.proof_root}. Wallet gas is not free.`;
     await refresh();
   }
-  $("connect").addEventListener("click",async()=>{credential=$("token").value.trim();$("token").value="";try{await refresh();}catch(e){status(e.message+". A new store needs an owner bootstrap with revision 0.",true);}});
-  $("logout").addEventListener("click",()=>{credential="";snapshot=null;revision=0;execute.pending=null;anchorPlan=null;$("wallet-anchor").hidden=true;$("wallet-status").textContent="";$("token").value="";$("identity").textContent="Disconnected";$("tasks").replaceChildren();$("cases").replaceChildren();$("replay").replaceChildren();$("handoffs").textContent="";$("response").textContent="";status("Credential forgotten.");});
+  function clearSession() {
+    authEpoch += 1; credential=""; snapshot=null; revision=0; execute.pending=null; anchorPlan=null;
+    $("wallet-anchor").hidden=true; $("wallet-status").textContent="";
+    $("identity").textContent="Disconnected";
+    for (const id of ["tasks", "cases", "replay"]) $(id).replaceChildren();
+    for (const id of ["handoffs", "response", "replay-status", "recovery-result"]) $(id).textContent="";
+    for (const id of ["revision", "runtime", "build"]) $(id).textContent="—";
+  }
+  $("connect").addEventListener("click", async () => {
+    const next = $("token").value.trim(); $("token").value=""; clearSession(); credential=next;
+    try { await refresh(); } catch (e) {
+      status(e.message+". A new workspace needs an owner bootstrap with revision 0.", true);
+    }
+  });
+  $("logout").addEventListener("click",()=>{clearSession(); $("token").value=""; status("Credential forgotten.");});
   $("refresh").addEventListener("click",()=>refresh().catch(e=>status(e.message,true)));
   $("execute").addEventListener("click",async()=>{$("execute").disabled=true;try{await execute();}catch(e){if(e.message.includes("REVISION_CONFLICT")){execute.pending=null;await refresh().catch(()=>{});}status(e.message+". Review current state before retrying.",true);}finally{$("execute").disabled=false;}});
   $("wallet-anchor").addEventListener("click", async()=>{
     try {
-      const p=anchorPlan;
+      const p=anchorPlan, epoch=authEpoch;
       if(!p || !p.audit_only || p.value!=="0x0" || ![8453,84532].includes(p.chain_id) || !window.ethereum) throw new Error("No valid audit plan or browser wallet available.");
       const accounts=await window.ethereum.request({method:"eth_requestAccounts"});
       if(!accounts[0] || accounts[0].toLowerCase()!==p.expected_attester.toLowerCase()) throw new Error("Select the configured attester wallet.");
       await window.ethereum.request({method:"wallet_switchEthereumChain",params:[{chainId:`0x${p.chain_id.toString(16)}`}]});
+      if (epoch !== authEpoch || p !== anchorPlan) throw new Error("Operator or audit plan changed; prepare again.");
       const hash=await window.ethereum.request({method:"eth_sendTransaction",params:[{from:accounts[0],to:p.to,value:"0x0",data:p.data,gas:"0x249f0"}]});
+      if (epoch !== authEpoch || p !== anchorPlan) return; // Do not mix a prior wallet response into a new operator view.
       $("wallet-status").textContent=`Submitted audit transaction ${hash}. Not verified yet. Use Verify audit transaction; do not treat this as payment authorization.`;
       anchorPlan=null;$("wallet-anchor").hidden=true;
     } catch(e) { status(e.message,true); }

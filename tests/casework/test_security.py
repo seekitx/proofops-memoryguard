@@ -8,6 +8,7 @@ from pydantic import ValidationError
 from proofops_casework.core import CaseworkError, digest, seal
 from proofops_casework.models import *
 from .support import Harness
+from proofops_casework.receipts import expected_model_context_hash
 
 
 def test_raw_prompt_never_stored_or_sent_to_model():
@@ -142,8 +143,10 @@ def test_model_tools_suppressed_and_receipt_bound():
             assert "raw_text" not in context and "target" not in context
             return SimpleNamespace(requested_tools=["payments.send", "precedent.lookup"],
                 model_receipt={"generation_id": "mock_generation", "completion_sha256": "a"*64,
-                    "model_context_hash": "b"*64, "resolved_model": "TEST_NOT_REAL_AI",
-                    "live_call_verified": True})
+                    "model_context_hash": expected_model_context_hash(context, allowed_tools),
+                    "resolved_model": "TEST_NOT_REAL_AI", "configured_model": "TEST_NOT_REAL_AI",
+                    "backend": "remote_structured_model", "completed_at": "2026-09-05T12:00:00Z",
+                    "structured_output_validated": True, "live_call_verified": True})
     model = Adversarial(); h = Harness(model=model); cid = h.risk()["case"]["case_id"]
     cmd = h.command()
     result = h.svc.investigate(h.actors["investigator"], cmd, cid)
