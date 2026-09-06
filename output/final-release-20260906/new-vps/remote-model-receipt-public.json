@@ -1,0 +1,63 @@
+{
+  "authoritative": false,
+  "build_commit": "a4b216e73f2eed86ef2e07e2fdece4b48728190c",
+  "captured_at": "2026-09-06T15:43:43.592675+00:00",
+  "case_id_sha256": "1e68f7d3a65f20e9422e25481778063c0af930dda5fe3b3be6f13e619922dabd",
+  "checks": {
+    "authoritative_false": true,
+    "completion_sha256_valid": true,
+    "executable_false": true,
+    "generation_id_present": true,
+    "http_200": true,
+    "live_call_verified": true,
+    "model_receipt_present": true,
+    "planner_status_remote": true,
+    "single_remote_request": true,
+    "structured_output_validated": true
+  },
+  "cleanup": {
+    "attempted": true,
+    "configured_workspaces_restored": true,
+    "initialized_workspaces_restored": true,
+    "passed": true,
+    "registry_mode_restored": true,
+    "registry_owner_restored": true,
+    "registry_restore_method": "volume_atomic_replace",
+    "registry_sha256_restored": true,
+    "server_build_unchanged": true,
+    "server_ready": true,
+    "server_temporary_files_removed": true,
+    "temporary_investigator_token_rejected": true,
+    "temporary_owner_token_rejected": true
+  },
+  "configured_model": "openai/gpt-4.1-mini",
+  "executable": false,
+  "final_status": "PASS",
+  "http_status": 200,
+  "model_receipt": {
+    "backend": "remote_structured_model",
+    "completed_at": "2026-09-06T15:43:49.170298+00:00",
+    "completion_sha256": "7ed8117f7081b200f572ecf613d4d3fb4df91c40bc674ef7627857fa5270bcd7",
+    "configured_model": "openai/gpt-4.1-mini",
+    "generation_id": "gen-1788709427-FnBDBsb4MtWIaTJSTR6y",
+    "live_call_verified": true,
+    "model_context_hash": "cf36d23b4843f66ac17839bd16034706ce72c17a58cc4824ac1473a4c334c325",
+    "resolved_model": "openai/gpt-4.1-mini",
+    "structured_output_validated": true
+  },
+  "planner_status": "REMOTE",
+  "public_base_url": "https://memoryguard.eyesonchain.xyz",
+  "registry_setup_method": "volume_atomic_replace",
+  "remote_investigation_requests": 1,
+  "report_id_sha256": "32a29c26116baed138a24a3c620dbf01b93e5a53a4f098cf4fbfa2b4575be7b6",
+  "schema_version": "memoryguard-remote-model-receipt/1",
+  "scope": "One paid OpenRouter structured-output investigation on a new synthetic workspace; non-authoritative and non-executable.",
+  "status": "PASS",
+  "synthetic_data": true,
+  "workspace_ready_before_investigation": {
+    "build_commit": "a4b216e73f2eed86ef2e07e2fdece4b48728190c",
+    "configured_workspaces": 2,
+    "initialized_workspaces": 2,
+    "ready": true
+  }
+}

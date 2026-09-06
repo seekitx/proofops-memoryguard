@@ -1,5 +1,8 @@
 # MemoryGuard final submission pack
 
+
+> Latest update, 2026-09-06: the initial degraded model attempt below is historical. A separate current-VPS request using `openai/gpt-4.1-mini` now passed with a real generation receipt on build `a4b216e`. See [public receipt](../output/final-release-20260906/new-vps/remote-model-receipt-public.json). Virtuals Job #76728 passed its deadline without funding or delivery; no completion is claimed. Current-VPS continuous video and public submission remain open.
+
 This file contains copy-ready text. Replace placeholders only after the linked
 artifact exists. Never paste the private build-page edit URL into the repository.
 
@@ -11,11 +14,16 @@ Saved to the private build page on 2026-09-05.
 
 ## Public demo URL
 
-`https://proofops-memoryguard.onrender.com`
+`https://memoryguard.eyesonchain.xyz/`
 
-The Render Starter service, HTTPS endpoint, 1 GB persistent disk, readiness check,
-and cross-restart Sibyl recall were exercised on 2026-09-05. Public run links and
-the honest evidence boundary are in
+The current VPS HTTPS endpoint, readiness check, runtime identity, and public-release
+status were checked read-only on 2026-09-06 at candidate SHA
+`a4b216e73f2eed86ef2e07e2fdece4b48728190c`. New VPS evidence also records a real
+`memoryguard` container restart with synthetic cross-restart Sibyl recall: the same
+action fingerprint changes from `READY` to `DENY`, related work stops, unrelated
+work continues, and all decisions remain `executable=false`. This evidence does
+not prove migrated private-data persistence. The initial remote investigation degraded. A separate request after switching to `openai/gpt-4.1-mini` passed with a validated live receipt. The former Render Starter run and its persistent-disk A/B remain
+historical evidence, with the honest boundary recorded in
 [`evidence/2026-09-05_RENDER_OPENROUTER_AB.md`](../evidence/2026-09-05_RENDER_OPENROUTER_AB.md).
 
 ## What breaks when memory is deleted?
@@ -61,19 +69,23 @@ consolidation for this version.
 
 ### Demo video post
 
-```text
-MemoryGuard treats forgetting as an authorization bug. Same $4.2k demo intent: READY → real Render restart → DENY after @sibylcap Memory recalls the exact dispute. Injection text is quarantined; the model gets no pay/sign tool.
+Publish this draft only after the current VPS A/B evidence has been reviewed and
+the continuous recording gate is complete. Do not describe the current degraded
+remote investigation as a successful model receipt.
 
-Demo: https://proofops-memoryguard.onrender.com
+```text
+MemoryGuard treats forgetting as an authorization bug. Same $4.2k demo intent: READY → fresh VPS service restart → DENY after @sibylcap Memory recalls the exact dispute. Injection text is quarantined; the model gets no pay/sign tool.
+
+Demo: https://memoryguard.eyesonchain.xyz/
 Video: [PASTE_VIDEO_URL]
 ```
 
 ### Build log post
 
 ```text
-Built ProofOps MemoryGuard for @sibylcap: load-bearing recall, a Sibyl-backed Agent ledger, exact causal memory IDs, fail-closed 503 with no fallback, and receipt-bound OpenRouter planning.
+Built ProofOps MemoryGuard for @sibylcap: load-bearing recall, a Sibyl-backed Agent ledger, exact causal memory IDs, fail-closed 503 with no fallback, and a receipt-bound OpenRouter planning path (current VPS generation receipt plus separately recorded synthetic restart evidence).
 
-Evidence: https://proofops-memoryguard.onrender.com/evidence
+Evidence: https://memoryguard.eyesonchain.xyz/casework/evidence
 Repo: https://github.com/seekitx/proofops-memoryguard
 
 Base, Virtuals, and PMF are not claimed.
@@ -93,9 +105,13 @@ reply rather than deleting `@sibylcap`.
 
 ## Final truth review before ready
 
-- Stable HTTPS page and `/health/ready` work in a private browser.
-- Render restart preserves Session A memory for Session B.
-- Video is one continuous, unedited 2–5 minute capture and shows commit hash/time.
+- Current VPS HTTPS page, `/health/ready`, `/api/runtime`, and
+  `/api/v2/public-release` work in a private browser.
+- The current VPS synthetic restart preserves the Casework state needed for
+  Session B; the former Render restart is historical evidence and cannot be used
+  as current private-data migration proof.
+- Any claimed current remote-model run must have a non-null receipt; the separate successful current-VPS request has that receipt; the initial degraded attempt remains recorded.
+- Video is 2–5 minutes; its fresh-session recall segment is continuous and unedited, with commit hash/time visible.
 - Video shows the same action fingerprint and different runtime instance IDs.
 - Video shows the exact causal dispute, prompt text quarantine, changed tool path,
   and fail-closed behavior.

@@ -1,5 +1,9 @@
-# Applying this Blueprint may create a paid persistent disk. Review Render pricing
-# before deployment; this file is configuration only and has not been applied.
+# Fallback/rollback configuration only after the migration to the current VPS.
+# The current judge entry is https://memoryguard.eyesonchain.xyz/; the Render URL
+# and origins below are intentionally retained for rollback and historical
+# evidence. Applying this Blueprint may create a paid persistent disk. Review
+# Render pricing before deployment; this file is configuration only and has not
+# been applied.
 services:
   - type: web
     name: proofops-memoryguard
