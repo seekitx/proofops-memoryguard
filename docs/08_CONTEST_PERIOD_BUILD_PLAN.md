@@ -7,7 +7,7 @@ opened. It is a useful prototype, but it cannot honestly be presented as the fin
 contest build. The window is now open; all Agent/runtime changes below must land as
 substantive, auditable in-window commits.
 
-## P0 — turn the memory service into a real Agent — remote path exercised
+## P0 — turn the memory service into a real Agent — remote path bounded
 
 The in-window source now adds a `MemoryGuardAgent` Module with two narrow Seams:
 
@@ -38,9 +38,10 @@ That captured build read generation metadata from runtime health immediately aft
 each run. The current schema `1.1` implementation instead stores and trace-binds the
 model receipt inside the Agent run. Early reruns met free-provider empty-response
 and HTTP failures. On 2026-09-05, the final public Render run pinned a previously
-successful free model and completed the receipt-bound
-A/B across a real service restart. Full contest acceptance still requires a
-continuous A/B/deletion capture.
+successful free model and completed the receipt-bound A/B across a real service
+restart. That run is preserved as historical evidence. Full contest acceptance
+still requires a fresh current-VPS remote-receipt A/B and a continuous
+A/B/deletion capture.
 
 ## P0 — real fresh-session and deletion evidence
 
@@ -56,16 +57,24 @@ On 2026-09-05, the repository also added a 12-check official-SDK judge benchmark
 an `/evidence` dashboard. These close the public quantitative-evidence gap but do not
 replace the continuous A/B/deletion video.
 
-The durable Render deployment is live at
-<https://proofops-memoryguard.onrender.com>. Its final stored Session A/B runs share
-the same action fingerprint and build commit, have different runtime IDs, bind live
-OpenRouter receipts inside schema `1.1` run records, and change the tool path from
-review to escalation. Exact IDs and limitations are in
+The current judge deployment is live at
+<https://memoryguard.eyesonchain.xyz/> (the root redirects to `/casework`). Its
+read-only `/health/ready`, `/api/runtime`, and `/api/v2/public-release` checks
+report candidate SHA `a4b216e73f2eed86ef2e07e2fdece4b48728190c`. The new VPS
+evidence now records a real `memoryguard` container restart and a synthetic
+Session A/B with the same action fingerprint, `READY` → `DENY`, related work
+stopped, unrelated work continuing, and all decisions `executable=false`. The
+scope is synthetic only and does not prove migrated private-data persistence. A
+remote investigation returned `DEGRADED` with no model receipt, so a successful
+receipt-bound remote run and continuous video remain open. The former Render Session A/B shares
+the same action fingerprint and build commit, has different runtime IDs, binds
+live OpenRouter receipts inside schema `1.1` run records, and changes the tool path
+from review to escalation. Exact historical IDs and limitations are in
 `evidence/2026-09-05_RENDER_OPENROUTER_AB.md`.
 
 - Display server UTC time and exact in-window Git commit in the product/video.
-- Run Session A, stop the Agent/API process, then start a fresh process on the same
-  persistent Sibyl database.
+- Run Session A, stop the current VPS Agent/API service, then start a fresh process
+  on the same persistent Sibyl database.
 - Run Session B and show identical action hash, new process/session IDs, causal
   memory ID, and DENY.
 - In an isolated copy, disable/remove the Sibyl Adapter, restart, and show the Agent

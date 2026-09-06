@@ -8,35 +8,50 @@ try to erase it.
 
 ## 2–5 minute unedited video
 
-### Render recording preflight
+### Current VPS recording preflight
 
 Before recording, open these three tabs and keep them visible:
 
-- <https://proofops-memoryguard.onrender.com>
-- <https://proofops-memoryguard.onrender.com/evidence>
-- the Render service dashboard, so the restart action and recovery are visible.
+- <https://memoryguard.eyesonchain.xyz/>
+- <https://memoryguard.eyesonchain.xyz/casework/evidence>
+- <https://memoryguard.eyesonchain.xyz/api/v2/public-release>
+- the VPS service view, so the authorized restart action and recovery are visible.
+
+The current domain has passed read-only `/health/ready`, `/api/runtime`, and
+`/api/v2/public-release` checks on candidate SHA
+`a4b216e73f2eed86ef2e07e2fdece4b48728190c`. The current VPS evidence also
+completed a synthetic Casework A/B across a real `memoryguard` container restart:
+the action fingerprint stayed the same, Session A was `READY`, Session B was
+`DENY`, related work stopped, unrelated work continued, and every result was
+`executable=false`. This is synthetic-workspace evidence only and does not prove
+migrated private-data persistence. The remote investigation was HTTP 200 with
+`planner_status=DEGRADED` and no model receipt, so it must not be presented as a
+successful current remote-model call. The former Render A/B and video records
+remain historical; this capture still needs one continuous unedited recording,
+and any remote-model claim still needs a successful receipt-bound run.
 
 Use one new subject for the whole take. On this Mac, the project virtual environment
 must supply the HTTPS certificate bundle; do not disable certificate verification.
 
 ```bash
 DEMO_SUBJECT="judge-$(uuidgen)"
-SSL_CERT_FILE=/Users/hun/项目/proofops-memoryguard/.venv/lib/python3.11/site-packages/certifi/cacert.pem \
+SSL_CERT_FILE=.venv/lib/python3.11/site-packages/certifi/cacert.pem \
   .venv/bin/python scripts/session_a.py \
-  --base-url https://proofops-memoryguard.onrender.com \
+  --base-url https://memoryguard.eyesonchain.xyz \
   --subject "$DEMO_SUBJECT" \
   --evidence-out /tmp/memoryguard-recording-a.json \
   --require-remote-model
 ```
 
 Keep the printed `session_a_evidence_sha256`. In the same continuous recording,
-choose **Manual Deploy → Restart service** in Render and wait until
-`/health/ready` returns. Then run:
+use the authorized VPS service restart procedure and wait until
+`https://memoryguard.eyesonchain.xyz/health/ready` returns. Keep the service
+restart event or server log visible as part of the recording evidence. Then run:
 
 ```bash
-SSL_CERT_FILE=/Users/hun/项目/proofops-memoryguard/.venv/lib/python3.11/site-packages/certifi/cacert.pem \
+SSL_CERT_FILE=.venv/lib/python3.11/site-packages/certifi/cacert.pem \
   .venv/bin/python scripts/session_b.py \
-  --base-url https://proofops-memoryguard.onrender.com \
+  --base-url https://memoryguard.eyesonchain.xyz \
   --subject "$DEMO_SUBJECT" \
   --session-a-evidence /tmp/memoryguard-recording-a.json \
   --session-a-sha256 PASTE_SESSION_A_SHA256 \
@@ -45,7 +60,8 @@ SSL_CERT_FILE=/Users/hun/项目/proofops-memoryguard/.venv/lib/python3.11/site-p
 
 Do a private rehearsal first because the OpenRouter model is a free experimental
 service. If it fails, MemoryGuard remains safe but the strict video comparison will
-correctly fail instead of hiding the degraded model call.
+correctly fail instead of hiding the degraded model call. Do not label the older
+Render receipt as a new VPS model call.
 
 ### 0:00–0:25 — problem and boundary
 

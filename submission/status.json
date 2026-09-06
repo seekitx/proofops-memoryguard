@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-09-04T17:32:00Z",
+  "updated_at": "2026-09-06T15:50:00Z",
   "claims": {
     "registration_confirmed": {
       "state": "verified",
@@ -31,8 +31,8 @@
       "evidence": "https://github.com/seekitx/proofops-memoryguard"
     },
     "repository_head_pushed": {
-      "state": "verified_public_evidence_page_deployed",
-      "evidence": "Public evidence display commit e23cb704393dae88dae66c0e9b98964f9c4b4088 is pushed and deployed. The recorded A/B remains explicitly bound to exact behavior build 5ae0861f96277bba37deae32165139821151e5dc; later changes are evidence presentation or status only"
+      "state": "verified_current_main_origin",
+      "evidence": "HEAD and origin/main both resolve to a4b216e73f2eed86ef2e07e2fdece4b48728190c; GitHub Actions run 33982006493 completed successfully for that SHA; the current VPS /api/runtime reports the same SHA, while the former Render deployment remains rollback/historical"
     },
     "prior_work_boundary_reviewed": {
       "state": "human_required",
@@ -40,19 +40,31 @@
     },
     "contest_period_implementation": {
       "state": "implemented_and_locally_exercised",
-      "evidence": "In-window history includes the Agent interface, receipt-bound model hardening, and code/evidence dashboard commit 7f002fb56c7ce21187047f3e7b00255ef36327ce"
+      "evidence": "In-window history includes the Agent interface, receipt-bound model hardening, and code/evidence dashboard commit 7f002fb56c7ce21187047f3e7b00255ef36327ce; this older commit is historical context, not the current final candidate"
     },
     "real_agent_behavior": {
-      "state": "verified_public_receipt_bound_ab",
-      "evidence": "Public Render runs run_dd3d78f34f4d5630103a and run_d703e9eaaa0204a87f9f persisted and trace-bound schema 1.1 OpenRouter receipts on both sides of a real service restart; evidence/2026-09-05_RENDER_OPENROUTER_AB.md"
+      "state": "historical_public_render_receipt_bound_ab",
+      "evidence": "Historical Render runs run_dd3d78f34f4d5630103a and run_d703e9eaaa0204a87f9f persisted and trace-bound schema 1.1 OpenRouter receipts on both sides of a real service restart; evidence/2026-09-05_RENDER_OPENROUTER_AB.md. The current VPS now has a synthetic Casework restart A/B, but its remote investigation was degraded with no model receipt; see the separate current-VPS claims below A later separate current-VPS remote investigation succeeded; see vps_remote_investigation. Earlier no-receipt wording describes the initial attempt only."
+    },
+    "vps_casework_restart_ab": {
+      "state": "verified_current_vps_synthetic_ready_deny",
+      "evidence": "The public VPS evidence files public-safe-evidence.json and http-results.json record Session A READY, a real memoryguard container restart, then Session B DENY with the same action fingerprint and different runtime IDs; related_tasks_stop=true, unrelated_tasks_continue=true, all_executable_false=true, and build SHA a4b216e73f2eed86ef2e07e2fdece4b48728190c. The scope is synthetic workspace only (real_private_casework_touched=false); Session A evidence was recovered from live state after a recorder timeout and no mutation was replayed. This does not prove migrated private-data persistence"
+    },
+    "vps_remote_investigation": {
+      "state": "verified_current_vps_remote_receipt",
+      "evidence": "output/final-release-20260906/new-vps/remote-model-receipt-public.json: one new synthetic investigation with openai/gpt-4.1-mini on a4b216e73f2eed86ef2e07e2fdece4b48728190c returned REMOTE, a generation ID, completion SHA-256 and validated structured output. Non-authoritative and non-executable. Original degraded attempt is retained separately; this was a new request after model configuration changed. Temporary credentials were removed."
+    },
+    "vps_temporary_credentials_revoked": {
+      "state": "verified_post_cleanup_401",
+      "evidence": "The public VPS HTTP results record that, after cleanup, the temporary owner and investigator credentials each returned HTTP 401 INVALID_CREDENTIAL; token values were not retained"
     },
     "sibyl_source_integration": {
-      "state": "runtime_verified_local_and_public",
-      "evidence": "src/proofops_memoryguard/adapters/sibyl.py; evidence/2026-09-01_RUNTIME_EVIDENCE.json; evidence/2026-09-05_RENDER_OPENROUTER_AB.md"
+      "state": "runtime_verified_local_and_current_vps_read_only",
+      "evidence": "src/proofops_memoryguard/adapters/sibyl.py; current VPS /health/ready, /api/runtime, /api/v2/public-release checks, and the synthetic Casework restart A/B in the public VPS evidence; historical Render A/B remains historical evidence"
     },
     "sibyl_runtime_identity": {
-      "state": "verified_local_and_public",
-      "evidence": "Public Render A/B reported official sibyl-memory-client 0.7.0, matching installed-distribution RECORD hashes, schema v4 compatible, different runtime IDs, and the same build commit. Continuous video remains pending"
+      "state": "verified_local_historical_public_and_current_vps_synthetic_restart",
+      "evidence": "Historical Render A/B reported official sibyl-memory-client 0.7.0, matching installed-distribution RECORD hashes, schema v4 compatible, different runtime IDs, and the same build commit. That historical A/B record had no continuous video evidence at the time. A separately accepted final-SHA raw take remains unpublished historical Render evidence. The current VPS evidence records different runtime IDs across a real memoryguard container restart and the same final SHA, but does not make a fresh remote-model receipt, SDK-version, or private-data persistence claim"
     },
     "local_dependency_install": {
       "state": "verified",
@@ -62,41 +74,49 @@
       "state": "verified",
       "evidence": ".venv/bin/python -m pytest: 32 passed in 0.42s on 2026-09-05 Beijing time"
     },
+    "unified_release_gate": {
+      "state": "verified_local_release_ready",
+      "evidence": "Exact candidate a4b216e73f2eed86ef2e07e2fdece4b48728190c passed 8/8 release stages with 216 tests and 0 failures, errors or skips; local_release_ready=true. GitHub Actions run 33982006493 completed successfully for the same SHA"
+    },
     "judge_conformance": {
-      "state": "verified_local_clean_commit",
-      "evidence": "12/12 checks passed against clean commit 7f002fb56c7ce21187047f3e7b00255ef36327ce using the official Sibyl SDK; one single-process conformance story, not 12 independent scenarios or restart/video proof"
+      "state": "historical_verified_local_clean_commit",
+      "evidence": "Historical 12/12 checks passed against clean commit 7f002fb56c7ce21187047f3e7b00255ef36327ce using the official Sibyl SDK; this is not current final-SHA or continuous-video proof"
     },
     "fresh_session_runtime": {
-      "state": "public_render_restart_and_receipt_bound_ab_verified_video_missing",
-      "evidence": "Build 5ae0861f96277bba37deae32165139821151e5dc completed public READY to DENY A/B across Render restart with different runtime IDs, same action fingerprint, exact dispute recall, changed safety tool path, and successful receipt-bound OpenRouter generations. JSON cannot replace the continuous video"
+      "state": "historical_public_render_restart_and_receipt_bound_ab",
+      "evidence": "Historical record only: build 5ae0861f96277bba37deae32165139821151e5dc completed public READY to DENY A/B across Render restart with different runtime IDs and receipt-bound OpenRouter generations; it is not the current final candidate and cannot substitute for the final-SHA raw capture"
     },
     "deletion_test": {
-      "state": "missing_sdk_fail_closed_verified_deletion_video_pending",
-      "evidence": "Fresh isolated environment without importable sibyl_memory_client returned 503 for readiness, direct decision, and Agent run with executable=false on commit 7f002fb56c7ce21187047f3e7b00255ef36327ce. Existing database deletion and continuous recording remain pending"
+      "state": "historical_missing_sdk_fail_closed_probe",
+      "evidence": "Historical isolated environment without importable sibyl_memory_client returned 503 for readiness, direct decision, and Agent run with executable=false on commit 7f002fb56c7ce21187047f3e7b00255ef36327ce; this older probe is not final-SHA video evidence"
+    },
+    "final_sha_continuous_raw_evidence": {
+      "state": "verified_final_sha_continuous_raw_historical_not_published",
+      "evidence": "Independent read-only acceptance of a fourth continuous raw take on final SHA a4b216e73f2eed86ef2e07e2fdece4b48728190c was recorded against the former Render deployment, but the raw evidence and v3 presentation candidate remain unpublished. A current-VPS continuous take remains pending"
     },
     "base_contract": {
-      "state": "implemented_uncompiled",
-      "evidence": "contracts/src/MemoryProofAnchor.sol"
+      "state": "verified_base_sepolia_deployed",
+      "evidence": "Read-only Base Sepolia deployment and source/bytecode consistency were verified in owner-controlled partner records outside this public whitelist; contract 0x2bB0b4f88c4404f1D36e2745B4e6A84adE4E1CF8; deployment tx 0x8b09c9b933fbfbd5d1f802a477c1a8309f417c29d57e587036f6256d1f9d28ec"
     },
     "base_exercised_integration": {
-      "state": "not_claimed",
-      "evidence": null
+      "state": "verified_base_sepolia_audit_anchor",
+      "evidence": "Read-only Base Sepolia audit-anchor receipt was verified in owner-controlled partner records outside this public whitelist; tx 0xc518b7b197ddd2b9c4d30a3a61846a0773489b9082bdd96b287ce82758b3704b committed the supplied proof root at memoryVersion 49 with successful receipt, expected event and confirmations. Audit-only; no payment authority or multiplier claimed"
     },
     "virtuals_integration": {
-      "state": "not_claimed",
-      "evidence": null
+      "state": "partial_acp_job_deadline_elapsed_unfunded",
+      "evidence": "Job #76728 creation tx 0x2a50383ea575ca63556cecaf5c75c3eba6d2a967eb03b0332f5a647e154c9134 is confirmed. At Base block 50959345, getJob remained Open with budget=0, but expiredAt=2026-09-06T11:25:51Z had elapsed. No funding, delivery, completion or refund event. Deadline elapsed does not mean an onchain JobExpired event occurred. Read-only monitoring stopped; completion and multiplier remain unclaimed."
     },
     "pmf_bonus": {
       "state": "not_claimed",
       "evidence": null
     },
     "public_deployment": {
-      "state": "verified_render_https_persistent_restart",
-      "evidence": "https://proofops-memoryguard.onrender.com is live on Render Starter with a 1GB persistent disk; presentation commit e23cb704393dae88dae66c0e9b98964f9c4b4088 serves /health/ready and /evidence; both historical A/B run URLs remain 200 after the redeploy, proving persistent storage survived"
+      "state": "verified_vps_https_runtime_public_release_synthetic_restart_ab",
+      "evidence": "https://memoryguard.eyesonchain.xyz/ is live on the current VPS; read-only /health/ready, /api/runtime, /api/v2/public-release, and /casework/evidence checks passed on candidate SHA a4b216e73f2eed86ef2e07e2fdece4b48728190c. The new VPS evidence also verifies a real memoryguard container restart and synthetic READY to DENY A/B with same action fingerprint, related-work stop, unrelated-work continuation, and executable=false. This proves current availability, build identity, and synthetic restart behavior only; it does not prove migrated private-data persistence or a successful remote receipt. The former Render persistent-restart record is retained as historical rollback evidence A later separate current-VPS remote investigation succeeded; see vps_remote_investigation. Earlier no-receipt wording describes the initial attempt only."
     },
     "demo_video": {
       "state": "missing",
-      "evidence": null
+      "evidence": "No public demo URL has been published. The final-SHA continuous raw take passed local read-only acceptance, while the v3 presentation candidate remains owner-review pending and unpublished"
     },
     "public_posts": {
       "state": "missing",
