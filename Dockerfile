@@ -7,7 +7,6 @@ COPY src ./src
 COPY apps ./apps
 COPY config ./config
 COPY contracts/src ./contracts/src
-COPY docs ./docs
 COPY evidence ./evidence
 RUN pip install --no-cache-dir .
 RUN mkdir -p /app/.data && chown -R appuser:appuser /app
