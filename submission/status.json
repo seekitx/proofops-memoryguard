@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-09-07T10:40:12.411572+00:00",
+  "updated_at": "2026-09-07T10:59:23.616792+00:00",
   "claims": {
     "registration_confirmed": {
       "state": "verified",
@@ -15,8 +15,8 @@
       "evidence": "Live browser reload on 2026-09-07T10:15:43.884375+00:00 confirmed public repo, current hosted 178.347-second video, two posts, memory fields and checked Ready."
     },
     "build_page_team_and_builders": {
-      "state": "human_required",
-      "evidence": "Official public submission instructions require team and partner stacks, but the private page inspected on 2026-09-05 had no separate editable field; organizer clarification may be required"
+      "state": "public_readme_builder_identified",
+      "evidence": "README opening and FINAL_HANDOFF identify ProofOps Labs and public entrant @reslibadsi28525. Private portal has no separate builder input; no legal name invented."
     },
     "build_page_partner_stacks": {
       "state": "human_required",
@@ -103,8 +103,8 @@
       "evidence": "Base Sepolia transaction 0xc518b7b197ddd2b9c4d30a3a61846a0773489b9082bdd96b287ce82758b3704b committed the proof root at memoryVersion 49. Public Blockscout recheck: submission/evidence/base-anchor-public-check.json. Audit-only; no payment authority or awarded multiplier claimed."
     },
     "virtuals_integration": {
-      "state": "gloria_delivery_and_seven_quarantine_receipts_verified_completion_unverified",
-      "evidence": "Job 1003558157 returned ten news items for the prior 0.01 USDC purchase. Seven receipts recovered at revisions 74\u201380, see submission/evidence/capacity-repeat.json. This is external news, not an independent security review. Original job 76728 remains historical uncompleted evidence."
+      "state": "live_recheck_delivered_evaluation_pending",
+      "evidence": "submission/evidence/gloria-status-20260907.json. Ten news items delivered; completion-target memo remains PENDING, external evaluator address specified, expiry timestamp passed but API still EVALUATION. Seven historical quarantine receipts. No new payment, import or approval."
     },
     "pmf_bonus": {
       "state": "not_claimed",
@@ -120,12 +120,13 @@
       "presentation_corrections": "Project/team closing credits; narration-source credit removed at owner request. Recorded READY receipt enlarged; subtitle timing and continuous sequence unchanged."
     },
     "public_posts": {
-      "state": "content_and_all_three_tags_verified_old_link_followup_needed",
+      "state": "tags_previously_verified_link_correction_user_confirmed",
       "urls": [
         "https://x.com/reslibadsi28525/status/2096832643967172716",
         "https://x.com/reslibadsi28525/status/2096832605652144230"
       ],
-      "evidence": "Chrome read both published posts on 2026-09-07T10:15:43.884375+00:00. Both tag @sibylcap @base @virtuals_io. Demo post points to historical release; build log points to now-excluded docs/JUDGE_OUTCOMES.md. Owner should post prepared updated public evidence link."
+      "evidence": "Chrome read both published posts on 2026-09-07T10:15:43.884375+00:00. Both tag @sibylcap @base @virtuals_io. Demo post points to historical release; build log points to now-excluded docs/JUDGE_OUTCOMES.md. Owner should post prepared updated public evidence link.",
+      "link_correction": "User confirmed correction posted in current conversation; correction reply URL not supplied or independently rechecked."
     },
     "contest_submission": {
       "state": "marked_ready_verified_after_reload",

@@ -1,0 +1,48 @@
+{
+  "schema_version": "memoryguard-gloria-status-check/1",
+  "checked_at": "2026-09-07T10:59:23.616792+00:00",
+  "source": "Authenticated read-only GET https://claw-api.virtuals.io/acp/jobs/1003558157",
+  "job_id": "1003558157",
+  "provider": "Gloria",
+  "buyer": "MemoryGuard Research Buyer",
+  "phase": "EVALUATION",
+  "completed": false,
+  "article_count": 10,
+  "delivery_sha256": "a4198a2e668f8029b7259b6218898184b780d38757019eb281aee65d5f861156",
+  "evaluator_address": "0x3675E1AB3c4E0B32A950BD55a989B97F5dEf6199",
+  "evaluator_differs_from_buyer": true,
+  "expiry_utc": "2026-09-07T04:16:36+00:00",
+  "expiry_timestamp_has_passed": true,
+  "memos": [
+    {
+      "id": 1011677497,
+      "nextPhase": "NEGOTIATION",
+      "status": "APPROVED",
+      "createdAt": "2026-09-07T04:06:43.638Z"
+    },
+    {
+      "id": 1011677498,
+      "nextPhase": "TRANSACTION",
+      "status": "APPROVED",
+      "createdAt": "2026-09-07T04:06:53.813Z"
+    },
+    {
+      "id": 1011677499,
+      "nextPhase": "EVALUATION",
+      "status": "PENDING",
+      "createdAt": "2026-09-07T04:07:09.885Z"
+    },
+    {
+      "id": 1011677500,
+      "nextPhase": "COMPLETED",
+      "status": "PENDING",
+      "createdAt": "2026-09-07T04:07:16.076Z"
+    }
+  ],
+  "finding": "Provider deliverable exists. Completion-target memo1011677500 is PENDING; API phase remains EVALUATION. No completed settlement is proven.",
+  "limits": "Specific evaluator identity, why approval did not occur, onchain settlement, and expired-job remedies were not established by this API response. Expiry passage alone does not establish cancellation.",
+  "this_check_imported_notes": 0,
+  "historical_quarantine_receipts": 7,
+  "payment_or_approval_performed": false,
+  "independent_security_review": false
+}

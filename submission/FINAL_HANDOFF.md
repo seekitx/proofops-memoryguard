@@ -7,6 +7,7 @@
 - Evidence: https://memoryguard.eyesonchain.xyz/casework/evidence
 - Source: https://github.com/seekitx/proofops-memoryguard (MIT)
 - Team: ProofOps Labs
+- Builder: [@reslibadsi28525](https://x.com/reslibadsi28525) (public entrant identity)
 
 ## Pitch
 
@@ -67,7 +68,9 @@ Base: previously verified Sepolia audit-anchor transaction
 The film displays the dated transaction proof; it does not send a new transaction.
 
 Virtuals: Gloria job `1003558157` delivered ten news items for 0.01 USDC; seven
-quarantine receipts were preserved. Final ACP settlement is unverified. News
+quarantine receipts were preserved. Latest authenticated status recheck confirms EVALUATION and a pending completion
+memo; see [current job check](evidence/gloria-status-20260907.json). Final ACP
+settlement is unverified. News
 cannot resolve a risk or approve a task. This is not an independent safety review.
 
 PMF and partner multipliers are not claimed as awarded results.
@@ -85,10 +88,10 @@ Two owner-published post URLs:
 
 Live Chrome inspection verified both post texts and all three tags on September 7.
 The demo post links to a historical release. The build-log post links to the
-now-excluded docs/JUDGE_OUTCOMES.md. The owner should publish the prepared link
-update below; internal docs are not reintroduced.
+now-excluded docs/JUDGE_OUTCOMES.md. The owner has confirmed publishing a link correction; its reply URL has not been
+independently rechecked. Internal docs are not reintroduced.
 
-Suggested reply to the build-log post (prepared, not sent):
+Correction wording provided to the owner (owner reports posted):
 
 > Updated MemoryGuard demo and evidence: https://memoryguard.eyesonchain.xyz/casework/evidence — same action, real service restart, remembered risk, explicit human reconsideration. The old docs link has moved here. @sibylcap @base @virtuals_io
 
