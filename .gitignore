@@ -22,7 +22,5 @@ contracts/typechain-types/
 .casework-private/
 .casework-backups/
 
-# Private research and competition planning stay local
-docs/research/
-docs/10_COMPETITIVE_CLOSURE_PLAN_2026-09-05.md
-docs/09_FIRST_PLACE_SPRINT_IMPLEMENTATION_PLAN.md
+# Project notes, research, plans, and internal evidence stay local.
+docs/

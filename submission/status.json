@@ -36,7 +36,7 @@
     },
     "prior_work_boundary_reviewed": {
       "state": "human_required",
-      "evidence": "docs/04_PRIOR_WORK.md"
+      "evidence": "README.md#prior-work"
     },
     "contest_period_implementation": {
       "state": "implemented_and_locally_exercised",
@@ -100,7 +100,7 @@
     },
     "base_exercised_integration": {
       "state": "verified_base_sepolia_audit_anchor",
-      "evidence": "Read-only Base Sepolia audit-anchor receipt was verified in owner-controlled partner records outside this public whitelist; tx 0xc518b7b197ddd2b9c4d30a3a61846a0773489b9082bdd96b287ce82758b3704b committed the supplied proof root at memoryVersion 49 with successful receipt, expected event and confirmations. Audit-only; no payment authority or multiplier claimed Public Blockscout read rechecked on 2026-09-07; see submission/evidence/base-anchor-public-check.json and docs/PARTNER_EVIDENCE.md."
+      "evidence": "Base Sepolia transaction 0xc518b7b197ddd2b9c4d30a3a61846a0773489b9082bdd96b287ce82758b3704b committed the proof root at memoryVersion 49. Public Blockscout recheck: submission/evidence/base-anchor-public-check.json. Audit-only; no payment authority or awarded multiplier claimed."
     },
     "virtuals_integration": {
       "state": "gloria_delivery_and_seven_quarantine_receipts_verified_completion_unverified",

@@ -7,8 +7,8 @@ requires valid resolutions plus explicit human reconsideration before a new READ
 proof. READY is never a payment or execution capability.
 
 - [Watch the 4m28s English demo](https://github.com/seekitx/proofops-memoryguard/releases/download/demo-a4b216e-20260907/MemoryGuard-Contest-English-Cover.mp4)
-- [Five-minute judge walkthrough](docs/JUDGE_WALKTHROUGH.md) and [partner evidence](docs/PARTNER_EVIDENCE.md)
-- [Measured scenario outcomes](docs/JUDGE_OUTCOMES.md) and [evidence index](docs/CONTEST_EVIDENCE_INDEX.md)
+- [Recorded outcome evidence](submission/evidence/outcomes-a4b216e.json)
+- [Exact-runtime release result](submission/evidence/local-release-a4b216e.json)
 - [Hosted workbench](https://memoryguard.eyesonchain.xyz/casework) · [public evidence](https://memoryguard.eyesonchain.xyz/casework/evidence)
 
 Runtime code remains `a4b216e73f2eed86ef2e07e2fdece4b48728190c`; subsequent
@@ -29,41 +29,12 @@ The store is the sole durable workspace; [`CaseworkService`](src/proofops_casewo
 uses it for risk, resolution and reconsideration. Earlier v1 instructions below
 are historical and are not the current scoped workbench walkthrough.
 
-## Current Sibyl candidate — 2.3.0-rc1
+## Current candidate
 
-Read [the consolidated release plan](docs/SIBYL_FINAL_RELEASE.md) for durable source obligations,
-new-session mission continuation, bounded model attempts, exact partner freshness and the unified
-local acceptance gate. Historical sections below document earlier increments, not current runtime proof.
-All outputs remain non-executable. No new test, model, source, wallet, ACP, video or PMF result is
-claimed merely from this source update. API compatibility id remains `casework-v2.2`; the active
-implementation reports `implementation_version=2.3.0-rc1`.
-
-
-## Casework 2.2 — source-aware investigation
-
-This increment adds allowlisted issue/chain evidence, signed incident ingress,
-durable acquisition plans, evidence-bound investigation and resolution, seven
-read-only MCP tools, and request-bound Virtuals ACP history inspection. No job
-creation, funding, signing, or risk-resolution tool is granted to the model.
-Implementation is not live verification. See [implementation](docs/CASEWORK_22_IMPLEMENTATION.md),
-[integration setup and limits](docs/CASEWORK_22_INTEGRATIONS.md), and
-[reviewer guide](docs/CASEWORK_22_JUDGE_GUIDE.md). Run final-build evidence before
-claiming live sources or partner credit; historical v1/2.1 captures do not prove these new integrations.
-
-
-## Casework 2.1 — release hardening
-
-This increment checks all ancestor expiries, offers read-only recovery order, binds
-investigations to current precedent versions, and gives v2 a dedicated
-`/casework/evidence` public evidence page. Existing v1 evidence stays historical.
-See [changes](docs/CASEWORK_21_HARDENING.md) and
-[capture/release steps](docs/CASEWORK_21_CAPTURE.md). No test, model, browser or
-partner result is claimed merely because the source is present.
-
-
-## Casework v2 — new implementation, separate evidence
-
-The optional `/casework` workbench adds scoped risk propagation, bounded investigation, independent handoff, case-specific resolution and explicit task reconsideration. Historical v1 receipt-bound runs do not validate this new code. No payment, signing or broadcast tool is added to the server. See [implementation](docs/CASEWORK_IMPLEMENTATION.md), [setup](docs/CASEWORK_SETUP.md), and [release gates](docs/CASEWORK_RELEASE_GATES.md). New runtime claims must be earned on the final committed build.
+The hosted implementation reports `2.3.0-rc1` and API compatibility id
+`casework-v2.2`. It supports scoped risk propagation, bounded investigation,
+independent handoff, case-specific resolution, and explicit reconsideration.
+Every result remains non-executable.
 
 > **Forgetting is a security bug.** MemoryGuard gives high-risk AI Agents a
 > persistent, inspectable reason to stop.
@@ -96,9 +67,8 @@ runtime IDs, related work stopped, unrelated work continuing, and every result
 (`real_private_casework_touched=false`); it does not prove migrated private-data
 persistence. The initial remote investigation degraded; a separate subsequent
 request returned a validated GPT-4.1-mini receipt on the same runtime commit.
-The current evidence index distinguishes both attempts, the recorded video and
-Base evidence. Two public post URLs have been saved to the submission portal; PMF remains unclaimed. See
-[manual completion gates](docs/07_MANUAL_COMPLETION_GATES.md).
+The recorded evidence distinguishes both attempts, the video, and Base evidence.
+Two public post URLs have been saved to the submission portal; PMF remains unclaimed.
 
 ## Judge path — under two minutes
 
@@ -281,9 +251,6 @@ independently verified action receipt exist.
   receipt sender matches the event attester, but does not claim that wallet is an
   authenticated customer identity. The Agent never handles a private key.
 
-The full threat model is in
-[`docs/05_SECURITY_AND_FAIL_CLOSED.md`](docs/05_SECURITY_AND_FAIL_CLOSED.md).
-
 ## Python test evidence
 
 The repository includes focused tests for:
@@ -345,37 +312,16 @@ limits are recorded in
 
 The original MemoryGuard foundation was created before the official build window
 and is declared pre-build Prior Work in the public commit history. The Agent Module
-and tool-audit increment described in
-[`docs/09_AGENT_INTERFACE_DECISION.md`](docs/09_AGENT_INTERFACE_DECISION.md) was
-implemented after the window opened. The project also reuses lessons—not contest evidence—from
+and tool-audit increment was implemented after the window opened. The project also
+reuses lessons—not contest evidence—from
 [SafeHire / ProofOps BNB](https://github.com/seekitx/safehire-proofops-bnb), whose
 latest copied local snapshot was commit
 `bf1e1b575cc361d6c8d0949c066cb213b8d38413` on 2026-08-31.
 
 Old BSC transactions, SafeHire jobs, reports, screenshots, users, or deployment
 status do not prove Sibyl usage, Base integration, MemoryGuard PMF, or current
-contest eligibility. The detailed disclosure is in
-[`docs/04_PRIOR_WORK.md`](docs/04_PRIOR_WORK.md).
-
-The remaining runtime and publication work is listed in
-[`docs/08_CONTEST_PERIOD_BUILD_PLAN.md`](docs/08_CONTEST_PERIOD_BUILD_PLAN.md) and
-tracked claim-by-claim in [`submission/status.json`](submission/status.json).
-
-## Competition strategy and evidence
-
-No verifiable past Sibyl Hackathon winners were found at the research snapshot; the
-official leaderboard was still a placeholder. We therefore used the official rubric
-and adjacent official Base Buildathon winners as pattern evidence: working product,
-clear utility, creative implementation, polished presentation, and credible growth.
-We did not label adjacent Base projects as Sibyl winners.
-
-- [Official requirement map](docs/01_OFFICIAL_REQUIREMENTS.md)
-- [Adversarial review and unanimous decision](docs/02_ADVERSARIAL_CONSENSUS.md)
-- [Construction blueprint](docs/03_CONSTRUCTION_BLUEPRINT.md)
-- [Demo, video, and submission runbook](docs/06_DEMO_AND_SUBMISSION.md)
-- [Manual completion gates](docs/07_MANUAL_COMPLETION_GATES.md)
-- [In-window Agent interface decision](docs/09_AGENT_INTERFACE_DECISION.md)
-- [Copy-ready submission pack](submission/FINAL_SUBMISSION_PACK.md)
+contest eligibility. Claim status is tracked in
+[`submission/status.json`](submission/status.json).
 
 ## License
 

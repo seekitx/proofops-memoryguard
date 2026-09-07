@@ -19,9 +19,6 @@ REQUIRED_FILES = (
     "src/proofops_memoryguard/adapters/sibyl.py",
     "contracts/src/MemoryProofAnchor.sol",
     "apps/web/index.html",
-    "docs/04_PRIOR_WORK.md",
-    "docs/07_MANUAL_COMPLETION_GATES.md",
-    "docs/09_AGENT_INTERFACE_DECISION.md",
 )
 BLOCKING_CLAIMS = (
     "registration_confirmed",
