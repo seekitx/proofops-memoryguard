@@ -31,8 +31,8 @@
       "evidence": "https://github.com/seekitx/proofops-memoryguard"
     },
     "repository_head_pushed": {
-      "state": "verified_current_main_origin",
-      "evidence": "HEAD and origin/main both resolve to a4b216e73f2eed86ef2e07e2fdece4b48728190c; GitHub Actions run 33982006493 completed successfully for that SHA; the current VPS /api/runtime reports the same SHA, while the former Render deployment remains rollback/historical"
+      "state": "runtime_frozen_documentation_and_evidence_published",
+      "evidence": "PR #1 merged the judge evidence and public film links into main. Runtime application source remains a4b216e73f2eed86ef2e07e2fdece4b48728190c; later documentation commits are not runtime deployments. The original GitHub Actions run 33982006493 verifies a4b216e, not subsequent documentation commits."
     },
     "prior_work_boundary_reviewed": {
       "state": "human_required",
