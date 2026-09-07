@@ -1,36 +1,44 @@
 # ProofOps MemoryGuard
 
-## Judge entry — September 7 evidence
+## Judge entry — September 7 final presentation
 
 MemoryGuard remembers risk across processes, stops only dependent work, and
 requires valid resolutions plus explicit human reconsideration before a new READY
 proof. READY is never a payment or execution capability.
 
-- [Watch the final-build English demo](https://github.com/seekitx/proofops-memoryguard/releases/download/demo-8a4e521-20260907/MemoryGuard-Final-8a4e521-English.mp4)
-- [Continuous VPS restart and recovery evidence](submission/evidence/continuous-8a4e521.json)
-- [Exact-runtime release result](submission/evidence/local-release-8a4e521.json) · [passing CI](https://github.com/seekitx/proofops-memoryguard/actions/runs/34093259925)
+- [Project introduction](https://memoryguard.eyesonchain.xyz/) · [English demo, 2:58](https://memoryguard.eyesonchain.xyz/assets/memoryguard-demo.mp4)
+- [Current recording evidence](submission/evidence/heritage-4692b42.json) · [video timing and fingerprints](submission/evidence/video-manifest.json)
+- [Runtime release result](submission/evidence/local-release-8a4e521.json) · [runtime CI](https://github.com/seekitx/proofops-memoryguard/actions/runs/34093259925)
 - [Hosted workbench](https://memoryguard.eyesonchain.xyz/casework) · [public evidence](https://memoryguard.eyesonchain.xyz/casework/evidence)
 
-Runtime is frozen at `8a4e5216aa0ab56c6718af9011a47b4a06013b2b`.
-The new continuous recording proves the same action changing READY to DENY across
-an actual VPS Docker restart on that commit. Three real model receipts accompany
-investigation and refreshed evidence. Resolving one risk leaves DENY; resolving
-both still requires explicit reviewer reconsideration. Every result is non-executable.
-Later evidence-only commits do not change the deployed runtime. Base is a historical
-verified Sepolia audit anchor. Gloria delivered news through Virtuals; seven
-quarantine receipts exist, but final platform completion and an independent
-security review are not claimed. Research and internal documentation remain local.
+The business runtime remains `8a4e5216aa0ab56c6718af9011a47b4a06013b2b`.
+The recorded interface is `4692b4268bc46fc82513eb6c9e343a1ead1364dd`, served
+separately by the web proxy. Later media and evidence commits do not alter the
+recorded workbench or business runtime. No new build or full test suite was run
+for this presentation update.
 
-September 7 storage maintenance preserved every table and row identifier,
-reclaimed unused pages and passed an authenticated write/replay across restart.
-No SDK quota was changed or paid service purchased. The submission portal
-advertises free Pro access during the hackathon; account activation/wiring is
-separate from this maintenance proof.
+The September 7 film contains an uncut, normal-speed 65-second sequence from a
+120-second retained raw recording: READY, actual VPS Docker restart, same-action
+DENY, scoped stop, investigation, and explicit reviewer reconsideration.
+UTC timestamps and both commit identifiers remain visible. Three validated
+remote-model receipts accompany the synthetic casework. MiniMax stock synthetic
+narration uses provider word timestamps for captions. The voice was previously
+owner-approved; the newly assembled film still needs the owner's final listen.
 
-Current Casework memory calls: [`SibylWorkspaceStore.load/save`](src/proofops_casework/store.py).
-The store is the sole durable workspace; [`CaseworkService`](src/proofops_casework/service.py)
-uses it for risk, resolution and reconsideration. Earlier v1 instructions below
-are historical and are not the current scoped workbench walkthrough.
+Base is a historical verified Sepolia audit anchor, not a transaction sent in
+this new recording. Gloria delivered news through Virtuals; seven quarantine
+receipts exist. Final ACP settlement, independent security review, PMF and
+awarded partner multipliers are not claimed. Research and internal docs stay local.
+Storage maintenance preserved all tables and row identifiers; only unused pages
+were reclaimed. No SDK quota was changed. All three temporary recording roles
+were revoked and returned HTTP 401 after cleanup.
+
+Current load-bearing memory calls are
+[`SibylWorkspaceStore.load/save`](src/proofops_casework/store.py).
+[`CaseworkService`](src/proofops_casework/service.py) reloads that sole durable
+workspace for risks, dependencies, resolutions and reconsideration.
+See [the submission handoff](submission/FINAL_HANDOFF.md) for the judged path,
+partner scope, deadline and remaining owner review.
 
 ## Current candidate
 
@@ -76,7 +84,7 @@ Two public post URLs have been saved to the submission portal; PMF remains uncla
 ## Judge path — under two minutes
 
 The current hosted build is live at
-<https://memoryguard.eyesonchain.xyz/> (the root redirects to `/casework`) and
+<https://memoryguard.eyesonchain.xyz/> (the root is the introduction; `/casework` is the scoped workbench) and
 exposes a redacted [evidence dashboard](https://memoryguard.eyesonchain.xyz/casework/evidence).
 The current [public-release status](https://memoryguard.eyesonchain.xyz/api/v2/public-release)
 and `/api/runtime` identify candidate SHA `8a4e5216aa0ab56c6718af9011a47b4a06013b2b`.

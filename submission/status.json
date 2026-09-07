@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-09-07T07:07:01.998807+00:00",
+  "updated_at": "2026-09-07T10:10:00Z",
   "claims": {
     "registration_confirmed": {
       "state": "verified",
@@ -47,16 +47,16 @@
       "evidence": "Historical Render runs run_dd3d78f34f4d5630103a and run_d703e9eaaa0204a87f9f persisted and trace-bound schema 1.1 OpenRouter receipts on both sides of a real service restart; evidence/2026-09-05_RENDER_OPENROUTER_AB.md. The current VPS now has a synthetic Casework restart A/B, but its remote investigation was degraded with no model receipt; see the separate current-VPS claims below A later separate current-VPS remote investigation succeeded; see vps_remote_investigation. Earlier no-receipt wording describes the initial attempt only."
     },
     "vps_casework_restart_ab": {
-      "state": "verified_current_build_continuous_recording",
-      "evidence": "submission/evidence/continuous-8a4e521.json: synthetic READY -> Docker restart -> same-action DENY; changed runtime, observed process start, scoped stop, two resolutions, refreshed investigation, explicit reconsideration. Complete raw sequence retained in film. Both container PIDs are 1; numeric PID change is not claimed."
+      "state": "verified_current_runtime_and_approved_ui_recording",
+      "evidence": "submission/evidence/heritage-4692b42.json; 11 recorder checks passed. Actual Docker restart; same action fingerprint; both container PIDs are 1. The final film uses raw seconds 0\u201365 continuously; full 120-second raw retained locally."
     },
     "vps_remote_investigation": {
-      "state": "verified_current_build_three_remote_receipts",
-      "evidence": "Three live openai/gpt-4.1-mini generation receipts in submission/evidence/continuous-8a4e521.json, including refreshed investigation after first risk resolution. Non-authoritative."
+      "state": "verified_three_receipts_in_latest_recording",
+      "evidence": "submission/evidence/heritage-4692b42.json; three openai/gpt-4.1-mini generation receipts, including fresh investigation after context changed. Non-authoritative."
     },
     "vps_temporary_credentials_revoked": {
-      "state": "verified_post_cleanup_401",
-      "evidence": "The public VPS HTTP results record that, after cleanup, the temporary owner and investigator credentials each returned HTTP 401 INVALID_CREDENTIAL; token values were not retained"
+      "state": "verified_all_three_http_401",
+      "evidence": "Latest owner, investigator and reviewer tokens all returned 401; temporary raw credentials removed."
     },
     "sibyl_source_integration": {
       "state": "runtime_verified_local_and_current_vps_read_only",
@@ -91,8 +91,8 @@
       "evidence": "Historical isolated environment without importable sibyl_memory_client returned 503 for readiness, direct decision, and Agent run with executable=false on commit 7f002fb56c7ce21187047f3e7b00255ef36327ce; this older probe is not final-SHA video evidence"
     },
     "final_sha_continuous_raw_evidence": {
-      "state": "verified_final_sha_continuous_raw_historical_not_published",
-      "evidence": "Historical a4b216e evidence; current runtime/video are covered by the 8a4e521 claims above. Independent read-only acceptance of a fourth continuous raw take on final SHA a4b216e73f2eed86ef2e07e2fdece4b48728190c was recorded against the former Render deployment, but the raw evidence and v3 presentation candidate remain unpublished. A current-VPS continuous take remains pending"
+      "state": "current_runtime_and_ui_recording_published",
+      "evidence": "See heritage-4692b42.json and video-manifest.json. A continuous normal-speed 65-second selection is in the final film; full 120-second raw retained locally. Earlier a4b216e captures remain historical."
     },
     "base_contract": {
       "state": "verified_base_sepolia_deployed",
@@ -111,12 +111,12 @@
       "evidence": null
     },
     "public_deployment": {
-      "state": "verified_vps_https_runtime_public_release_synthetic_restart_ab",
-      "evidence": "Historical a4b216e evidence; current runtime/video are covered by the 8a4e521 claims above. https://memoryguard.eyesonchain.xyz/ is live on the current VPS; read-only /health/ready, /api/runtime, /api/v2/public-release, and /casework/evidence checks passed on candidate SHA a4b216e73f2eed86ef2e07e2fdece4b48728190c. The new VPS evidence also verifies a real memoryguard container restart and synthetic READY to DENY A/B with same action fingerprint, related-work stop, unrelated-work continuation, and executable=false. This proves current availability, build identity, and synthetic restart behavior only; it does not prove migrated private-data persistence or a successful remote receipt. The former Render persistent-restart record is retained as historical rollback evidence A later separate current-VPS remote investigation succeeded; see vps_remote_investigation. Earlier no-receipt wording describes the initial attempt only."
+      "state": "business_frozen_ui_separately_deployed",
+      "evidence": "Business 8a4e521; workbench UI4692b42. Static presentation deployed through nginx; actual recording restart and three model receipts in heritage-4692b42.json."
     },
     "demo_video": {
-      "state": "published_current_build_human_listening_pending",
-      "evidence": "https://github.com/seekitx/proofops-memoryguard/releases/download/demo-8a4e521-20260907/MemoryGuard-Final-8a4e521-English.mp4 ; 241.728 seconds, 1080p, English synthetic narration, subtitles and cover. Complete continuous interval 30.40-149.92 seconds. Portal saved and reloaded. Human listening pending."
+      "state": "published_portal_update_in_progress_owner_listen_pending",
+      "evidence": "https://memoryguard.eyesonchain.xyz/assets/memoryguard-demo.mp4; 178.347 seconds, 1080p. Approved voice; newly assembled film awaiting final owner listen."
     },
     "public_posts": {
       "state": "user_published_urls_saved_in_portal",
@@ -141,6 +141,10 @@
     "hackathon_free_pro": {
       "state": "account_activated_server_entitlement_still_free",
       "evidence": "Account activation succeeded. Authenticated official /api/plugin/access recheck returned tier=free, source=free, cap_bytes=5242880. Portal offer and actual entitlement disagree; credentials are not wired into runtime. See submission/evidence/entitlement-check.json."
+    },
+    "public_homepage": {
+      "state": "verified_live_static_presentation",
+      "evidence": "Homepage, workbench, evidence, video bytes and HTTP range delivery checked. Business commit 8a4e5216aa0ab56c6718af9011a47b4a06013b2b and runtime identity unchanged. deployments/memoryguard-home/verification.json"
     }
   }
 }

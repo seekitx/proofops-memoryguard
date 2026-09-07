@@ -1,25 +1,85 @@
 {
-  "filename": "MemoryGuard-Contest-English-Cover.mp4",
-  "sha256": "c0328e495c29ef7a924f9d3333caa640f49e9ab5cba438560c34422a45786585",
-  "duration_seconds": 267.853333,
+  "business_commit": "8a4e5216aa0ab56c6718af9011a47b4a06013b2b",
+  "recorded_ui_commit": "4692b4268bc46fc82513eb6c9e343a1ead1364dd",
+  "duration_seconds": 178.346667,
   "resolution": "1920x1080",
-  "runtime_commit": "a4b216e73f2eed86ef2e07e2fdece4b48728190c",
-  "continuous_core_source": "earlier Render recording of same runtime commit",
-  "continuous_raw_interval_seconds": [
+  "video_sha256": "2843a7460ab5aa409ed106ec65bc92ebdde3d50842c579ec7ebdfb9d189789b0",
+  "raw_sha256": "5dd00b86cf5772b48f33f59d4977529540be810bc9c0d7916158c082f733cf89",
+  "continuous_raw_interval": [
     0,
-    113.8
+    65
   ],
-  "gloria_seconds": 18.4,
-  "voice": "local synthetic Qwen3 Aiden",
-  "full_human_audio_review": "pending",
-  "public_url": "https://github.com/seekitx/proofops-memoryguard/releases/download/demo-a4b216e-20260907/MemoryGuard-Contest-English-Cover.mp4",
-  "cover_duration_seconds": 3,
-  "original_video_start_seconds": 3.021016,
-  "source_video_sha256": "c7a6878234a4307238ed3660b1b80a7424e1265198e4be29251d12e12f71ae10",
-  "cover_integrity": {
-    "source_frames": 6620,
-    "covered_frames": 6695,
-    "cover_frames": 75,
-    "all_original_decoded_frames_identical": true
-  }
+  "continuous_final_interval": [
+    16.46,
+    81.46000000000001
+  ],
+  "internal_core_cuts": 0,
+  "core_speed": 1,
+  "unabridged_raw_retained": true,
+  "narration": "MiniMax speech-2.8-hd English_expressive_narrator; synthetic stock voice",
+  "subtitle_alignment": "provider word timestamps; same delay and speed as audio",
+  "voice_selection_owner_approved": true,
+  "new_final_audio_review": "pending",
+  "sections": [
+    {
+      "section": "01-intro",
+      "start": 0,
+      "duration": 16.46
+    },
+    {
+      "section": "continuous",
+      "start": 16.46,
+      "duration": 65,
+      "raw_interval": [
+        0,
+        65
+      ],
+      "internal_cuts": 0,
+      "speed": 1
+    },
+    {
+      "section": "03-impact",
+      "start": 81.46000000000001,
+      "duration": 13.076
+    },
+    {
+      "section": "04-investigation",
+      "start": 94.536,
+      "duration": 15.056000000000001
+    },
+    {
+      "section": "05-partial",
+      "start": 109.592,
+      "duration": 7.748
+    },
+    {
+      "section": "06-human",
+      "start": 117.34,
+      "duration": 10.412
+    },
+    {
+      "section": "07-ready",
+      "start": 127.75200000000001,
+      "duration": 9.8
+    },
+    {
+      "section": "08-base",
+      "start": 137.55200000000002,
+      "duration": 16.028
+    },
+    {
+      "section": "09-gloria",
+      "start": 153.58,
+      "duration": 11.600000000000001
+    },
+    {
+      "section": "10-close",
+      "start": 165.18,
+      "duration": 13.040000000000001
+    }
+  ],
+  "privacy": "webpage only; isolated browser context; no bookmarks or personal browser profile",
+  "partner_scope": "Historical Base Sepolia audit anchor and Gloria news delivery; no new transaction; no final ACP settlement claim",
+  "public_url": "https://memoryguard.eyesonchain.xyz/assets/memoryguard-demo.mp4",
+  "filename": "memoryguard-demo.mp4"
 }

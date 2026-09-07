@@ -1,0 +1,93 @@
+# MemoryGuard submission handoff
+
+## Judge links
+
+- Project: https://memoryguard.eyesonchain.xyz/
+- Video: https://memoryguard.eyesonchain.xyz/assets/memoryguard-demo.mp4
+- Evidence: https://memoryguard.eyesonchain.xyz/casework/evidence
+- Source: https://github.com/seekitx/proofops-memoryguard (MIT)
+- Team: ProofOps Labs
+
+## Pitch
+
+MemoryGuard remembers risk across sessions, stops only the work that depends on
+it, and refuses to resume until the evidence and authority are valid again.
+Same action. Fresh process. Remembered risk. Different authority.
+
+## Memory note
+
+Persist: scoped risks, task dependencies, immutable decisions, resolutions and
+review records in the official Sibyl workspace store. Untrusted instructions are
+quarantined as fingerprints, not added to authority-bearing prompts.
+
+Recall: the fresh server process reloads the durable workspace before evaluating
+the same action. The film shows an actual Docker restart, different runtime IDs,
+an unchanged business commit and the same action fingerprint.
+
+Change: READY becomes DENY. Dependent work stops; unrelated work remains READY.
+Resolving one risk is insufficient. Resolving both still requires explicit human
+reconsideration. A new READY proof remains non-executable.
+
+Without this memory, durable risk and review context cannot be recovered. The
+workflow fails closed instead of silently switching to another business store.
+
+## Film
+
+- 1920 × 1080; 178.347 seconds; English MiniMax stock synthetic voice.
+- Core: 00:16.46–01:21.46, continuous and normal speed, no internal cuts.
+- Full raw recording retained locally; the final film selects raw seconds 0–65.
+- Eleven recording checks passed; three real, structured remote-model receipts.
+- Isolated webpage capture; no bookmarks or personal browser profile.
+- Word-timestamp subtitles follow the identical audio delays and speed factors.
+- Previously approved voice; the owner should listen once to the new assembly.
+
+## Verified outcomes
+
+| Situation | Observed result | Recovery requirement |
+|---|---|---|
+| Same action before risks | READY, non-executable | Finalization remains separate |
+| Same action after actual restart | DENY with two causal risks | Resolve both risks |
+| Dependent task | SUSPENDED, effective policy DENY | Valid recovery evidence |
+| Unrelated task | READY, non-executable | Its own gates still apply |
+| Only one risk resolved | DENY | Resolve remaining risk |
+| Both risks resolved | Needs human reconsideration | Explicit reviewer action |
+| Explicit reconsideration | New READY proof | Still no execution authority |
+
+These are synthetic scenarios on a real hosted Sibyl workspace. They are not
+customer adoption, private-data migration proof or an independent security audit.
+See [the recording record](evidence/heritage-4692b42.json).
+
+## Partner scope
+
+Base: previously verified Sepolia audit-anchor transaction
+`0xc518b7b197ddd2b9c4d30a3a61846a0773489b9082bdd96b287ce82758b3704b`.
+The film displays the dated transaction proof; it does not send a new transaction.
+
+Virtuals: Gloria job `1003558157` delivered ten news items for 0.01 USDC; seven
+quarantine receipts were preserved. Final ACP settlement is unverified. News
+cannot resolve a risk or approve a task. This is not an independent safety review.
+
+PMF and partner multipliers are not claimed as awarded results.
+
+## Submission and deadline
+
+Official requirements: https://hack.sibyllabs.org/submissions and
+https://hack.sibyllabs.org/rules . Deadline: September 10, 2026 at 23:59 UTC
+(September 11, 07:59 in China). The private portal is authoritative for Ready.
+Do not publish its private editing link.
+
+Two owner-published post URLs:
+- https://x.com/reslibadsi28525/status/2096832643967172716
+- https://x.com/reslibadsi28525/status/2096832605652144230
+
+The portal accepts these two URLs. Post content and required partner tags need an
+independent content check; a checked portal milestone alone is not that check.
+No new post is automatically sent by this handoff.
+
+## Release boundary
+
+Business runtime: `8a4e5216aa0ab56c6718af9011a47b4a06013b2b`.
+Recorded workbench UI: `4692b4268bc46fc82513eb6c9e343a1ead1364dd`.
+Later video/evidence-only changes are separate from that business release.
+The existing runtime release results and CI remain linked from README. No new
+compilation or full test suite was run for the presentation update.
