@@ -21,8 +21,8 @@ The September 7 film contains an uncut, normal-speed 65-second sequence from a
 120-second retained raw recording: READY, actual VPS Docker restart, same-action
 DENY, scoped stop, investigation, and explicit reviewer reconsideration.
 UTC timestamps and both commit identifiers remain visible. Three validated
-remote-model receipts accompany the synthetic casework. MiniMax stock synthetic
-narration uses provider word timestamps for captions. The voice was previously
+remote-model receipts accompany the synthetic casework. English
+narration uses word timestamps for captions. The voice was previously
 owner-approved; the newly assembled film still needs the owner's final listen.
 
 Base is a historical verified Sepolia audit anchor, not a transaction sent in

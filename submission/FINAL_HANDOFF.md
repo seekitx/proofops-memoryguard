@@ -33,17 +33,16 @@ workflow fails closed instead of silently switching to another business store.
 
 ## Film
 
-- 1920 × 1080; 178.347 seconds; English MiniMax stock synthetic voice.
+- 1920 × 1080; 178.347 seconds; English narration.
 - Core: 00:16.46–01:21.46, continuous and normal speed, no internal cuts.
 - Full raw recording retained locally; the final film selects raw seconds 0–65.
 - Eleven recording checks passed; three real, structured remote-model receipts.
 - Isolated webpage capture; no bookmarks or personal browser profile.
 - Word-timestamp subtitles follow the identical audio delays and speed factors.
 - Previously approved voice; the owner should listen once to the new assembly.
-- Presentation correction: MiniMax/team credits, clearly labelled recorded READY
-  response, and subtitle punctuation/line breaks. Core footage and timing unchanged.
-- Presentation correction: MiniMax/team credits, clearly labelled recorded READY
-  response, and subtitle punctuation/line breaks. Core footage and timing unchanged.
+
+- Closing card: MemoryGuard and ProofOps Labs. No narration-source credit.
+- Recorded READY response and corrected captions; core footage and timing unchanged.
 
 ## Verified outcomes
 

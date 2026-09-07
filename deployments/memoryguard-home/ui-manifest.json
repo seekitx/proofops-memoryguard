@@ -1,13 +1,13 @@
 {
   "business_commit": "8a4e5216aa0ab56c6718af9011a47b4a06013b2b",
   "assets": {
-    "landing.html": "84934e27edf82cb01f30403e342bd5061d0d60b395d0aae8e4bc7a3c3a28985b",
+    "landing.html": "20ffb3d3fb236ffdd74ee56771783c5f521f5499e50930f5df65805fafcfb1a1",
     "casework.html": "2bc60267afc9386d99e558761347b952c8cad4c929dd93d3a26ce1f62619a2d1",
     "casework-sources.html": "9c8d48c67098b97ba26d7c0265912807b72e4fcedf13e251171aee89010887f9",
     "casework-evidence.html": "c206f477b4f9ec6b337fdddf63a50c52b070867d89868e3980cdd9d41fa73471",
     "evidence.html": "a895c9a4f7e867770135694bc563235c60f8cc256210107b6c3e5dc33a55477b",
     "proof.html": "f23f705f0c6d22f7a2e1ae3e987c8caa6f077b2d49e50b35e9f259f8e11db673",
-    "assets/memoryguard-demo.mp4": "307b17dcb76b125a1374bc2d66a12e36df7d5ebf54b22f819630e134ee6a5ec1",
+    "assets/memoryguard-demo.mp4": "7770d9c101ddd5706e6a787dd9a2caa84746bb11be091847e4ebe53a95605c47",
     "assets/memoryguard.css": "7b4f68fc9bebc32d06e3f1418b85d6519c2886ad329a18b079dfe170c08ebe23",
     "assets/heritage.css": "9167d041816e18567a224d5505bb55bf4a1fbb43ea980611e95f4519e3695de4",
     "assets/casework.css": "0b68fd0ba1bd24700f6d7c90bbdeb8c0a588742017350c1049fa230dd368e3e8",
@@ -19,7 +19,7 @@
     "assets/landing.css": "bbd7ab6d36f8c34cd88ee43921009786000df58b1c6b4bcb13c941356366872b",
     "assets/casework.js": "168e740daf9f1c067f843b188dfbbc2496b4a09e7ce379692f751a1579b7602d",
     "assets/workbench.css": "ec199be1f0feb88bc2b2aad19ba05645339b5fc74b76418a5fb7f75bc351727a",
-    "assets/heritage-capture.json": "18aba6ccdb2522c4143c901699a268b1d15eeaaf40ca1869a83abafc05fe31cd",
+    "assets/heritage-capture.json": "6b65ca0dc1e30b2ca2e47bb0ab011b098967e72f02fbf230130c233ef6eed6e0",
     "assets/memoryguard-demo.srt": "3742a423d99f04d47b319e33af6a7c3fab4923803158bc7f531f5cf0c0583511"
   },
   "recorded_ui_commit": "4692b4268bc46fc82513eb6c9e343a1ead1364dd",
