@@ -40,6 +40,10 @@ workflow fails closed instead of silently switching to another business store.
 - Isolated webpage capture; no bookmarks or personal browser profile.
 - Word-timestamp subtitles follow the identical audio delays and speed factors.
 - Previously approved voice; the owner should listen once to the new assembly.
+- Presentation correction: MiniMax/team credits, clearly labelled recorded READY
+  response, and subtitle punctuation/line breaks. Core footage and timing unchanged.
+- Presentation correction: MiniMax/team credits, clearly labelled recorded READY
+  response, and subtitle punctuation/line breaks. Core footage and timing unchanged.
 
 ## Verified outcomes
 

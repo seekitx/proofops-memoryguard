@@ -3,7 +3,7 @@
   "recorded_ui_commit": "4692b4268bc46fc82513eb6c9e343a1ead1364dd",
   "duration_seconds": 178.346667,
   "resolution": "1920x1080",
-  "video_sha256": "2843a7460ab5aa409ed106ec65bc92ebdde3d50842c579ec7ebdfb9d189789b0",
+  "video_sha256": "307b17dcb76b125a1374bc2d66a12e36df7d5ebf54b22f819630e134ee6a5ec1",
   "raw_sha256": "5dd00b86cf5772b48f33f59d4977529540be810bc9c0d7916158c082f733cf89",
   "continuous_raw_interval": [
     0,
@@ -81,5 +81,13 @@
   "privacy": "webpage only; isolated browser context; no bookmarks or personal browser profile",
   "partner_scope": "Historical Base Sepolia audit anchor and Gloria news delivery; no new transaction; no final ACP settlement claim",
   "public_url": "https://memoryguard.eyesonchain.xyz/assets/memoryguard-demo.mp4",
-  "filename": "memoryguard-demo.mp4"
+  "filename": "memoryguard-demo.mp4",
+  "presentation_corrections": {
+    "closing_credit": "MiniMax synthetic narration; ProofOps Labs",
+    "ready_section": "Actual saved response fields rendered as a clearly labelled recorded-receipt card",
+    "subtitle_changes": "Punctuation spacing and sentence line breaks only; all timestamps unchanged",
+    "continuous_source_sha256": "7eae4f171cc1cafa9983873adc70edd624ed7f1e9060c61878e29e02d8c5d6b5",
+    "continuous_source_unchanged": true,
+    "prior_video_sha256": "2843a7460ab5aa409ed106ec65bc92ebdde3d50842c579ec7ebdfb9d189789b0"
+  }
 }

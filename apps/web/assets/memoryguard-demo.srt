@@ -8,15 +8,17 @@ decision today, then forget the risk tomorrow.
 
 3
 00:00:04,779 --> 00:00:08,405
-MemoryGuard carries trusted risk across processes. This
+MemoryGuard carries trusted
+risk across processes. This
 
 4
 00:00:08,704 --> 00:00:12,075
-synthetic transfer begins as a non-executable ready
+synthetic transfer begins
+as a non-executable ready
 
 5
 00:00:12,117 --> 00:00:14,379
-draft.The model can neither sign nor move
+draft. The model can neither sign nor move
 
 6
 00:00:14,379 --> 00:00:14,891
@@ -44,11 +46,13 @@ and runtime identity.
 
 12
 00:00:39,592 --> 00:00:43,621
-Same action, now denied. Unrelated work continues.
+Same action, now denied.
+Unrelated work continues.
 
 13
 00:00:44,195 --> 00:00:47,565
-The investigator obtains real structured model reports.
+The investigator obtains real
+structured model reports.
 
 14
 00:00:50,595 --> 00:00:52,813
@@ -72,7 +76,8 @@ Both resolved. Human review is still required.
 
 19
 00:01:12,895 --> 00:01:16,521
-Explicit reconsideration creates a new draft. Still
+Explicit reconsideration
+creates a new draft. Still
 
 20
 00:01:16,564 --> 00:01:18,313
@@ -84,7 +89,8 @@ After reconnecting to the fresh runtime, the
 
 22
 00:01:24,063 --> 00:01:28,073
-identical action fingerprint becomes blocked. Both remembered
+identical action fingerprint
+becomes blocked. Both remembered
 
 23
 00:01:28,116 --> 00:01:31,231
@@ -96,7 +102,8 @@ synthetic task remains ready.
 
 25
 00:01:34,579 --> 00:01:37,779
-A separate investigator requests real structured model
+A separate investigator
+requests real structured model
 
 26
 00:01:37,821 --> 00:01:40,808
@@ -104,7 +111,8 @@ reports. Each response has a live generation
 
 27
 00:01:40,851 --> 00:01:44,563
-receipt and remains non-authoritative.The evidence is handed
+receipt and remains non-authoritative.
+The evidence is handed
 
 28
 00:01:44,563 --> 00:01:46,653
@@ -136,7 +144,8 @@ approval still does not return. The state
 
 35
 00:02:01,991 --> 00:02:04,977
-requires human review until the authorized reviewer
+requires human review until
+the authorized reviewer
 
 36
 00:02:05,020 --> 00:02:06,727
@@ -148,7 +157,8 @@ That creates a new ready proof, while
 
 38
 00:02:09,885 --> 00:02:14,408
-executable remains false. Memory remembers risk; valid
+executable remains false.
+Memory remembers risk; valid
 
 39
 00:02:14,451 --> 00:02:16,499
@@ -160,7 +170,8 @@ On Base Sepolia, MemoryGuard has a deployed
 
 41
 00:02:20,325 --> 00:02:23,141
-proof anchor and a confirmed contract interaction.
+proof anchor and a confirmed
+contract interaction.
 
 42
 00:02:23,184 --> 00:02:25,488
@@ -172,7 +183,7 @@ later audit. This is a testnet audit
 
 44
 00:02:27,963 --> 00:02:30,352
-anchor.It is not a payment, and it
+anchor. It is not a payment, and it
 
 45
 00:02:30,352 --> 00:02:32,101
@@ -180,19 +191,23 @@ grants no execution authority.
 
 46
 00:02:33,623 --> 00:02:36,865
-Gloria delivered news through Virtuals. Seven inputs
+Gloria delivered news through
+Virtuals. Seven inputs
 
 47
 00:02:36,908 --> 00:02:40,023
-were quarantined in Sibyl. External information grants
+were quarantined in Sibyl.
+External information grants
 
 48
 00:02:40,065 --> 00:02:44,119
-no authority. Final platform completion remains unverified.
+no authority. Final platform
+completion remains unverified.
 
 49
 00:02:45,223 --> 00:02:48,465
-MemoryGuard remembers risk across sessions, stops only
+MemoryGuard remembers risk
+across sessions, stops only
 
 50
 00:02:48,508 --> 00:02:50,812
@@ -200,7 +215,8 @@ dependent work, and knows who may let
 
 51
 00:02:50,855 --> 00:02:55,121
-it continue. Same action. Fresh process. Remembered
+it continue. Same action.
+Fresh process. Remembered
 
 52
 00:02:55,164 --> 00:02:57,169

@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-09-07T10:15:43.884375+00:00",
+  "updated_at": "2026-09-07T10:40:12.411572+00:00",
   "claims": {
     "registration_confirmed": {
       "state": "verified",
@@ -116,7 +116,8 @@
     },
     "demo_video": {
       "state": "published_and_saved_in_portal_owner_final_listen_pending",
-      "evidence": "https://memoryguard.eyesonchain.xyz/assets/memoryguard-demo.mp4 ; 178.347 seconds, 1080p. Public download hash matches video manifest. Approved voice; new assembly owner listen pending."
+      "evidence": "https://memoryguard.eyesonchain.xyz/assets/memoryguard-demo.mp4 ; 178.347 seconds, 1080p. Public download hash matches video manifest. Approved voice; new assembly owner listen pending.",
+      "presentation_corrections": "MiniMax/team closing credits corrected; saved READY receipt enlarged and labelled; subtitle punctuation/line breaks corrected without timing changes; continuous source unchanged."
     },
     "public_posts": {
       "state": "content_and_all_three_tags_verified_old_link_followup_needed",

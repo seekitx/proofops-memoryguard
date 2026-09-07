@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-07T10:11:00.537393+00:00",
+  "checked_at": "2026-09-07T10:41:01.935752+00:00",
   "results": {
     "/": {
       "status": 200,
@@ -54,13 +54,13 @@
     },
     "/assets/heritage-capture.json": {
       "status": 200,
-      "sha256": "37cc2266af45f59e56f5db294f9a9cd2f7b9bc5e6a44343afcb71389d43c950c",
+      "sha256": "18aba6ccdb2522c4143c901699a268b1d15eeaaf40ca1869a83abafc05fe31cd",
       "bytes": 10653
     },
     "/assets/memoryguard-demo.srt": {
       "status": 200,
-      "sha256": "71cea16467efcefa75695dfb4cb4f25d02b9c09c0da4296c71dc39afc13f4f9f",
-      "bytes": 3920
+      "sha256": "3742a423d99f04d47b319e33af6a7c3fab4923803158bc7f531f5cf0c0583511",
+      "bytes": 3923
     },
     "/assets/casework.js": {
       "status": 200,
@@ -69,13 +69,14 @@
     },
     "/assets/memoryguard-demo.mp4": {
       "status": 200,
-      "sha256": "2843a7460ab5aa409ed106ec65bc92ebdde3d50842c579ec7ebdfb9d189789b0",
-      "bytes": 7990835
+      "sha256": "307b17dcb76b125a1374bc2d66a12e36df7d5ebf54b22f819630e134ee6a5ec1",
+      "bytes": 8035613
     }
   },
   "range": {
     "status": 206,
     "bytes": 1024,
     "content_range": "bytes 0-1023/7990835"
-  }
+  },
+  "latest_scope": "Three updated media/evidence files rechecked; other route checks retain preceding observation."
 }
