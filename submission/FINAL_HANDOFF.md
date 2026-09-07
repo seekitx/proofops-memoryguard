@@ -80,9 +80,18 @@ Two owner-published post URLs:
 - https://x.com/reslibadsi28525/status/2096832643967172716
 - https://x.com/reslibadsi28525/status/2096832605652144230
 
-The portal accepts these two URLs. Post content and required partner tags need an
-independent content check; a checked portal milestone alone is not that check.
-No new post is automatically sent by this handoff.
+Live Chrome inspection verified both post texts and all three tags on September 7.
+The demo post links to a historical release. The build-log post links to the
+now-excluded docs/JUDGE_OUTCOMES.md. The owner should publish the prepared link
+update below; internal docs are not reintroduced.
+
+Suggested reply to the build-log post (prepared, not sent):
+
+> Updated MemoryGuard demo and evidence: https://memoryguard.eyesonchain.xyz/casework/evidence — same action, real service restart, remembered risk, explicit human reconsideration. The old docs link has moved here. @sibylcap @base @virtuals_io
+
+The official private portal was reloaded after saving: all four artifact
+milestones are checked and **Marked ready for judging** is enabled. It points to
+the current hosted 2:58 film. The owner can revise/unmark before close.
 
 ## Release boundary
 

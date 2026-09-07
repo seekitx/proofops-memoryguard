@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-09-07T10:10:00Z",
+  "updated_at": "2026-09-07T10:15:43.884375+00:00",
   "claims": {
     "registration_confirmed": {
       "state": "verified",
@@ -11,8 +11,8 @@
       "evidence": "Private build page opened and inspected read-only again on 2026-09-05 Beijing time; edit token intentionally not stored"
     },
     "build_page_current_milestones": {
-      "state": "repo_current_video_posts_memory_saved_ready_unmarked",
-      "evidence": "Browser reload on 2026-09-07 confirmed current 8a4e521 video link and all four artifact milestones. Ready checkbox remains unchecked."
+      "state": "four_artifacts_saved_and_ready",
+      "evidence": "Live browser reload on 2026-09-07T10:15:43.884375+00:00 confirmed public repo, current hosted 178.347-second video, two posts, memory fields and checked Ready."
     },
     "build_page_team_and_builders": {
       "state": "human_required",
@@ -31,8 +31,8 @@
       "evidence": "https://github.com/seekitx/proofops-memoryguard"
     },
     "repository_head_pushed": {
-      "state": "runtime_frozen_evidence_updated",
-      "evidence": "Runtime commit 8a4e5216aa0ab56c6718af9011a47b4a06013b2b deployed on VPS. Subsequent README/submission commits are evidence only. Exact-runtime GitHub Actions run 34093259925 passed. docs/ remains local-only and is absent from published branch/tag histories."
+      "state": "presentation_and_evidence_pushed",
+      "evidence": "Remote main reread as ae4391d93ae8295f2856d4e972c4f283a9989362. Runtime remains 8a4e521; recorded workbench UI4692b42. Later submission-status commits only synchronize portal observations."
     },
     "prior_work_boundary_reviewed": {
       "state": "human_required",
@@ -115,24 +115,24 @@
       "evidence": "Business 8a4e521; workbench UI4692b42. Static presentation deployed through nginx; actual recording restart and three model receipts in heritage-4692b42.json."
     },
     "demo_video": {
-      "state": "published_portal_update_in_progress_owner_listen_pending",
-      "evidence": "https://memoryguard.eyesonchain.xyz/assets/memoryguard-demo.mp4; 178.347 seconds, 1080p. Approved voice; newly assembled film awaiting final owner listen."
+      "state": "published_and_saved_in_portal_owner_final_listen_pending",
+      "evidence": "https://memoryguard.eyesonchain.xyz/assets/memoryguard-demo.mp4 ; 178.347 seconds, 1080p. Public download hash matches video manifest. Approved voice; new assembly owner listen pending."
     },
     "public_posts": {
-      "state": "user_published_urls_saved_in_portal",
+      "state": "content_and_all_three_tags_verified_old_link_followup_needed",
       "urls": [
         "https://x.com/reslibadsi28525/status/2096832643967172716",
         "https://x.com/reslibadsi28525/status/2096832605652144230"
       ],
-      "evidence": "User supplied both published URLs. Saved to private build page on 2026-09-07; its 2 posts milestone was checked. This records portal acceptance, not an independent X content audit."
+      "evidence": "Chrome read both published posts on 2026-09-07T10:15:43.884375+00:00. Both tag @sibylcap @base @virtuals_io. Demo post points to historical release; build log points to now-excluded docs/JUDGE_OUTCOMES.md. Owner should post prepared updated public evidence link."
     },
     "contest_submission": {
-      "state": "artifacts_saved_not_marked_ready",
-      "evidence": "Repository, video, two posts and memory explanation saved; Ready remains unmarked."
+      "state": "marked_ready_verified_after_reload",
+      "evidence": "Official private build page shows Marked ready for judging after reload. Video URL is the hosted memoryguard-demo.mp4. Ready can be unmarked before close."
     },
     "build_page_marked_ready": {
-      "state": "not_marked",
-      "evidence": "Last live portal inspection on 2026-09-07 showed Mark ready for judging."
+      "state": "verified_marked_ready",
+      "evidence": "Live browser UI read after page reload on 2026-09-07T10:15:43.884375+00:00; checkbox Value1."
     },
     "storage_capacity_recovery": {
       "state": "maintenance_and_bounded_write_replay_verified",
