@@ -1,0 +1,220 @@
+{
+  "schema_version": "memoryguard-casework-recording/1",
+  "final_candidate_sha": "8a4e5216aa0ab56c6718af9011a47b4a06013b2b",
+  "base_url": "https://memoryguard.eyesonchain.xyz",
+  "seed_is_synthetic": true,
+  "webpage_only": true,
+  "browser_chrome_recorded": false,
+  "desktop_recorded": false,
+  "persistent_profile_used": false,
+  "core_checks": {
+    "final_sha_bound": true,
+    "same_action_fingerprint": true,
+    "exact_two_risks": true,
+    "runtime_changed": true,
+    "process_ids_recorded": true,
+    "continuous_restart_segment": true,
+    "render_restart_event_bound": true,
+    "render_event_time_ordered": true,
+    "one_risk_still_deny": true,
+    "both_risks_need_human": true,
+    "explicit_reconsideration_ready": true
+  },
+  "session_a": {
+    "task_id": "task_bcb31a0dbd9a410d8813857f471815cb",
+    "child_task_id": "task_90ef8af258fa469e99c78a510655f37a",
+    "unrelated_task_id": "task_a49258b6d63f47a99a0899b84036adac",
+    "decision": {
+      "decision_id": "decision_3a2e4e4df44c41408e98c3646c5cd2e1",
+      "task_id": "task_bcb31a0dbd9a410d8813857f471815cb",
+      "verdict": "READY",
+      "tool": "human_review.prepare",
+      "causal_refs": [
+        "baseline:9fd6fe0dfdccae920a12fb69b5e2e41dd79c6383a24e8fb36dc263fbdfb5d96a:v1"
+      ],
+      "active_blockers": [],
+      "action_fingerprint": "82cd0db464d0889c10eb586ba7d16b1eb2d26820235f32b3a377fa3f21102465",
+      "basis_hash": "92eb25474b3ea631b5947b3c572452511d23490f0d3bf4eec3ecd240456d6308",
+      "proof_root": "7522c25c12806b06bad1c4ee73c8ae95896195d4d36adff84aebc8bab6ac01b2",
+      "memory_revision": 4,
+      "runtime_id": "runtime_bcdda93eebc74781be68cdf9925826e9",
+      "process_id": 1,
+      "build_commit": "8a4e5216aa0ab56c6718af9011a47b4a06013b2b",
+      "executable": false
+    },
+    "scope": {
+      "subject_id": "judge-final-8a4e521c",
+      "method": "transfer",
+      "chain_id": 84532
+    },
+    "runtime_id": "runtime_bcdda93eebc74781be68cdf9925826e9",
+    "process_id": 1,
+    "build_commit": "8a4e5216aa0ab56c6718af9011a47b4a06013b2b"
+  },
+  "session_b": {
+    "runtime_id": "runtime_b6bdf83098c04e54b887bfa883e1a273",
+    "process_id": 1,
+    "build_commit": "8a4e5216aa0ab56c6718af9011a47b4a06013b2b",
+    "decision": {
+      "decision_id": "decision_b2f87444c3af4d1a8fff393f006b0563",
+      "task_id": "task_bcb31a0dbd9a410d8813857f471815cb",
+      "verdict": "DENY",
+      "tool": "operator_escalation.create",
+      "causal_refs": [
+        "case:case_01b03c0204c2441eb0ce7418996fb341:v1",
+        "case:case_dce0134c537a4184a3c3b182899e0be4:v1"
+      ],
+      "active_blockers": [
+        "case_01b03c0204c2441eb0ce7418996fb341",
+        "case_dce0134c537a4184a3c3b182899e0be4"
+      ],
+      "action_fingerprint": "82cd0db464d0889c10eb586ba7d16b1eb2d26820235f32b3a377fa3f21102465",
+      "basis_hash": "7ffe2c9f84bc9192d440fa4156e93897cbd0d99781c09557cc051c9bbd9738d2",
+      "proof_root": "9c98fae7c144044f055aedffeed6569ca1eefe3e9e4d7b7c3719a9eba11204db",
+      "memory_revision": 10,
+      "runtime_id": "runtime_b6bdf83098c04e54b887bfa883e1a273",
+      "process_id": 1,
+      "build_commit": "8a4e5216aa0ab56c6718af9011a47b4a06013b2b",
+      "executable": false
+    },
+    "replay_contains_same_action": true,
+    "replay_contains_recorded_process_ids": true
+  },
+  "investigations": [
+    {
+      "case_id": "case_01b03c0204c2441eb0ce7418996fb341",
+      "report_id": "report_90f342f9557e4d5cb7db0460b0f3caca",
+      "planner_status": "REMOTE",
+      "authoritative": false,
+      "receipt": {
+        "backend": "remote_structured_model",
+        "generation_id": "gen-1788763746-gbO8Pohz8SvyMb780DOo",
+        "resolved_model": "openai/gpt-4.1-mini",
+        "completion_sha256": "0e3fbd091720df10dee5c43570b6527584d39c1be3dc1a404ff36fde1d1cf4e7",
+        "live_call_verified": true,
+        "structured_output_validated": true
+      }
+    },
+    {
+      "case_id": "case_dce0134c537a4184a3c3b182899e0be4",
+      "report_id": "report_95c946b55bbd4579bd695a5e776704ff",
+      "planner_status": "REMOTE",
+      "authoritative": false,
+      "receipt": {
+        "backend": "remote_structured_model",
+        "generation_id": "gen-1788763749-YUuSTVBR5H9ykoaJxa1z",
+        "resolved_model": "openai/gpt-4.1-mini",
+        "completion_sha256": "94b5cfbfa9cb1379d66ea9b0afb3dbc79c6900a54e37293f4e36e75674af3fb7",
+        "live_call_verified": true,
+        "structured_output_validated": true
+      }
+    },
+    {
+      "case_id": "case_dce0134c537a4184a3c3b182899e0be4",
+      "report_id": "report_6c34c47e1d5046298100dd03471eab09",
+      "planner_status": "REMOTE",
+      "authoritative": false,
+      "receipt": {
+        "backend": "remote_structured_model",
+        "generation_id": "gen-1788763766-WkgINuowevoUoXURiG2c",
+        "resolved_model": "openai/gpt-4.1-mini",
+        "completion_sha256": "1070562f65d177ed6792c557c65ac2bd024518bf99ccf3b017c77ebc040f37bc",
+        "live_call_verified": true,
+        "structured_output_validated": true
+      },
+      "refresh_reason": "case_context_changed_after_first_resolution"
+    }
+  ],
+  "handoffs": [
+    {
+      "handoff_id": "handoff_f981bfeb1b2444169bab6720b263648a",
+      "reviewer_id": "actor_reviewer_8a4e521c",
+      "investigator_id": "actor_investigator_8a4e521c"
+    },
+    {
+      "handoff_id": "handoff_fae324595767486ea8a54cf09b62276c",
+      "reviewer_id": "actor_reviewer_8a4e521c",
+      "investigator_id": "actor_investigator_8a4e521c"
+    },
+    {
+      "handoff_id": "handoff_3918ca1175e14b6695a538712673c815",
+      "reviewer_id": "actor_reviewer_8a4e521c",
+      "investigator_id": "actor_investigator_8a4e521c",
+      "refresh_reason": "case_context_changed_after_first_resolution"
+    }
+  ],
+  "reconsideration": {
+    "decision": {
+      "decision_id": "decision_40df2d1ace1743cca3a069a41f51fa91",
+      "task_id": "task_bcb31a0dbd9a410d8813857f471815cb",
+      "verdict": "READY",
+      "tool": "human_review.prepare",
+      "causal_refs": [
+        "baseline:9fd6fe0dfdccae920a12fb69b5e2e41dd79c6383a24e8fb36dc263fbdfb5d96a:v1",
+        "resolution:case_01b03c0204c2441eb0ce7418996fb341:v2",
+        "resolution:case_dce0134c537a4184a3c3b182899e0be4:v2"
+      ],
+      "active_blockers": [],
+      "action_fingerprint": "82cd0db464d0889c10eb586ba7d16b1eb2d26820235f32b3a377fa3f21102465",
+      "basis_hash": "7cd2d5c1cb56cea087682a609c8c856edef37046abbebdd7ed837c5601fe99cd",
+      "proof_root": "071fb02081316d9e866d4032878825439f1913d6db0a79c14b0be1596bdcddaf",
+      "memory_revision": 27,
+      "runtime_id": "runtime_b6bdf83098c04e54b887bfa883e1a273",
+      "process_id": 1,
+      "build_commit": "8a4e5216aa0ab56c6718af9011a47b4a06013b2b",
+      "executable": false
+    },
+    "old_ready_proof_root": "7522c25c12806b06bad1c4ee73c8ae95896195d4d36adff84aebc8bab6ac01b2",
+    "new_ready_proof_root": "071fb02081316d9e866d4032878825439f1913d6db0a79c14b0be1596bdcddaf",
+    "explicit_reviewer_id": "actor_reviewer_8a4e521c"
+  },
+  "risks": {
+    "note": {
+      "authority": false,
+      "raw_text_sent_to_model": false
+    },
+    "cases": [
+      {
+        "case_id": "case_01b03c0204c2441eb0ce7418996fb341",
+        "kind": "dispute",
+        "status": "OPEN"
+      },
+      {
+        "case_id": "case_dce0134c537a4184a3c3b182899e0be4",
+        "kind": "revocation",
+        "status": "OPEN"
+      }
+    ]
+  },
+  "restart": {
+    "continuous_segment": true,
+    "waits_were_not_trimmed": true,
+    "barrier_opened_utc": "2026-09-07T06:48:21.310Z",
+    "observed_new_runtime_utc": "2026-09-07T06:48:56.917Z",
+    "old_runtime_id": "runtime_bcdda93eebc74781be68cdf9925826e9",
+    "old_process_id": 1,
+    "new_runtime_id": "runtime_b6bdf83098c04e54b887bfa883e1a273",
+    "new_process_id": 1,
+    "different_runtime": true,
+    "different_process": false,
+    "pid_comparison_is_observation_only": true,
+    "same_final_sha": true,
+    "render_event_time_ordered": true,
+    "render_event": {
+      "event_id": "vps-restart-13da6665c22e46dc95bf54fa699b7f2e",
+      "restart_started_utc": "2026-09-07T06:48:50.282649Z",
+      "event_utc": "2026-09-07T06:48:56.393668Z",
+      "restart_completed_utc": "2026-09-07T06:48:56.393668Z",
+      "process_started_utc": "2026-09-07T06:48:52.679987465Z",
+      "process_start_status": "observed",
+      "process_start_source": "docker_state_started_at",
+      "build_sha": "8a4e5216aa0ab56c6718af9011a47b4a06013b2b",
+      "source": "VPS Docker restart plus public HTTPS readiness",
+      "verification_url": ""
+    }
+  },
+  "raw_media_seconds": 119.52,
+  "recorder_wall_clock_seconds": 120.007,
+  "duration_note": "Raw file is 119.52 seconds, below 2 minutes; the narrated final film is the submission artifact. The complete raw sequence is preserved in that film.",
+  "credential_cleanup": "Original registry restored; temporary owner rejected with HTTP 401; local temporary tokens deleted."
+}

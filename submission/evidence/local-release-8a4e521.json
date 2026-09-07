@@ -1,0 +1,68 @@
+{
+  "schema_version": "memoryguard-release-gate/1",
+  "captured_at": "2026-09-07T06:31:42.161105+00:00",
+  "build_commit": "8a4e5216aa0ab56c6718af9011a47b4a06013b2b",
+  "git_clean": true,
+  "source_digest": "6bdd3bf2c4756c7341f29b05b9f4bdce42c7fc945a89e63a9bb6820dd820df1c",
+  "verification_source_digest": "acca6f29197e1aea2567e878b1b67678d7fdd7095fc2b3adbd55056f8fb3a07f",
+  "source_stable": true,
+  "mode": "EXECUTED_LOCAL",
+  "stages": [
+    {
+      "name": "static",
+      "state": "PASSED",
+      "parsed_python_files": 99
+    },
+    {
+      "name": "official_sdk",
+      "state": "PASSED",
+      "exit_code": 0,
+      "log_sha256": "f0fd240a5687c9875a3cca88f4d5e7659731bdb4afc36987521a154c203e12c8"
+    },
+    {
+      "name": "pytest",
+      "state": "PASSED",
+      "exit_code": 0,
+      "tests": 216,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "log_sha256": "a6581e01edb4c104c1f781f66331441edc60d6940d20ffa4f602f25982a103d6"
+    },
+    {
+      "name": "fresh_process",
+      "state": "PASSED",
+      "exit_code": 0,
+      "log_sha256": "cc770d5e16cf07da3ba8d287095b855f9f1f1ba9c0f37795127fd9627d8df04c"
+    },
+    {
+      "name": "scenario_matrix",
+      "state": "PASSED",
+      "exit_code": 0,
+      "log_sha256": "a899489c63fa1a588375ec77b706cf77a576bcda65f192c34e04ed166f6af851"
+    },
+    {
+      "name": "source_experiment",
+      "state": "PASSED",
+      "exit_code": 0,
+      "log_sha256": "b00341f85fba7b62c6cb86236d9d61ec68debfdb212925a0a9452c84afca00d1"
+    },
+    {
+      "name": "http_acceptance",
+      "state": "PASSED",
+      "exit_code": 0,
+      "log_sha256": "85070c3764b24e57f1db49631cc2aa12f682d394a6ed8bb1d3cdf0d7fa91654e"
+    },
+    {
+      "name": "contracts",
+      "state": "PASSED",
+      "exit_code": 0,
+      "log_sha256": "7dd0cc50fe6e8385276b1d968c209f5f1dd0e63704b9c965f2df150c6bc90691"
+    }
+  ],
+  "local_release_ready": true,
+  "contest_submission_ready": false,
+  "scope": "Self-recorded local verification only. Hosted browser, remote model, Base, ACP, video and posts require separate evidence.",
+  "external_execution_claimed": false,
+  "partner_bonus_claimed": false
+}

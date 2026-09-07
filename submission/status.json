@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-09-07T06:02:51.172645+00:00",
+  "updated_at": "2026-09-07T07:07:01.998807+00:00",
   "claims": {
     "registration_confirmed": {
       "state": "verified",
@@ -11,8 +11,8 @@
       "evidence": "Private build page opened and inspected read-only again on 2026-09-05 Beijing time; edit token intentionally not stored"
     },
     "build_page_current_milestones": {
-      "state": "repo_video_posts_memory_saved",
-      "evidence": "Live build page on 2026-09-07 showed all four milestones checked after saving both post URLs. Ready remained unmarked."
+      "state": "repo_current_video_posts_memory_saved_ready_unmarked",
+      "evidence": "Browser reload on 2026-09-07 confirmed current 8a4e521 video link and all four artifact milestones. Ready checkbox remains unchecked."
     },
     "build_page_team_and_builders": {
       "state": "human_required",
@@ -31,8 +31,8 @@
       "evidence": "https://github.com/seekitx/proofops-memoryguard"
     },
     "repository_head_pushed": {
-      "state": "runtime_frozen_documentation_and_evidence_published",
-      "evidence": "PR #1 merged the judge evidence and public film links into main. Runtime application source remains a4b216e73f2eed86ef2e07e2fdece4b48728190c; later documentation commits are not runtime deployments. The original GitHub Actions run 33982006493 verifies a4b216e, not subsequent documentation commits."
+      "state": "runtime_frozen_evidence_updated",
+      "evidence": "Runtime commit 8a4e5216aa0ab56c6718af9011a47b4a06013b2b deployed on VPS. Subsequent README/submission commits are evidence only. Exact-runtime GitHub Actions run 34093259925 passed. docs/ remains local-only and is absent from published branch/tag histories."
     },
     "prior_work_boundary_reviewed": {
       "state": "human_required",
@@ -47,12 +47,12 @@
       "evidence": "Historical Render runs run_dd3d78f34f4d5630103a and run_d703e9eaaa0204a87f9f persisted and trace-bound schema 1.1 OpenRouter receipts on both sides of a real service restart; evidence/2026-09-05_RENDER_OPENROUTER_AB.md. The current VPS now has a synthetic Casework restart A/B, but its remote investigation was degraded with no model receipt; see the separate current-VPS claims below A later separate current-VPS remote investigation succeeded; see vps_remote_investigation. Earlier no-receipt wording describes the initial attempt only."
     },
     "vps_casework_restart_ab": {
-      "state": "verified_current_vps_synthetic_ready_deny",
-      "evidence": "The public VPS evidence files public-safe-evidence.json and http-results.json record Session A READY, a real memoryguard container restart, then Session B DENY with the same action fingerprint and different runtime IDs; related_tasks_stop=true, unrelated_tasks_continue=true, all_executable_false=true, and build SHA a4b216e73f2eed86ef2e07e2fdece4b48728190c. The scope is synthetic workspace only (real_private_casework_touched=false); Session A evidence was recovered from live state after a recorder timeout and no mutation was replayed. This does not prove migrated private-data persistence"
+      "state": "verified_current_build_continuous_recording",
+      "evidence": "submission/evidence/continuous-8a4e521.json: synthetic READY -> Docker restart -> same-action DENY; changed runtime, observed process start, scoped stop, two resolutions, refreshed investigation, explicit reconsideration. Complete raw sequence retained in film. Both container PIDs are 1; numeric PID change is not claimed."
     },
     "vps_remote_investigation": {
-      "state": "verified_current_vps_remote_receipt",
-      "evidence": "output/final-release-20260906/new-vps/remote-model-receipt-public.json: one new synthetic investigation with openai/gpt-4.1-mini on a4b216e73f2eed86ef2e07e2fdece4b48728190c returned REMOTE, a generation ID, completion SHA-256 and validated structured output. Non-authoritative and non-executable. Original degraded attempt is retained separately; this was a new request after model configuration changed. Temporary credentials were removed."
+      "state": "verified_current_build_three_remote_receipts",
+      "evidence": "Three live openai/gpt-4.1-mini generation receipts in submission/evidence/continuous-8a4e521.json, including refreshed investigation after first risk resolution. Non-authoritative."
     },
     "vps_temporary_credentials_revoked": {
       "state": "verified_post_cleanup_401",
@@ -76,7 +76,7 @@
     },
     "unified_release_gate": {
       "state": "verified_local_release_ready",
-      "evidence": "Exact candidate a4b216e73f2eed86ef2e07e2fdece4b48728190c passed 8/8 release stages with 216 tests and 0 failures, errors or skips; local_release_ready=true. GitHub Actions run 33982006493 completed successfully for the same SHA"
+      "evidence": "Historical a4b216e evidence; current runtime/video are covered by the 8a4e521 claims above. Exact candidate a4b216e73f2eed86ef2e07e2fdece4b48728190c passed 8/8 release stages with 216 tests and 0 failures, errors or skips; local_release_ready=true. GitHub Actions run 33982006493 completed successfully for the same SHA"
     },
     "judge_conformance": {
       "state": "historical_verified_local_clean_commit",
@@ -92,7 +92,7 @@
     },
     "final_sha_continuous_raw_evidence": {
       "state": "verified_final_sha_continuous_raw_historical_not_published",
-      "evidence": "Independent read-only acceptance of a fourth continuous raw take on final SHA a4b216e73f2eed86ef2e07e2fdece4b48728190c was recorded against the former Render deployment, but the raw evidence and v3 presentation candidate remain unpublished. A current-VPS continuous take remains pending"
+      "evidence": "Historical a4b216e evidence; current runtime/video are covered by the 8a4e521 claims above. Independent read-only acceptance of a fourth continuous raw take on final SHA a4b216e73f2eed86ef2e07e2fdece4b48728190c was recorded against the former Render deployment, but the raw evidence and v3 presentation candidate remain unpublished. A current-VPS continuous take remains pending"
     },
     "base_contract": {
       "state": "verified_base_sepolia_deployed",
@@ -104,7 +104,7 @@
     },
     "virtuals_integration": {
       "state": "gloria_delivery_and_seven_quarantine_receipts_verified_completion_unverified",
-      "evidence": "Job 1003558157 returned ten news items for the prior 0.01 USDC purchase. Seven receipts recovered at revisions 74–80, see submission/evidence/capacity-repeat.json. This is external news, not an independent security review. Original job 76728 remains historical uncompleted evidence."
+      "evidence": "Job 1003558157 returned ten news items for the prior 0.01 USDC purchase. Seven receipts recovered at revisions 74\u201380, see submission/evidence/capacity-repeat.json. This is external news, not an independent security review. Original job 76728 remains historical uncompleted evidence."
     },
     "pmf_bonus": {
       "state": "not_claimed",
@@ -112,12 +112,11 @@
     },
     "public_deployment": {
       "state": "verified_vps_https_runtime_public_release_synthetic_restart_ab",
-      "evidence": "https://memoryguard.eyesonchain.xyz/ is live on the current VPS; read-only /health/ready, /api/runtime, /api/v2/public-release, and /casework/evidence checks passed on candidate SHA a4b216e73f2eed86ef2e07e2fdece4b48728190c. The new VPS evidence also verifies a real memoryguard container restart and synthetic READY to DENY A/B with same action fingerprint, related-work stop, unrelated-work continuation, and executable=false. This proves current availability, build identity, and synthetic restart behavior only; it does not prove migrated private-data persistence or a successful remote receipt. The former Render persistent-restart record is retained as historical rollback evidence A later separate current-VPS remote investigation succeeded; see vps_remote_investigation. Earlier no-receipt wording describes the initial attempt only."
+      "evidence": "Historical a4b216e evidence; current runtime/video are covered by the 8a4e521 claims above. https://memoryguard.eyesonchain.xyz/ is live on the current VPS; read-only /health/ready, /api/runtime, /api/v2/public-release, and /casework/evidence checks passed on candidate SHA a4b216e73f2eed86ef2e07e2fdece4b48728190c. The new VPS evidence also verifies a real memoryguard container restart and synthetic READY to DENY A/B with same action fingerprint, related-work stop, unrelated-work continuation, and executable=false. This proves current availability, build identity, and synthetic restart behavior only; it does not prove migrated private-data persistence or a successful remote receipt. The former Render persistent-restart record is retained as historical rollback evidence A later separate current-VPS remote investigation succeeded; see vps_remote_investigation. Earlier no-receipt wording describes the initial attempt only."
     },
     "demo_video": {
-      "state": "public_uploaded_and_saved_to_build_page",
-      "url": "https://github.com/seekitx/proofops-memoryguard/releases/download/demo-a4b216e-20260907/MemoryGuard-Contest-English-Cover.mp4",
-      "evidence": "submission/evidence/video-manifest.json; 267.853 seconds, 1080p, English synthetic voice and subtitles; historical continuous Render source of a4b216e, separate supplements; full human audio review pending. Covered edition saved to portal on 2026-09-07. All 6620 original decoded video frames match after the 75-frame title card."
+      "state": "published_current_build_human_listening_pending",
+      "evidence": "https://github.com/seekitx/proofops-memoryguard/releases/download/demo-8a4e521-20260907/MemoryGuard-Final-8a4e521-English.mp4 ; 241.728 seconds, 1080p, English synthetic narration, subtitles and cover. Complete continuous interval 30.40-149.92 seconds. Portal saved and reloaded. Human listening pending."
     },
     "public_posts": {
       "state": "user_published_urls_saved_in_portal",

@@ -6,17 +6,20 @@ MemoryGuard remembers risk across processes, stops only dependent work, and
 requires valid resolutions plus explicit human reconsideration before a new READY
 proof. READY is never a payment or execution capability.
 
-- [Watch the 4m28s English demo](https://github.com/seekitx/proofops-memoryguard/releases/download/demo-a4b216e-20260907/MemoryGuard-Contest-English-Cover.mp4)
-- [Recorded outcome evidence](submission/evidence/outcomes-a4b216e.json)
-- [Exact-runtime release result](submission/evidence/local-release-a4b216e.json)
+- [Watch the final-build English demo](https://github.com/seekitx/proofops-memoryguard/releases/download/demo-8a4e521-20260907/MemoryGuard-Final-8a4e521-English.mp4)
+- [Continuous VPS restart and recovery evidence](submission/evidence/continuous-8a4e521.json)
+- [Exact-runtime release result](submission/evidence/local-release-8a4e521.json) · [passing CI](https://github.com/seekitx/proofops-memoryguard/actions/runs/34093259925)
 - [Hosted workbench](https://memoryguard.eyesonchain.xyz/casework) · [public evidence](https://memoryguard.eyesonchain.xyz/casework/evidence)
 
-Runtime code remains `a4b216e73f2eed86ef2e07e2fdece4b48728190c`; subsequent
-commits update documentation/evidence only. The continuous film segment is the
-earlier Render recording of that build; VPS restart and model receipts are
-separate evidence. Base is a verified Sepolia audit anchor. Gloria delivered news
-through Virtuals; seven quarantine receipts exist, but final platform completion
-and an independent security review are not claimed.
+Runtime is frozen at `8a4e5216aa0ab56c6718af9011a47b4a06013b2b`.
+The new continuous recording proves the same action changing READY to DENY across
+an actual VPS Docker restart on that commit. Three real model receipts accompany
+investigation and refreshed evidence. Resolving one risk leaves DENY; resolving
+both still requires explicit reviewer reconsideration. Every result is non-executable.
+Later evidence-only commits do not change the deployed runtime. Base is a historical
+verified Sepolia audit anchor. Gloria delivered news through Virtuals; seven
+quarantine receipts exist, but final platform completion and an independent
+security review are not claimed. Research and internal documentation remain local.
 
 September 7 storage maintenance preserved every table and row identifier,
 reclaimed unused pages and passed an authenticated write/replay across restart.
@@ -58,15 +61,15 @@ Sibyl recall, isolated missing-SDK fail-closed behavior, and a 12-check official
 benchmark have now been exercised locally. The receipt-bound OpenRouter A/B on
 the former Render HTTPS deployment passed across a real service restart; that run
 is now historical evidence. The current VPS runtime is live at the current judge
-URL below on candidate SHA `a4b216e73f2eed86ef2e07e2fdece4b48728190c`, and its
+URL below on candidate SHA `8a4e5216aa0ab56c6718af9011a47b4a06013b2b`, and its
 read-only readiness, runtime, and public-release checks have passed. A current-VPS
 synthetic Casework run also completed Session A `READY` → a real `memoryguard`
 container restart → Session B `DENY`, with the same action fingerprint, different
 runtime IDs, related work stopped, unrelated work continuing, and every result
 `executable=false`. This evidence uses only a synthetic workspace
 (`real_private_casework_touched=false`); it does not prove migrated private-data
-persistence. The initial remote investigation degraded; a separate subsequent
-request returned a validated GPT-4.1-mini receipt on the same runtime commit.
+persistence. An earlier VPS attempt degraded. The current recorded run returned three
+validated GPT-4.1-mini receipts on the frozen runtime commit.
 The recorded evidence distinguishes both attempts, the video, and Base evidence.
 Two public post URLs have been saved to the submission portal; PMF remains unclaimed.
 
@@ -76,7 +79,7 @@ The current hosted build is live at
 <https://memoryguard.eyesonchain.xyz/> (the root redirects to `/casework`) and
 exposes a redacted [evidence dashboard](https://memoryguard.eyesonchain.xyz/casework/evidence).
 The current [public-release status](https://memoryguard.eyesonchain.xyz/api/v2/public-release)
-and `/api/runtime` identify candidate SHA `a4b216e73f2eed86ef2e07e2fdece4b48728190c`.
+and `/api/runtime` identify candidate SHA `8a4e5216aa0ab56c6718af9011a47b4a06013b2b`.
 They keep automated local checks, current runtime state, and still-missing
 human/external proof visibly separate. The former Render URL remains available
 only as rollback/historical evidence.
