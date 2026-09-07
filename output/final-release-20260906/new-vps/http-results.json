@@ -1,0 +1,86 @@
+{
+  "schema_version": "memoryguard-vps-http-results/1",
+  "base_url": "https://memoryguard.eyesonchain.xyz",
+  "observed": [
+    {
+      "method": "GET",
+      "path": "/api/runtime",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/health/ready",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/casework",
+      "status": 503,
+      "phase": "before explicit bootstrap",
+      "error": "MEMORY_WORKSPACE_MISSING"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/bootstrap",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/baselines",
+      "status": 200,
+      "count": 2
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/tasks",
+      "status": 200,
+      "count": 3
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/notes",
+      "status": 200,
+      "raw_note_retained": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/cases",
+      "status": 200,
+      "count": 2
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/tasks/{root}/evaluate",
+      "status": 200,
+      "phase": "session_b",
+      "verdict": "DENY"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/cases/{case}/investigate",
+      "status": 200,
+      "phase": "remote investigation",
+      "planner_status": "DEGRADED"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/casework",
+      "status": 401,
+      "phase": "after cleanup with temporary owner token",
+      "error": "INVALID_CREDENTIAL"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/casework",
+      "status": 401,
+      "phase": "after cleanup with temporary investigator token",
+      "error": "INVALID_CREDENTIAL"
+    }
+  ],
+  "no_authorization_values_recorded": true,
+  "overall_status": "PASS_WITH_LIMITATIONS",
+  "limitations": [
+    "Session A is live-state recovery after recorder timeout, not clean continuous recording.",
+    "Remote investigation returned HTTP 200 but DEGRADED with no model receipt or generation ID; receipt gate NOT PASSED."
+  ]
+}

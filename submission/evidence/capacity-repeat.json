@@ -1,0 +1,217 @@
+{
+  "schema": "memoryguard-capacity-repeat/1",
+  "runs": [
+    {
+      "build_commit": "a4b216e73f2eed86ef2e07e2fdece4b48728190c",
+      "runtime_id": "runtime_5a52aa85ab164012a86262c817f01572",
+      "before_revision": 80,
+      "after_revision": 81,
+      "first_response": {
+        "status": "QUARANTINED",
+        "text_hash": "e4a891ec0c6e2db43e863fab71f59bb6036dea9a0822f11ccb5fccd5de9e2d9e",
+        "authority": false,
+        "model_received_raw_text": false,
+        "revision": 81,
+        "event_hash": "aabe2c15580d07e31ddefd6ce79eaacd87561615bd412f3d0cefdea33372a1cf",
+        "executable": false,
+        "replayed": false
+      },
+      "second_response": {
+        "status": "QUARANTINED",
+        "text_hash": "e4a891ec0c6e2db43e863fab71f59bb6036dea9a0822f11ccb5fccd5de9e2d9e",
+        "authority": false,
+        "model_received_raw_text": false,
+        "revision": 81,
+        "event_hash": "aabe2c15580d07e31ddefd6ce79eaacd87561615bd412f3d0cefdea33372a1cf",
+        "executable": false,
+        "replayed": true,
+        "historical_only": true
+      },
+      "task_statuses_unchanged": true,
+      "cases_unchanged": true,
+      "gloria_receipts": [
+        {
+          "status": "QUARANTINED",
+          "text_hash": "2b2285af88a51fc99bc61f7bd61be1334dd8c04adcc7371a506ed4a57319a38a",
+          "authority": false,
+          "model_received_raw_text": false,
+          "revision": 74,
+          "event_hash": "fbccee8b4d0e8955eda1c938e2a8355f6ff9cf809d9ef23be629dab3d5a5e0d1",
+          "executable": false,
+          "replayed": false
+        },
+        {
+          "status": "QUARANTINED",
+          "text_hash": "bf0a4a9c32604015165ace66844f9d1903d974b05a665ba65729966b4c07aa6a",
+          "authority": false,
+          "model_received_raw_text": false,
+          "revision": 75,
+          "event_hash": "c6101146af4f4994330d38361fb5fec7fe55104afa86c13fcc44ed9bf1a8fecd",
+          "executable": false,
+          "replayed": false
+        },
+        {
+          "status": "QUARANTINED",
+          "text_hash": "71b36ca802028f649efbfff68c32a57219cbff546d094bf978e9a4e4766960f3",
+          "authority": false,
+          "model_received_raw_text": false,
+          "revision": 76,
+          "event_hash": "c40c8e5e617afe57ff9d1c9470b1d2de45b8c61552cd2eb3f2af980001c08d02",
+          "executable": false,
+          "replayed": false
+        },
+        {
+          "status": "QUARANTINED",
+          "text_hash": "e7711e64516ba59d1285964646b70b1581e8fc15e03611c56700ca4a8e43851c",
+          "authority": false,
+          "model_received_raw_text": false,
+          "revision": 77,
+          "event_hash": "b8e8a1437597e24a18be54d74a95880eb6e022c00b1197928e230242033881f7",
+          "executable": false,
+          "replayed": false
+        },
+        {
+          "status": "QUARANTINED",
+          "text_hash": "1436ec0d99cd1f4721c56e6491b106617a4df089edeb7f882efb6648c546400b",
+          "authority": false,
+          "model_received_raw_text": false,
+          "revision": 78,
+          "event_hash": "d1d8c5c53a2856d8d19a363353c026cd3732f5fcb692309df7ba97a09b797ecc",
+          "executable": false,
+          "replayed": false
+        },
+        {
+          "status": "QUARANTINED",
+          "text_hash": "e8bf94c65784c8cd339e024c755cecef787c92cddb50b84f967be9d90174003e",
+          "authority": false,
+          "model_received_raw_text": false,
+          "revision": 79,
+          "event_hash": "a97d80a1c5bc6ebbcfe0ea892485a9d5f9c850b19db96d01dc33c7f5a6aa4871",
+          "executable": false,
+          "replayed": false
+        },
+        {
+          "status": "QUARANTINED",
+          "text_hash": "43a34b9a4f5a4dc7d070790f5774f2c752819d72ef1f2f010a274f9e82a7ab63",
+          "authority": false,
+          "model_received_raw_text": false,
+          "revision": 80,
+          "event_hash": "e234b298ee03f3371073092e2eff4dd3b340e1e09149ae1d2ac66f6e7a9290d6",
+          "executable": false,
+          "replayed": false
+        }
+      ],
+      "gloria_imported_count": 7,
+      "database_bytes": 3616768
+    },
+    {
+      "build_commit": "a4b216e73f2eed86ef2e07e2fdece4b48728190c",
+      "runtime_id": "runtime_7e9f02efc73649c6ae84bb1607039378",
+      "before_revision": 81,
+      "after_revision": 81,
+      "first_response": {
+        "status": "QUARANTINED",
+        "text_hash": "e4a891ec0c6e2db43e863fab71f59bb6036dea9a0822f11ccb5fccd5de9e2d9e",
+        "authority": false,
+        "model_received_raw_text": false,
+        "revision": 81,
+        "event_hash": "aabe2c15580d07e31ddefd6ce79eaacd87561615bd412f3d0cefdea33372a1cf",
+        "executable": false,
+        "replayed": true,
+        "historical_only": true
+      },
+      "second_response": {
+        "status": "QUARANTINED",
+        "text_hash": "e4a891ec0c6e2db43e863fab71f59bb6036dea9a0822f11ccb5fccd5de9e2d9e",
+        "authority": false,
+        "model_received_raw_text": false,
+        "revision": 81,
+        "event_hash": "aabe2c15580d07e31ddefd6ce79eaacd87561615bd412f3d0cefdea33372a1cf",
+        "executable": false,
+        "replayed": true,
+        "historical_only": true
+      },
+      "task_statuses_unchanged": true,
+      "cases_unchanged": true,
+      "gloria_receipts": [
+        {
+          "status": "QUARANTINED",
+          "text_hash": "2b2285af88a51fc99bc61f7bd61be1334dd8c04adcc7371a506ed4a57319a38a",
+          "authority": false,
+          "model_received_raw_text": false,
+          "revision": 74,
+          "event_hash": "fbccee8b4d0e8955eda1c938e2a8355f6ff9cf809d9ef23be629dab3d5a5e0d1",
+          "executable": false,
+          "replayed": false
+        },
+        {
+          "status": "QUARANTINED",
+          "text_hash": "bf0a4a9c32604015165ace66844f9d1903d974b05a665ba65729966b4c07aa6a",
+          "authority": false,
+          "model_received_raw_text": false,
+          "revision": 75,
+          "event_hash": "c6101146af4f4994330d38361fb5fec7fe55104afa86c13fcc44ed9bf1a8fecd",
+          "executable": false,
+          "replayed": false
+        },
+        {
+          "status": "QUARANTINED",
+          "text_hash": "71b36ca802028f649efbfff68c32a57219cbff546d094bf978e9a4e4766960f3",
+          "authority": false,
+          "model_received_raw_text": false,
+          "revision": 76,
+          "event_hash": "c40c8e5e617afe57ff9d1c9470b1d2de45b8c61552cd2eb3f2af980001c08d02",
+          "executable": false,
+          "replayed": false
+        },
+        {
+          "status": "QUARANTINED",
+          "text_hash": "e7711e64516ba59d1285964646b70b1581e8fc15e03611c56700ca4a8e43851c",
+          "authority": false,
+          "model_received_raw_text": false,
+          "revision": 77,
+          "event_hash": "b8e8a1437597e24a18be54d74a95880eb6e022c00b1197928e230242033881f7",
+          "executable": false,
+          "replayed": false
+        },
+        {
+          "status": "QUARANTINED",
+          "text_hash": "1436ec0d99cd1f4721c56e6491b106617a4df089edeb7f882efb6648c546400b",
+          "authority": false,
+          "model_received_raw_text": false,
+          "revision": 78,
+          "event_hash": "d1d8c5c53a2856d8d19a363353c026cd3732f5fcb692309df7ba97a09b797ecc",
+          "executable": false,
+          "replayed": false
+        },
+        {
+          "status": "QUARANTINED",
+          "text_hash": "e8bf94c65784c8cd339e024c755cecef787c92cddb50b84f967be9d90174003e",
+          "authority": false,
+          "model_received_raw_text": false,
+          "revision": 79,
+          "event_hash": "a97d80a1c5bc6ebbcfe0ea892485a9d5f9c850b19db96d01dc33c7f5a6aa4871",
+          "executable": false,
+          "replayed": false
+        },
+        {
+          "status": "QUARANTINED",
+          "text_hash": "43a34b9a4f5a4dc7d070790f5774f2c752819d72ef1f2f010a274f9e82a7ab63",
+          "authority": false,
+          "model_received_raw_text": false,
+          "revision": 80,
+          "event_hash": "e234b298ee03f3371073092e2eff4dd3b340e1e09149ae1d2ac66f6e7a9290d6",
+          "executable": false,
+          "replayed": false
+        }
+      ],
+      "gloria_imported_count": 7,
+      "database_bytes": 4509696
+    }
+  ],
+  "fresh_runtime_replay": true,
+  "exactly_one_new_quarantined_diagnostic": true,
+  "task_statuses_and_cases_unchanged": true,
+  "temporary_registry_restored": true,
+  "added_spend_usdc": 0
+}

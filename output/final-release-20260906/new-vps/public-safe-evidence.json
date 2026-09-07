@@ -1,0 +1,293 @@
+{
+  "schema_version": "memoryguard-vps-public-evidence/1",
+  "overall_status": "PASS_WITH_LIMITATIONS",
+  "recorded_utc": "2026-09-06T13:13:30Z",
+  "public_target": {
+    "base_url": "https://memoryguard.eyesonchain.xyz",
+    "build_commit": "a4b216e73f2eed86ef2e07e2fdece4b48728190c",
+    "implementation_version": "2.3.0-rc1"
+  },
+  "synthetic_scope": {
+    "tenant_workspace": "memoryguard-vps-20260906",
+    "subject": "vps-judge-20260906",
+    "synthetic_only": true,
+    "real_private_casework_touched": false
+  },
+  "public_runtime_and_health": {
+    "before_session_a": {
+      "runtime_id": {
+        "redacted": "runtime_99\u2026543537",
+        "sha256": "ed7297b6c88de17956a5646a4468521e1f1e25d7520e43c1e5d921d2483223cb"
+      },
+      "ready_http": 200,
+      "ready": true,
+      "configured_workspaces": 2,
+      "initialized_workspaces": 2,
+      "executable": false
+    },
+    "after_ab_restart": {
+      "runtime_id": {
+        "redacted": "runtime_98\u2026ca1cad",
+        "sha256": "b53023e6e27a9475febbbf8547b1fb0f548b04b750fa14f6235f90e227acc218"
+      },
+      "ready_http": 200,
+      "ready": true,
+      "configured_workspaces": 2,
+      "initialized_workspaces": 2,
+      "executable": false
+    },
+    "after_cleanup": {
+      "runtime_id": {
+        "redacted": "runtime_2f\u2026c18534",
+        "sha256": "0f8f5b3c0d6228c868af46396ded3086557c88652cb47cbfe5fd618c4d8e987f"
+      },
+      "ready_http": 200,
+      "ready": true,
+      "configured_workspaces": 1,
+      "initialized_workspaces": 1,
+      "executable": false
+    }
+  },
+  "restart_proof": {
+    "setup_registry_reload": {
+      "service_scope": "MemoryGuard service only",
+      "health_after": "healthy",
+      "started_at_before": "2026-09-06T12:22:41.028734312Z",
+      "started_at_after": "2026-09-06T13:01:25.337192409Z",
+      "purpose": "load temporary registry; separate from A to B proof"
+    },
+    "session_a_to_b": {
+      "service_scope": "MemoryGuard service only",
+      "started_at_before": "2026-09-06T13:01:25.337192409Z",
+      "started_at_after": "2026-09-06T13:07:35.801056524Z",
+      "health_poll_reached_healthy_utc": "2026-09-06T13:08:10Z",
+      "runtime_before": {
+        "redacted": "runtime_99\u2026543537",
+        "sha256": "ed7297b6c88de17956a5646a4468521e1f1e25d7520e43c1e5d921d2483223cb"
+      },
+      "runtime_after": {
+        "redacted": "runtime_98\u2026ca1cad",
+        "sha256": "b53023e6e27a9475febbbf8547b1fb0f548b04b750fa14f6235f90e227acc218"
+      },
+      "same_build": true,
+      "different_runtime": true,
+      "container_recreated": false,
+      "same_container_across_restarts": true,
+      "explanation": "The service was restarted in place; the runtime changed while the build stayed the same."
+    },
+    "cleanup_registry_reload": {
+      "service_scope": "MemoryGuard service only",
+      "started_at_after": "2026-09-06T13:11:40.763844409Z",
+      "health_poll_reached_healthy_utc": "2026-09-06T13:12:16Z",
+      "runtime_after": {
+        "redacted": "runtime_2f\u2026c18534",
+        "sha256": "0f8f5b3c0d6228c868af46396ded3086557c88652cb47cbfe5fd618c4d8e987f"
+      },
+      "purpose": "load restored registry"
+    }
+  },
+  "session_a": {
+    "status": "recovered_from_live_state",
+    "clean_continuous_recording": false,
+    "live_state_recovery": true,
+    "recovery_note": "The first local recorder timed out after the mutation sequence. Evidence was reconstructed from live overview/replay reads without replaying mutations; this is not a clean continuous recording.",
+    "workspace_bootstrap_http": 200,
+    "revision_after_seed_and_risks": 9,
+    "root_decision": {
+      "decision_id": {
+        "redacted": "[redacted]",
+        "sha256": "0a92f2ca9c06ff9b96cd7e096a50ddc4352bd9c0350629d6bfa3ecde60b6bdff"
+      },
+      "task_id": {
+        "redacted": "[redacted]",
+        "sha256": "8743546e174b5a3ea6e375a8768c887faf20af1d6790b21688778e27469b0364"
+      },
+      "verdict": "READY",
+      "reason_codes": [
+        "CURRENT_POLICY_PASSED",
+        "HUMAN_CONFIRMATION_STILL_REQUIRED"
+      ],
+      "causal_refs": [
+        "baseline:6222a15f19c23801047e432eaaeeb58540f61d8644bcaed9659b9f81f0393a6d:v1"
+      ],
+      "active_blockers": [],
+      "action_fingerprint": "e9f44f0f6b529db2be525e8b04faf60d8958c75878b69727de24867ef7dacf53",
+      "basis_hash": "4d3d689b32f42b0337614c95eaba51cae70dccd727ed645dcd385281a6131bd0",
+      "memory_revision": 4,
+      "build_commit": "a4b216e73f2eed86ef2e07e2fdece4b48728190c",
+      "executable": false
+    },
+    "action_fingerprint": "e9f44f0f6b529db2be525e8b04faf60d8958c75878b69727de24867ef7dacf53",
+    "risks": {
+      "case_kinds": [
+        "dispute",
+        "revocation"
+      ],
+      "case_ids_redacted": [
+        {
+          "redacted": "case_04f44\u20265573ce",
+          "sha256": "662008c054ddfabbce1173c7a9eeec5322734b1b9218ad796a0d8da9504f415e"
+        },
+        {
+          "redacted": "case_83d15\u2026dec29d",
+          "sha256": "78d95664098473110158e06a943cfd450b5dafb374d8e868b1a3b45b828d4a9b"
+        }
+      ],
+      "status": "OPEN",
+      "operator_attested": true
+    },
+    "quarantine_note": {
+      "http_status_observed": 200,
+      "raw_text_in_evidence": false,
+      "raw_text_sent_to_model": false,
+      "authority": false
+    }
+  },
+  "session_b": {
+    "status": "passed",
+    "same_action_fingerprint": true,
+    "session_a_decision": {
+      "decision_id": {
+        "redacted": "[redacted]",
+        "sha256": "0a92f2ca9c06ff9b96cd7e096a50ddc4352bd9c0350629d6bfa3ecde60b6bdff"
+      },
+      "task_id": {
+        "redacted": "[redacted]",
+        "sha256": "8743546e174b5a3ea6e375a8768c887faf20af1d6790b21688778e27469b0364"
+      },
+      "verdict": "READY",
+      "reason_codes": [
+        "CURRENT_POLICY_PASSED",
+        "HUMAN_CONFIRMATION_STILL_REQUIRED"
+      ],
+      "causal_refs": [
+        "baseline:6222a15f19c23801047e432eaaeeb58540f61d8644bcaed9659b9f81f0393a6d:v1"
+      ],
+      "active_blockers": [],
+      "action_fingerprint": "e9f44f0f6b529db2be525e8b04faf60d8958c75878b69727de24867ef7dacf53",
+      "basis_hash": "4d3d689b32f42b0337614c95eaba51cae70dccd727ed645dcd385281a6131bd0",
+      "memory_revision": 4,
+      "build_commit": "a4b216e73f2eed86ef2e07e2fdece4b48728190c",
+      "executable": false
+    },
+    "session_b_decision": {
+      "decision_id": {
+        "redacted": "[redacted]",
+        "sha256": "bbe25a3ce8c9889d2996201cbf5abe75a518d1fffc14c312a2ad914d07551287"
+      },
+      "task_id": {
+        "redacted": "[redacted]",
+        "sha256": "8743546e174b5a3ea6e375a8768c887faf20af1d6790b21688778e27469b0364"
+      },
+      "verdict": "DENY",
+      "reason_codes": [
+        "OPEN_RISK_RECALLED"
+      ],
+      "causal_refs": [
+        "case:[redacted]:v1",
+        "case:[redacted]:v1"
+      ],
+      "active_blockers": [
+        {
+          "redacted": "[redacted]",
+          "sha256": "60e374fb03b3d6da19915d1ca91684a3a78976167f71fd350988f0f697110cc9"
+        },
+        {
+          "redacted": "[redacted]",
+          "sha256": "22d5519467d0c3d3212ab59f18f3683be2043daa5f98f843ad76ecab20dba4da"
+        }
+      ],
+      "action_fingerprint": "e9f44f0f6b529db2be525e8b04faf60d8958c75878b69727de24867ef7dacf53",
+      "basis_hash": "f986ea9a1f234ce3abf9fdbab62fc9ebf1e1245e98b628276bc203c9b35fff05",
+      "memory_revision": 10,
+      "build_commit": "a4b216e73f2eed86ef2e07e2fdece4b48728190c",
+      "executable": false
+    },
+    "related_tasks_stop": true,
+    "unrelated_tasks_continue": true,
+    "all_executable_false": true,
+    "task_outcomes": [
+      {
+        "task_id": {
+          "redacted": "[redacted]",
+          "sha256": "8743546e174b5a3ea6e375a8768c887faf20af1d6790b21688778e27469b0364"
+        },
+        "status": "DENY",
+        "effective_verdict": "DENY",
+        "active_blockers": [
+          {
+            "redacted": "[redacted]",
+            "sha256": "60e374fb03b3d6da19915d1ca91684a3a78976167f71fd350988f0f697110cc9"
+          },
+          {
+            "redacted": "[redacted]",
+            "sha256": "22d5519467d0c3d3212ab59f18f3683be2043daa5f98f843ad76ecab20dba4da"
+          }
+        ],
+        "executable": false
+      },
+      {
+        "task_id": {
+          "redacted": "[redacted]",
+          "sha256": "7323bb9d50721fec083802866772a35b9df5cb8fa83b6adbae1bbaa1e697da1d"
+        },
+        "status": "SUSPENDED",
+        "effective_verdict": "DENY",
+        "active_blockers": [
+          {
+            "redacted": "[redacted]",
+            "sha256": "60e374fb03b3d6da19915d1ca91684a3a78976167f71fd350988f0f697110cc9"
+          },
+          {
+            "redacted": "[redacted]",
+            "sha256": "22d5519467d0c3d3212ab59f18f3683be2043daa5f98f843ad76ecab20dba4da"
+          }
+        ],
+        "executable": false
+      },
+      {
+        "task_id": {
+          "redacted": "[redacted]",
+          "sha256": "864dcdadb50ab2859d860c1eb41c237053329fbabaee6dddc87adc1e485ba36c"
+        },
+        "status": "READY",
+        "effective_verdict": "READY",
+        "active_blockers": [],
+        "executable": false
+      }
+    ]
+  },
+  "remote_model_investigation": {
+    "http_status": 200,
+    "planner_status": "DEGRADED",
+    "model_receipt": null,
+    "generation_id": null,
+    "receipt_gate": "NOT_PASSED",
+    "attempted_once": true,
+    "same_request_retried": false,
+    "statement": "The remote investigation returned HTTP 200 but DEGRADED with no model receipt or generation ID. This gate did not pass."
+  },
+  "temporary_access_cleanup": {
+    "temporary_entries_added": 2,
+    "temporary_entries_removed": 2,
+    "temporary_backup_removed": true,
+    "temporary_owner_token_after_cleanup_http": 401,
+    "temporary_investigator_token_after_cleanup_http": 401,
+    "synthetic_workspace_retained": true
+  },
+  "boundaries": {
+    "product_source_changed": false,
+    "build_or_full_tests_run": false,
+    "other_services_restarted_or_modified": false,
+    "render_changed": false,
+    "volume_deleted": false,
+    "wallet_signature_or_broadcast": false,
+    "mainnet_transaction": false,
+    "clean_continuous_recording": false,
+    "remote_receipt_gate_passed": false
+  },
+  "limitations": [
+    "Session A is live-state recovery after recorder timeout, not clean continuous recording.",
+    "Remote model request returned DEGRADED with no generation/receipt; receipt gate is NOT_PASSED."
+  ]
+}

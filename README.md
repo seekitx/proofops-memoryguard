@@ -1,5 +1,33 @@
 # ProofOps MemoryGuard
 
+## Judge entry — September 7 evidence
+
+MemoryGuard remembers risk across processes, stops only dependent work, and
+requires valid resolutions plus explicit human reconsideration before a new READY
+proof. READY is never a payment or execution capability.
+
+- [Watch the 4m25s English demo](https://github.com/seekitx/proofops-memoryguard/releases/download/demo-a4b216e-20260907/MemoryGuard-Contest-English.mp4)
+- [Measured scenario outcomes](docs/JUDGE_OUTCOMES.md) and [evidence index](docs/CONTEST_EVIDENCE_INDEX.md)
+- [Hosted workbench](https://memoryguard.eyesonchain.xyz/casework) · [public evidence](https://memoryguard.eyesonchain.xyz/casework/evidence)
+
+Runtime code remains `a4b216e73f2eed86ef2e07e2fdece4b48728190c`; subsequent
+commits update documentation/evidence only. The continuous film segment is the
+earlier Render recording of that build; VPS restart and model receipts are
+separate evidence. Base is a verified Sepolia audit anchor. Gloria delivered news
+through Virtuals; seven quarantine receipts exist, but final platform completion
+and an independent security review are not claimed.
+
+September 7 storage maintenance preserved every table and row identifier,
+reclaimed unused pages and passed an authenticated write/replay across restart.
+No SDK quota was changed or paid service purchased. The submission portal
+advertises free Pro access during the hackathon; account activation/wiring is
+separate from this maintenance proof.
+
+Current Casework memory calls: [`SibylWorkspaceStore.load/save`](src/proofops_casework/store.py).
+The store is the sole durable workspace; [`CaseworkService`](src/proofops_casework/service.py)
+uses it for risk, resolution and reconsideration. Earlier v1 instructions below
+are historical and are not the current scoped workbench walkthrough.
+
 ## Current Sibyl candidate — 2.3.0-rc1
 
 Read [the consolidated release plan](docs/SIBYL_FINAL_RELEASE.md) for durable source obligations,
@@ -55,19 +83,32 @@ window opened, this repository added a substantive `MemoryGuardAgent`: a real mo
 Seam, Sibyl-backed run ledger, verdict-gated tool executor, resumable runs, and
 executor-generated inspectable traces. The deterministic Agent path, two-process
 Sibyl recall, isolated missing-SDK fail-closed behavior, and a 12-check official-SDK
-benchmark have now been exercised locally. The final receipt-bound OpenRouter A/B
-has passed on a durable Render HTTPS
-deployment across a real service restart. The continuous video, Base evidence,
-posts, and PMF artifact are not claimed yet. See
+benchmark have now been exercised locally. The receipt-bound OpenRouter A/B on
+the former Render HTTPS deployment passed across a real service restart; that run
+is now historical evidence. The current VPS runtime is live at the current judge
+URL below on candidate SHA `a4b216e73f2eed86ef2e07e2fdece4b48728190c`, and its
+read-only readiness, runtime, and public-release checks have passed. A current-VPS
+synthetic Casework run also completed Session A `READY` → a real `memoryguard`
+container restart → Session B `DENY`, with the same action fingerprint, different
+runtime IDs, related work stopped, unrelated work continuing, and every result
+`executable=false`. This evidence uses only a synthetic workspace
+(`real_private_casework_touched=false`); it does not prove migrated private-data
+persistence. The initial remote investigation degraded; a separate subsequent
+request returned a validated GPT-4.1-mini receipt on the same runtime commit.
+The current evidence index distinguishes both attempts, the recorded video and
+Base evidence. Public posts and PMF remain unverified. See
 [manual completion gates](docs/07_MANUAL_COMPLETION_GATES.md).
 
 ## Judge path — under two minutes
 
-The hosted build is live at
-<https://proofops-memoryguard.onrender.com> and exposes a redacted
-[evidence dashboard](https://proofops-memoryguard.onrender.com/evidence). It keeps
-automated local checks, live runtime state, and still-missing human/external proof
-visibly separate.
+The current hosted build is live at
+<https://memoryguard.eyesonchain.xyz/> (the root redirects to `/casework`) and
+exposes a redacted [evidence dashboard](https://memoryguard.eyesonchain.xyz/casework/evidence).
+The current [public-release status](https://memoryguard.eyesonchain.xyz/api/v2/public-release)
+and `/api/runtime` identify candidate SHA `a4b216e73f2eed86ef2e07e2fdece4b48728190c`.
+They keep automated local checks, current runtime state, and still-missing
+human/external proof visibly separate. The former Render URL remains available
+only as rollback/historical evidence.
 
 1. Open the demo and establish a trusted `$5,000` target baseline in **Session A**.
 2. Run the guarded Agent on a `$4,200` goal. MemoryGuard returns `READY`; the
@@ -143,10 +184,13 @@ The authorized contest run also exercised strict structured output
 through an OpenRouter free model across a full API restart; its generation IDs,
 completion hashes, and legacy runtime-health binding limitation are recorded in
 [`evidence/2026-09-01_OPENROUTER_HTTPS_EVIDENCE.md`](evidence/2026-09-01_OPENROUTER_HTTPS_EVIDENCE.md).
-The final Render run stores and trace-binds the receipt inside each schema `1.1`
-Agent run; both sides passed after the service restart. See
+The historical Render run stored and trace-bound the receipt inside each schema
+`1.1` Agent run; both sides passed after that service restart. See
 [`evidence/2026-09-05_RENDER_OPENROUTER_AB.md`](evidence/2026-09-05_RENDER_OPENROUTER_AB.md).
-A deterministic-planner screenshot is not claimed as real-AI proof.
+The current VPS deployment has completed the synthetic restart/A/B. Its first
+investigation degraded; the separately linked subsequent investigation has a
+successful receipt. Neither is claimed as a remote-model A/B pair. A deterministic-planner screenshot is not claimed as real-AI
+proof.
 
 ## Run locally
 
@@ -258,9 +302,10 @@ On 2026-09-05, the latest authorized Python run completed with `32 passed` using
 production readiness under an optional model outage, and the public write-rate
 guard. The remote-model evidence path persists a
 non-secret model receipt in the same Sibyl Agent run and binds it to the tool trace;
-tampering with the generation ID fails the run integrity check. The final public
-Render A/B completed successfully with a pinned OpenRouter free model and a real
-service restart. The generic free router had previously produced invalid JSON and
+tampering with the generation ID fails the run integrity check. The historical
+public Render A/B completed successfully with a pinned OpenRouter free model and a
+real service restart. The generic free router had previously produced invalid JSON
+and
 HTTP failures; those runs stayed fail-closed, and no production-reliability claim is
 made for the free model. The first run exposed
 a missing Keccak backend; the
@@ -278,10 +323,14 @@ returned 503, while the decision and Agent responses also reported
 [`evidence/2026-09-01_RUNTIME_EVIDENCE.md`](evidence/2026-09-01_RUNTIME_EVIDENCE.md).
 That earlier file is not remote-model evidence. A later production-configured run
 successfully used an OpenRouter free model in both sessions through a temporary
-Cloudflare HTTPS tunnel. It remains historical evidence only. The current stable
+Cloudflare HTTPS tunnel. It remains historical evidence only. The former stable
 Render deployment and receipt-bound restart run are recorded in
 [`evidence/2026-09-05_RENDER_OPENROUTER_AB.md`](evidence/2026-09-05_RENDER_OPENROUTER_AB.md).
-Neither machine-readable result replaces the required unedited video. See also
+The current VPS `/health/ready`, `/api/runtime`, and `/api/v2/public-release`
+checks establish availability and build identity; the new synthetic A/B evidence
+also establishes the real container restart and the `READY` → `DENY` safety change.
+It does not prove migrated private-data persistence or a successful remote-model
+receipt, and it does not replace the required unedited video. See also
 [`evidence/2026-09-01_OPENROUTER_HTTPS_EVIDENCE.md`](evidence/2026-09-01_OPENROUTER_HTTPS_EVIDENCE.md).
 
 The current evidence/dashboard hardening commit was revalidated on 2026-09-05 with
