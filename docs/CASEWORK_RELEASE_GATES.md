@@ -27,9 +27,19 @@ Source existence alone does not validate production.
 - [ ] Original local video reviewed; cold-start segment continuous and matches final code. Historical recording acceptance and the presentation candidate remain unpublished; audio owner review is also pending.
 - [ ] Public posts/video URLs accessible; private page status checked by owner; ready before deadline.
 
+## September 7 evidence update
+
+The public English film and current submission milestones are indexed in
+[the judge evidence index](CONTEST_EVIDENCE_INDEX.md). The video preserves the
+earlier continuous Render take; it is not a new continuous VPS recording.
+Gloria delivered ten news items through Virtuals and seven quarantine receipts
+were recovered. This is not completion of the old independent-review jobs.
+Storage maintenance and a bounded authenticated write/restart replay passed,
+with all original records preserved. Public posts and Ready remain incomplete.
+
 ## Keep NOT CLAIMED unless real external evidence exists
 
-Virtuals native runtime or completed partner job (Job #76728 remains onchain `Open` with `budget=0`, its deadline elapsed without payment, delivery or completion), partner multiplier award, customers, PMF, monetary savings, mainnet payment, independent security audit and production multi-host scalability.
+Completed Virtuals independent review or final Gloria platform settlement (historical Job #76728 remains onchain `Open` with `budget=0`, its deadline elapsed without payment, delivery or completion), partner multiplier award, customers, PMF, monetary savings, mainnet payment, independent security audit and production multi-host scalability.
 
 ## Rollback
 

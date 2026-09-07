@@ -1,5 +1,33 @@
 # ProofOps MemoryGuard
 
+## Judge entry — September 7 evidence
+
+MemoryGuard remembers risk across processes, stops only dependent work, and
+requires valid resolutions plus explicit human reconsideration before a new READY
+proof. READY is never a payment or execution capability.
+
+- [Watch the 4m25s English demo](https://github.com/seekitx/proofops-memoryguard/releases/download/demo-a4b216e-20260907/MemoryGuard-Contest-English.mp4)
+- [Measured scenario outcomes](docs/JUDGE_OUTCOMES.md) and [evidence index](docs/CONTEST_EVIDENCE_INDEX.md)
+- [Hosted workbench](https://memoryguard.eyesonchain.xyz/casework) · [public evidence](https://memoryguard.eyesonchain.xyz/casework/evidence)
+
+Runtime code remains `a4b216e73f2eed86ef2e07e2fdece4b48728190c`; subsequent
+commits update documentation/evidence only. The continuous film segment is the
+earlier Render recording of that build; VPS restart and model receipts are
+separate evidence. Base is a verified Sepolia audit anchor. Gloria delivered news
+through Virtuals; seven quarantine receipts exist, but final platform completion
+and an independent security review are not claimed.
+
+September 7 storage maintenance preserved every table and row identifier,
+reclaimed unused pages and passed an authenticated write/replay across restart.
+No SDK quota was changed or paid service purchased. The submission portal
+advertises free Pro access during the hackathon; account activation/wiring is
+separate from this maintenance proof.
+
+Current Casework memory calls: [`SibylWorkspaceStore.load/save`](src/proofops_casework/store.py).
+The store is the sole durable workspace; [`CaseworkService`](src/proofops_casework/service.py)
+uses it for risk, resolution and reconsideration. Earlier v1 instructions below
+are historical and are not the current scoped workbench walkthrough.
+
 ## Current Sibyl candidate — 2.3.0-rc1
 
 Read [the consolidated release plan](docs/SIBYL_FINAL_RELEASE.md) for durable source obligations,
@@ -65,10 +93,10 @@ container restart → Session B `DENY`, with the same action fingerprint, differ
 runtime IDs, related work stopped, unrelated work continuing, and every result
 `executable=false`. This evidence uses only a synthetic workspace
 (`real_private_casework_touched=false`); it does not prove migrated private-data
-persistence. The remote investigation returned HTTP 200 but
-`planner_status=DEGRADED` with `model_receipt=null`, so no current remote-model
-success is claimed. The continuous video, Base evidence, posts, and PMF artifact
-are not claimed yet. See
+persistence. The initial remote investigation degraded; a separate subsequent
+request returned a validated GPT-4.1-mini receipt on the same runtime commit.
+The current evidence index distinguishes both attempts, the recorded video and
+Base evidence. Public posts and PMF remain unverified. See
 [manual completion gates](docs/07_MANUAL_COMPLETION_GATES.md).
 
 ## Judge path — under two minutes
@@ -159,9 +187,9 @@ completion hashes, and legacy runtime-health binding limitation are recorded in
 The historical Render run stored and trace-bound the receipt inside each schema
 `1.1` Agent run; both sides passed after that service restart. See
 [`evidence/2026-09-05_RENDER_OPENROUTER_AB.md`](evidence/2026-09-05_RENDER_OPENROUTER_AB.md).
-The current VPS deployment has completed the synthetic restart/A/B, but its remote
-investigation degraded with no model receipt; that response is not a successful
-remote-receipt A/B. A deterministic-planner screenshot is not claimed as real-AI
+The current VPS deployment has completed the synthetic restart/A/B. Its first
+investigation degraded; the separately linked subsequent investigation has a
+successful receipt. Neither is claimed as a remote-model A/B pair. A deterministic-planner screenshot is not claimed as real-AI
 proof.
 
 ## Run locally
