@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-09-06T15:50:00Z",
+  "updated_at": "2026-09-07T05:11:14.380938+00:00",
   "claims": {
     "registration_confirmed": {
       "state": "verified",
@@ -11,8 +11,8 @@
       "evidence": "Private build page opened and inspected read-only again on 2026-09-05 Beijing time; edit token intentionally not stored"
     },
     "build_page_current_milestones": {
-      "state": "repo_and_memory_saved_video_and_posts_missing",
-      "evidence": "On 2026-09-05 the public repo URL, deletion impact, three-line memory walkthrough, recall and entities were saved successfully. Repo and Memory fields show complete; demo video and two posts remain empty; ready remains unmarked"
+      "state": "repo_video_memory_saved_posts_missing",
+      "evidence": "Private build page rechecked 2026-09-07: repo, demo video and memory fields show complete; two posts absent; ready not marked. Private URL omitted."
     },
     "build_page_team_and_builders": {
       "state": "human_required",
@@ -23,8 +23,8 @@
       "evidence": "Only claim partner stacks exercised in the demo"
     },
     "memory_implementation_note": {
-      "state": "saved_to_private_build_page",
-      "evidence": "Private build page now contains the copy-reviewed deletion impact and three-line walkthrough; only recall and entities were selected"
+      "state": "saved_current_casework_description",
+      "evidence": "Saved scoped risks, dependencies, immutable decisions, resolution and explicit reconsideration description on 2026-09-07."
     },
     "repository_public": {
       "state": "verified",
@@ -103,8 +103,8 @@
       "evidence": "Read-only Base Sepolia audit-anchor receipt was verified in owner-controlled partner records outside this public whitelist; tx 0xc518b7b197ddd2b9c4d30a3a61846a0773489b9082bdd96b287ce82758b3704b committed the supplied proof root at memoryVersion 49 with successful receipt, expected event and confirmations. Audit-only; no payment authority or multiplier claimed"
     },
     "virtuals_integration": {
-      "state": "partial_acp_job_deadline_elapsed_unfunded",
-      "evidence": "Job #76728 creation tx 0x2a50383ea575ca63556cecaf5c75c3eba6d2a967eb03b0332f5a647e154c9134 is confirmed. At Base block 50959345, getJob remained Open with budget=0, but expiredAt=2026-09-06T11:25:51Z had elapsed. No funding, delivery, completion or refund event. Deadline elapsed does not mean an onchain JobExpired event occurred. Read-only monitoring stopped; completion and multiplier remain unclaimed."
+      "state": "gloria_delivery_and_seven_quarantine_receipts_verified_completion_unverified",
+      "evidence": "Job 1003558157 returned ten news items for the prior 0.01 USDC purchase. Seven receipts recovered at revisions 74\u201380, see submission/evidence/capacity-repeat.json. This is external news, not an independent security review. Original job 76728 remains historical uncompleted evidence."
     },
     "pmf_bonus": {
       "state": "not_claimed",
@@ -115,20 +115,29 @@
       "evidence": "https://memoryguard.eyesonchain.xyz/ is live on the current VPS; read-only /health/ready, /api/runtime, /api/v2/public-release, and /casework/evidence checks passed on candidate SHA a4b216e73f2eed86ef2e07e2fdece4b48728190c. The new VPS evidence also verifies a real memoryguard container restart and synthetic READY to DENY A/B with same action fingerprint, related-work stop, unrelated-work continuation, and executable=false. This proves current availability, build identity, and synthetic restart behavior only; it does not prove migrated private-data persistence or a successful remote receipt. The former Render persistent-restart record is retained as historical rollback evidence A later separate current-VPS remote investigation succeeded; see vps_remote_investigation. Earlier no-receipt wording describes the initial attempt only."
     },
     "demo_video": {
-      "state": "missing",
-      "evidence": "No public demo URL has been published. The final-SHA continuous raw take passed local read-only acceptance, while the v3 presentation candidate remains owner-review pending and unpublished"
+      "state": "public_uploaded_and_saved_to_build_page",
+      "url": "https://github.com/seekitx/proofops-memoryguard/releases/download/demo-a4b216e-20260907/MemoryGuard-Contest-English.mp4",
+      "evidence": "submission/evidence/video-manifest.json; 264.832 seconds, 1080p, English synthetic voice and subtitles; historical continuous Render source of a4b216e, separate supplements; full human audio review pending."
     },
     "public_posts": {
-      "state": "missing",
-      "evidence": []
+      "state": "missing_on_build_page",
+      "evidence": "Two URLs empty in live portal on 2026-09-07. User previously retained publication; no posts sent."
     },
     "contest_submission": {
-      "state": "human_required",
-      "evidence": null
+      "state": "partial_not_ready",
+      "evidence": "Repo, video and memory saved. Public posts absent; ready unmarked."
     },
     "build_page_marked_ready": {
-      "state": "human_required",
-      "evidence": "Must be completed before 2026-09-10T23:59:00Z"
+      "state": "not_marked",
+      "evidence": "Live portal still shows Mark ready for judging; posts incomplete."
+    },
+    "storage_capacity_recovery": {
+      "state": "maintenance_and_bounded_write_replay_verified",
+      "evidence": "submission/evidence/capacity-maintenance.json and capacity-repeat.json. Preserved all records, compacted 5173248 to 3608576 bytes; one diagnostic write plus replay across restart passed. Not unlimited capacity or full scenario rerun."
+    },
+    "hackathon_free_pro": {
+      "state": "portal_offer_confirmed_activation_pending",
+      "evidence": "Private build page states Pro storage cap lifted through event for plugin accounts, nothing to pay. Binding email requested; SDK entitlement wiring not complete."
     }
   }
 }

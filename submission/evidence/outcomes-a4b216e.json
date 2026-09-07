@@ -1,0 +1,73 @@
+{
+  "schema": "memoryguard-outcomes/1",
+  "runtime_commit": "a4b216e73f2eed86ef2e07e2fdece4b48728190c",
+  "synthetic_scenarios": true,
+  "new_model_calls": 0,
+  "new_tests_run": false,
+  "recording_acceptance_checks": {
+    "candidate_sha_is_expected": true,
+    "runtime_initial_build_is_expected": true,
+    "session_a_build_is_expected": true,
+    "session_b_build_is_expected": true,
+    "decision_builds_are_expected": true,
+    "restart_build_is_expected": true,
+    "restart_event_matches_external_file": true,
+    "different_runtime": true,
+    "pid_observed_and_not_used_as_restart_proof": true,
+    "restart_event_time_ordered": true,
+    "restart_event_after_barrier": true,
+    "restart_event_completed_before_new_runtime_observed": true,
+    "continuous_capture_flags": true,
+    "capture_is_webpage_only": true,
+    "raw_capture_is_unedited": true,
+    "raw_video_hash_matches_evidence": true,
+    "raw_video_is_usable": true,
+    "raw_video_duration_in_range": true,
+    "capture_duration_in_range": true,
+    "two_remote_investigations": true,
+    "remote_receipts_live_and_structured": true,
+    "two_distinct_handoffs": true,
+    "same_action_fingerprint_across_states": true,
+    "verdict_sequence": true,
+    "exact_two_blockers_after_restart": true,
+    "all_decisions_non_executable": true,
+    "replay_cards_are_actual_and_exact": true,
+    "new_ready_proof_is_distinct": true,
+    "core_checks_all_pass": true,
+    "capture_runtime_script_matches_current": true,
+    "node_check_passed": true,
+    "post_restart_role_operation_order": true
+  },
+  "vps_results": {
+    "same_action_fingerprint": true,
+    "related_tasks_stop": true,
+    "unrelated_tasks_continue": true,
+    "all_executable_false": true
+  },
+  "isolated_official_sdk_results": {
+    "same_action": true,
+    "same_build": true,
+    "different_runtime_a_b": true,
+    "different_process_a_b": true,
+    "exact_dispute_recalled": true,
+    "denied_review_blocked": true,
+    "escalation_persisted": true,
+    "unrelated_stays_ready": true,
+    "partial_resolution_still_denied": true,
+    "all_resolved_needs_review": true,
+    "restored_with_new_proof": true,
+    "descendant_recovered": true,
+    "deleted_memory_stops_core": true
+  },
+  "source_sha256": {
+    "release/recording-take4-readonly-acceptance.json": "e291e470ab8a599e3e799fd27e174e2f083735224070b16ba2baa135e64692f4",
+    "new-vps/public-safe-evidence.json": "726468ad47fd76496c9f0fe6d41ada61806623fff616f87af8641e03d12b29ea",
+    "release/public-export-a4/casework-capture-a4-official-sdk.json": "5043328625b5af00134a6a19825a464aef6e60f754752a065dc6877c4dbb96eb"
+  },
+  "not_claimed": [
+    "real customer outcomes",
+    "money saved",
+    "independent security audit",
+    "current production write readiness"
+  ]
+}

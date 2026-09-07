@@ -1,0 +1,16 @@
+{
+  "filename": "MemoryGuard-Contest-English.mp4",
+  "sha256": "c7a6878234a4307238ed3660b1b80a7424e1265198e4be29251d12e12f71ae10",
+  "duration_seconds": 264.832,
+  "resolution": "1920x1080",
+  "runtime_commit": "a4b216e73f2eed86ef2e07e2fdece4b48728190c",
+  "continuous_core_source": "earlier Render recording of same runtime commit",
+  "continuous_raw_interval_seconds": [
+    0,
+    113.8
+  ],
+  "gloria_seconds": 18.4,
+  "voice": "local synthetic Qwen3 Aiden",
+  "full_human_audio_review": "pending",
+  "public_url": "https://github.com/seekitx/proofops-memoryguard/releases/download/demo-a4b216e-20260907/MemoryGuard-Contest-English.mp4"
+}
