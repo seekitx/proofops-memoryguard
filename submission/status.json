@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-09-07T05:11:14.380938+00:00",
+  "updated_at": "2026-09-07T06:02:51.172645+00:00",
   "claims": {
     "registration_confirmed": {
       "state": "verified",
@@ -11,8 +11,8 @@
       "evidence": "Private build page opened and inspected read-only again on 2026-09-05 Beijing time; edit token intentionally not stored"
     },
     "build_page_current_milestones": {
-      "state": "repo_video_memory_saved_posts_missing",
-      "evidence": "Private build page rechecked 2026-09-07: repo, demo video and memory fields show complete; two posts absent; ready not marked. Private URL omitted."
+      "state": "repo_video_posts_memory_saved",
+      "evidence": "Live build page on 2026-09-07 showed all four milestones checked after saving both post URLs. Ready remained unmarked."
     },
     "build_page_team_and_builders": {
       "state": "human_required",
@@ -100,11 +100,11 @@
     },
     "base_exercised_integration": {
       "state": "verified_base_sepolia_audit_anchor",
-      "evidence": "Read-only Base Sepolia audit-anchor receipt was verified in owner-controlled partner records outside this public whitelist; tx 0xc518b7b197ddd2b9c4d30a3a61846a0773489b9082bdd96b287ce82758b3704b committed the supplied proof root at memoryVersion 49 with successful receipt, expected event and confirmations. Audit-only; no payment authority or multiplier claimed"
+      "evidence": "Read-only Base Sepolia audit-anchor receipt was verified in owner-controlled partner records outside this public whitelist; tx 0xc518b7b197ddd2b9c4d30a3a61846a0773489b9082bdd96b287ce82758b3704b committed the supplied proof root at memoryVersion 49 with successful receipt, expected event and confirmations. Audit-only; no payment authority or multiplier claimed Public Blockscout read rechecked on 2026-09-07; see submission/evidence/base-anchor-public-check.json and docs/PARTNER_EVIDENCE.md."
     },
     "virtuals_integration": {
       "state": "gloria_delivery_and_seven_quarantine_receipts_verified_completion_unverified",
-      "evidence": "Job 1003558157 returned ten news items for the prior 0.01 USDC purchase. Seven receipts recovered at revisions 74\u201380, see submission/evidence/capacity-repeat.json. This is external news, not an independent security review. Original job 76728 remains historical uncompleted evidence."
+      "evidence": "Job 1003558157 returned ten news items for the prior 0.01 USDC purchase. Seven receipts recovered at revisions 74–80, see submission/evidence/capacity-repeat.json. This is external news, not an independent security review. Original job 76728 remains historical uncompleted evidence."
     },
     "pmf_bonus": {
       "state": "not_claimed",
@@ -120,24 +120,28 @@
       "evidence": "submission/evidence/video-manifest.json; 264.832 seconds, 1080p, English synthetic voice and subtitles; historical continuous Render source of a4b216e, separate supplements; full human audio review pending."
     },
     "public_posts": {
-      "state": "missing_on_build_page",
-      "evidence": "Two URLs empty in live portal on 2026-09-07. User previously retained publication; no posts sent."
+      "state": "user_published_urls_saved_in_portal",
+      "urls": [
+        "https://x.com/reslibadsi28525/status/2096832643967172716",
+        "https://x.com/reslibadsi28525/status/2096832605652144230"
+      ],
+      "evidence": "User supplied both published URLs. Saved to private build page on 2026-09-07; its 2 posts milestone was checked. This records portal acceptance, not an independent X content audit."
     },
     "contest_submission": {
-      "state": "partial_not_ready",
-      "evidence": "Repo, video and memory saved. Public posts absent; ready unmarked."
+      "state": "artifacts_saved_not_marked_ready",
+      "evidence": "Repository, video, two posts and memory explanation saved; Ready remains unmarked."
     },
     "build_page_marked_ready": {
       "state": "not_marked",
-      "evidence": "Live portal still shows Mark ready for judging; posts incomplete."
+      "evidence": "Last live portal inspection on 2026-09-07 showed Mark ready for judging."
     },
     "storage_capacity_recovery": {
       "state": "maintenance_and_bounded_write_replay_verified",
       "evidence": "submission/evidence/capacity-maintenance.json and capacity-repeat.json. Preserved all records, compacted 5173248 to 3608576 bytes; one diagnostic write plus replay across restart passed. Not unlimited capacity or full scenario rerun."
     },
     "hackathon_free_pro": {
-      "state": "portal_offer_confirmed_activation_pending",
-      "evidence": "Private build page states Pro storage cap lifted through event for plugin accounts, nothing to pay. Binding email requested; SDK entitlement wiring not complete."
+      "state": "account_activated_server_entitlement_still_free",
+      "evidence": "Account activation succeeded. Authenticated official /api/plugin/access recheck returned tier=free, source=free, cap_bytes=5242880. Portal offer and actual entitlement disagree; credentials are not wired into runtime. See submission/evidence/entitlement-check.json."
     }
   }
 }

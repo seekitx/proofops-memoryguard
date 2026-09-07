@@ -7,6 +7,7 @@ requires valid resolutions plus explicit human reconsideration before a new READ
 proof. READY is never a payment or execution capability.
 
 - [Watch the 4m25s English demo](https://github.com/seekitx/proofops-memoryguard/releases/download/demo-a4b216e-20260907/MemoryGuard-Contest-English.mp4)
+- [Five-minute judge walkthrough](docs/JUDGE_WALKTHROUGH.md) and [partner evidence](docs/PARTNER_EVIDENCE.md)
 - [Measured scenario outcomes](docs/JUDGE_OUTCOMES.md) and [evidence index](docs/CONTEST_EVIDENCE_INDEX.md)
 - [Hosted workbench](https://memoryguard.eyesonchain.xyz/casework) · [public evidence](https://memoryguard.eyesonchain.xyz/casework/evidence)
 
@@ -68,7 +69,7 @@ The optional `/casework` workbench adds scoped risk propagation, bounded investi
 > persistent, inspectable reason to stop.
 
 [![Sibyl Memory](https://img.shields.io/badge/Sibyl_Memory-load--bearing-c9ff4a?labelColor=171714)](https://github.com/Sibyl-Labs/Sibyl-Memory)
-[![Base](https://img.shields.io/badge/Base-anchor_prepared-0052ff)](https://base.org/)
+[![Base](https://img.shields.io/badge/Base-Sepolia_audit_anchor-0052ff)](https://base.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-f2efe6.svg)](LICENSE)
 
 MemoryGuard remembers a trusted dispute or revocation across Agent sessions,
@@ -96,7 +97,7 @@ runtime IDs, related work stopped, unrelated work continuing, and every result
 persistence. The initial remote investigation degraded; a separate subsequent
 request returned a validated GPT-4.1-mini receipt on the same runtime commit.
 The current evidence index distinguishes both attempts, the recorded video and
-Base evidence. Public posts and PMF remain unverified. See
+Base evidence. Two public post URLs have been saved to the submission portal; PMF remains unclaimed. See
 [manual completion gates](docs/07_MANUAL_COMPLETION_GATES.md).
 
 ## Judge path — under two minutes

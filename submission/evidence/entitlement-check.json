@@ -1,0 +1,11 @@
+{
+  "checked_at": "2026-09-07T06:01:02.177900+00:00",
+  "endpoint": "https://api.sibyllabs.org/api/plugin/access",
+  "result": {
+    "tier": "free",
+    "source": "free",
+    "cap_bytes": 5242880,
+    "expires_at": null
+  },
+  "contains_credentials": false
+}

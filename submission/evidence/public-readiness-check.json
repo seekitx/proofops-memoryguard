@@ -1,0 +1,29 @@
+{
+  "checked_at": "2026-09-07T06:04:40.336731+00:00",
+  "checks": [
+    {
+      "url": "https://memoryguard.eyesonchain.xyz/health/ready",
+      "ok": true,
+      "identity": {
+        "ready": true,
+        "build_commit": "a4b216e73f2eed86ef2e07e2fdece4b48728190c",
+        "implementation_version": "2.3.0-rc1",
+        "executable": false
+      }
+    },
+    {
+      "url": "https://memoryguard.eyesonchain.xyz/api/runtime",
+      "ok": true,
+      "identity": {
+        "build_commit": "a4b216e73f2eed86ef2e07e2fdece4b48728190c",
+        "implementation_version": "2.3.0-rc1",
+        "executable": false
+      }
+    },
+    {
+      "url": "https://memoryguard.eyesonchain.xyz/casework/evidence",
+      "ok": true
+    }
+  ],
+  "scope": "Unauthenticated read-only reachability and reported identity. No business mutation or full scenario replay."
+}

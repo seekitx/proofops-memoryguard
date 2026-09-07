@@ -1,0 +1,27 @@
+{
+  "checked_at": "2026-09-07T06:02:51.172645+00:00",
+  "source": "https://base-sepolia.blockscout.com/api/v2/transactions/0xc518b7b197ddd2b9c4d30a3a61846a0773489b9082bdd96b287ce82758b3704b",
+  "network": "base_sepolia",
+  "status": "ok",
+  "transaction_hash": "0xc518b7b197ddd2b9c4d30a3a61846a0773489b9082bdd96b287ce82758b3704b",
+  "block_number": 46452756,
+  "timestamp": "2026-09-06T05:50:00.000000Z",
+  "decoded_input": {
+    "method_call": "anchor(bytes32 proofRoot, uint64 memoryVersion)",
+    "method_id": "db2c4aca",
+    "parameters": [
+      {
+        "name": "proofRoot",
+        "type": "bytes32",
+        "value": "0xd92714452b3be26262ce235e2cb9dee31f9db92e2bd20a6b7e53d7be234c04e6"
+      },
+      {
+        "name": "memoryVersion",
+        "type": "uint64",
+        "value": "49"
+      }
+    ]
+  },
+  "new_transaction_sent": false,
+  "claim": "Public explorer recheck of previously exercised audit anchor; no payment authority or awarded multiplier."
+}
