@@ -19,6 +19,10 @@
     const d=await api("/api/v2/casework"); snapshot=d; revision=d.revision;
     $("revision").textContent=String(revision); $("runtime").textContent=d.runtime_id; $("build").textContent=d.build_commit;
     $("identity").textContent=`${d.principal.actor_id} · ${d.principal.role} · ${d.principal.tenant_id} · ${d.memory_backend}`;
+    $("summary-tasks").textContent=String(d.tasks.length);
+    for (const [id, verdict] of [["summary-denied", "DENY"], ["summary-ready", "READY"], ["summary-human", "NEEDS_HUMAN"]]) {
+      $(id).textContent=String(d.tasks.filter(t => t.effective_verdict === verdict).length);
+    }
     $("tasks").replaceChildren();
     d.tasks.forEach(t=>{ const row=document.createElement("tr");
       const id=document.createElement("td"); id.append(text("code",t.task_id),text("code",t.intent.scope.target)); row.append(id);
@@ -71,6 +75,7 @@
     for (const id of ["tasks", "cases", "replay"]) $(id).replaceChildren();
     for (const id of ["handoffs", "response", "replay-status", "recovery-result"]) $(id).textContent="";
     for (const id of ["revision", "runtime", "build"]) $(id).textContent="—";
+    for (const id of ["summary-tasks", "summary-denied", "summary-ready", "summary-human"]) $(id).textContent="—";
   }
   $("connect").addEventListener("click", async () => {
     const next = $("token").value.trim(); $("token").value=""; clearSession(); credential=next;
