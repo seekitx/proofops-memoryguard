@@ -1,7 +1,7 @@
 {
-  "filename": "MemoryGuard-Contest-English.mp4",
-  "sha256": "c7a6878234a4307238ed3660b1b80a7424e1265198e4be29251d12e12f71ae10",
-  "duration_seconds": 264.832,
+  "filename": "MemoryGuard-Contest-English-Cover.mp4",
+  "sha256": "c0328e495c29ef7a924f9d3333caa640f49e9ab5cba438560c34422a45786585",
+  "duration_seconds": 267.853333,
   "resolution": "1920x1080",
   "runtime_commit": "a4b216e73f2eed86ef2e07e2fdece4b48728190c",
   "continuous_core_source": "earlier Render recording of same runtime commit",
@@ -12,5 +12,14 @@
   "gloria_seconds": 18.4,
   "voice": "local synthetic Qwen3 Aiden",
   "full_human_audio_review": "pending",
-  "public_url": "https://github.com/seekitx/proofops-memoryguard/releases/download/demo-a4b216e-20260907/MemoryGuard-Contest-English.mp4"
+  "public_url": "https://github.com/seekitx/proofops-memoryguard/releases/download/demo-a4b216e-20260907/MemoryGuard-Contest-English-Cover.mp4",
+  "cover_duration_seconds": 3,
+  "original_video_start_seconds": 3.021016,
+  "source_video_sha256": "c7a6878234a4307238ed3660b1b80a7424e1265198e4be29251d12e12f71ae10",
+  "cover_integrity": {
+    "source_frames": 6620,
+    "covered_frames": 6695,
+    "cover_frames": 75,
+    "all_original_decoded_frames_identical": true
+  }
 }

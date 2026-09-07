@@ -116,8 +116,8 @@
     },
     "demo_video": {
       "state": "public_uploaded_and_saved_to_build_page",
-      "url": "https://github.com/seekitx/proofops-memoryguard/releases/download/demo-a4b216e-20260907/MemoryGuard-Contest-English.mp4",
-      "evidence": "submission/evidence/video-manifest.json; 264.832 seconds, 1080p, English synthetic voice and subtitles; historical continuous Render source of a4b216e, separate supplements; full human audio review pending."
+      "url": "https://github.com/seekitx/proofops-memoryguard/releases/download/demo-a4b216e-20260907/MemoryGuard-Contest-English-Cover.mp4",
+      "evidence": "submission/evidence/video-manifest.json; 267.853 seconds, 1080p, English synthetic voice and subtitles; historical continuous Render source of a4b216e, separate supplements; full human audio review pending. Covered edition saved to portal on 2026-09-07. All 6620 original decoded video frames match after the 75-frame title card."
     },
     "public_posts": {
       "state": "user_published_urls_saved_in_portal",

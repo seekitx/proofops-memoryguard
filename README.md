@@ -6,7 +6,7 @@ MemoryGuard remembers risk across processes, stops only dependent work, and
 requires valid resolutions plus explicit human reconsideration before a new READY
 proof. READY is never a payment or execution capability.
 
-- [Watch the 4m25s English demo](https://github.com/seekitx/proofops-memoryguard/releases/download/demo-a4b216e-20260907/MemoryGuard-Contest-English.mp4)
+- [Watch the 4m28s English demo](https://github.com/seekitx/proofops-memoryguard/releases/download/demo-a4b216e-20260907/MemoryGuard-Contest-English-Cover.mp4)
 - [Five-minute judge walkthrough](docs/JUDGE_WALKTHROUGH.md) and [partner evidence](docs/PARTNER_EVIDENCE.md)
 - [Measured scenario outcomes](docs/JUDGE_OUTCOMES.md) and [evidence index](docs/CONTEST_EVIDENCE_INDEX.md)
 - [Hosted workbench](https://memoryguard.eyesonchain.xyz/casework) · [public evidence](https://memoryguard.eyesonchain.xyz/casework/evidence)
@@ -372,12 +372,9 @@ We did not label adjacent Base projects as Sibyl winners.
 - [Official requirement map](docs/01_OFFICIAL_REQUIREMENTS.md)
 - [Adversarial review and unanimous decision](docs/02_ADVERSARIAL_CONSENSUS.md)
 - [Construction blueprint](docs/03_CONSTRUCTION_BLUEPRINT.md)
-- [Official-source research](docs/research/SIBYL_HACKATHON_OFFICIAL_RESEARCH_2026-09-01.md)
 - [Demo, video, and submission runbook](docs/06_DEMO_AND_SUBMISSION.md)
 - [Manual completion gates](docs/07_MANUAL_COMPLETION_GATES.md)
 - [In-window Agent interface decision](docs/09_AGENT_INTERFACE_DECISION.md)
-- [2026-09-05 official rules refresh](docs/research/SIBYL_OFFICIAL_REFRESH_2026-09-05.md)
-- [Competitive closure plan](docs/10_COMPETITIVE_CLOSURE_PLAN_2026-09-05.md)
 - [Copy-ready submission pack](submission/FINAL_SUBMISSION_PACK.md)
 
 ## License
