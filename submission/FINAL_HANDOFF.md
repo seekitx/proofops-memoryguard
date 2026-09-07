@@ -109,3 +109,7 @@ Recorded workbench UI: `4692b4268bc46fc82513eb6c9e343a1ead1364dd`.
 Later video/evidence-only changes are separate from that business release.
 The existing runtime release results and CI remain linked from README. No new
 compilation or full test suite was run for the presentation update.
+
+## Final submission closeout
+
+Chrome save and reload on 2026-09-07T13:37:05.252573+00:00 confirmed all four artifact milestones and checked **Marked ready for judging**. The saved video URL is `https://memoryguard.eyesonchain.xyz/assets/memoryguard-demo.mp4?v=840883ca` (3:10). The existing Ready state was preserved. The portal has no separate partner field; partner scope is declared in README and the final film. No private edit link or credential is included here.

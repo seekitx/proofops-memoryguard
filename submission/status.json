@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-09-07T13:24:53.946630+00:00",
+  "updated_at": "2026-09-07T13:37:05.252573+00:00",
   "claims": {
     "registration_confirmed": {
       "state": "verified",
@@ -12,15 +12,15 @@
     },
     "build_page_current_milestones": {
       "state": "four_artifacts_saved_and_ready",
-      "evidence": "Live browser reload on 2026-09-07T10:15:43.884375+00:00 confirmed public repo, current hosted 178.347-second video, two posts, memory fields and checked Ready."
+      "evidence": "Chrome save and reload on 2026-09-07T13:37:05.252573+00:00 confirmed public repo, versioned final 189.717333-second video URL, two posts, memory fields and checked Ready."
     },
     "build_page_team_and_builders": {
       "state": "public_readme_builder_identified",
       "evidence": "README opening and FINAL_HANDOFF identify ProofOps Labs and public entrant @reslibadsi28525. Private portal has no separate builder input; no legal name invented."
     },
     "build_page_partner_stacks": {
-      "state": "human_required",
-      "evidence": "Only claim partner stacks exercised in the demo"
+      "state": "declared_in_public_readme_and_video_no_separate_portal_field",
+      "evidence": "Current portal has no separate partner-stack input. README and final film declare Base Sepolia audit anchor and Virtuals Otto completed job77243. Multiplier eligibility remains a judge decision."
     },
     "memory_implementation_note": {
       "state": "saved_current_casework_description",
@@ -48,7 +48,7 @@
     },
     "vps_casework_restart_ab": {
       "state": "verified_current_runtime_and_approved_ui_recording",
-      "evidence": "submission/evidence/heritage-4692b42.json; 11 recorder checks passed. Actual Docker restart; same action fingerprint; both container PIDs are 1. The final film uses raw seconds 0\u201365 continuously; full 120-second raw retained locally."
+      "evidence": "submission/evidence/heritage-4692b42.json; 11 recorder checks passed. Actual Docker restart; same action fingerprint; both container PIDs are 1. The final film uses raw seconds 0–65 continuously; full 120-second raw retained locally."
     },
     "vps_remote_investigation": {
       "state": "verified_three_receipts_in_latest_recording",
@@ -116,7 +116,7 @@
     },
     "demo_video": {
       "state": "published_and_saved_in_portal_owner_final_listen_pending",
-      "evidence": "https://memoryguard.eyesonchain.xyz/assets/memoryguard-demo.mp4 ; 178.347 seconds, 1080p. Public download hash matches video manifest. Approved voice; new assembly owner listen pending.",
+      "evidence": "https://memoryguard.eyesonchain.xyz/assets/memoryguard-demo.mp4?v=840883ca ; 189.717333 seconds, 1080p. Public hash matches final video manifest. Versioned URL saved and verified after Chrome reload; owner final listen remains separate.",
       "presentation_corrections": "Otto native ACP job77243 completed receipt cards; updated English narration and word-timed captions; original continuous sequence unchanged.",
       "duration_seconds": 189.717333
     },
@@ -131,11 +131,11 @@
     },
     "contest_submission": {
       "state": "marked_ready_verified_after_reload",
-      "evidence": "Official private build page shows Marked ready for judging after reload. Video URL is the hosted memoryguard-demo.mp4. Ready can be unmarked before close."
+      "evidence": "Final video URL with v=840883ca saved in Chrome; reload on 2026-09-07T13:37:05.252573+00:00 retained the URL, four completed artifact milestones and Marked ready for judging. No separate submit button on this official build page."
     },
     "build_page_marked_ready": {
       "state": "verified_marked_ready",
-      "evidence": "Live browser UI read after page reload on 2026-09-07T10:15:43.884375+00:00; checkbox Value1."
+      "evidence": "Chrome reload after final save on 2026-09-07T13:37:05.252573+00:00; Marked ready for judging checkbox remains checked."
     },
     "storage_capacity_recovery": {
       "state": "maintenance_and_bounded_write_replay_verified",
