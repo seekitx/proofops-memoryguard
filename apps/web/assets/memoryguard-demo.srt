@@ -190,34 +190,56 @@ anchor. It is not a payment, and it
 grants no execution authority.
 
 46
-00:02:33,623 --> 00:02:36,865
-Gloria delivered news through
-Virtuals. Seven inputs
+00:02:33,623 --> 00:02:36,268
+Virtuals now completes a real service purchase.
 
 47
-00:02:36,908 --> 00:02:40,023
-were quarantined in Sibyl.
-External information grants
+00:02:36,311 --> 00:02:38,999
+MemoryGuard paid one cent to Otto for
 
 48
-00:02:40,065 --> 00:02:44,119
-no authority. Final platform
-completion remains unverified.
+00:02:39,041 --> 00:02:41,559
+a news report. The provider delivered, and
 
 49
-00:02:45,223 --> 00:02:48,465
+00:02:41,644 --> 00:02:45,057
+our buyer wallet accepted it.
+Job seventy-seven thousand,
+
+50
+00:02:45,356 --> 00:02:48,087
+two hundred forty-three is completed on Base
+
+51
+00:02:48,087 --> 00:02:48,428
+mainnet.
+
+52
+00:02:49,211 --> 00:02:51,515
+This confirms service delivery, not the truth
+
+53
+00:02:51,557 --> 00:02:54,715
+of the news. External reports never override
+
+54
+00:02:54,757 --> 00:02:55,525
+a denial.
+
+55
+00:02:56,583 --> 00:02:59,825
 MemoryGuard remembers risk
 across sessions, stops only
 
-50
-00:02:48,508 --> 00:02:50,812
+56
+00:02:59,868 --> 00:03:02,172
 dependent work, and knows who may let
 
-51
-00:02:50,855 --> 00:02:55,121
+57
+00:03:02,215 --> 00:03:06,481
 it continue. Same action.
 Fresh process. Remembered
 
-52
-00:02:55,164 --> 00:02:57,169
+58
+00:03:06,524 --> 00:03:08,529
 risk. Different authority.

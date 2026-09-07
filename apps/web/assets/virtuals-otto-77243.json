@@ -1,0 +1,113 @@
+{
+  "checked_at": "2026-09-07T13:19:03.770Z",
+  "job_id": "77243",
+  "protocol": "native ACP v2 SDK / AgenticCommerceV3 contract",
+  "provider": "Otto AI - Market Alpha Agent",
+  "offering": "crypto_news",
+  "price_usdc": "0.01",
+  "status": "COMPLETED",
+  "buyer_self_evaluation": true,
+  "delivery_validation": {
+    "id": "77243",
+    "provider": "0x7457b799121c9b8c51298d08f1c19f0186648c90",
+    "deliveryHash": "0x209396a7d8bdd523a84fb76dce7ec465c53e2769dd1185b6ce654760cf5281b7",
+    "reportLength": 3085,
+    "requestedReportPresent": true,
+    "sourceTruthVerified": false,
+    "authority": false,
+    "ignoredUpsell": true
+  },
+  "chain_proof": {
+    "checkedAt": "2026-09-07T13:19:03.770Z",
+    "chainId": 8453,
+    "contract": "0x238E541BfefD82238730D00a2208E5497F1832E0",
+    "block": "50998898",
+    "job": {
+      "client": "0x46f4c13EB296454c8455bA24168d180AC7158B83",
+      "status": 3,
+      "provider": "0x7457b799121c9B8C51298d08f1C19f0186648C90",
+      "expiredAt": 1788788686,
+      "evaluator": "0x46f4c13EB296454c8455bA24168d180AC7158B83",
+      "hook": "0x0000000000000000000000000000000000000000",
+      "budget": "10000",
+      "description": "crypto_news"
+    },
+    "events": [
+      {
+        "event": "JobCreated",
+        "args": {
+          "jobId": "77243",
+          "client": "0x46f4c13EB296454c8455bA24168d180AC7158B83",
+          "provider": "0x7457b799121c9B8C51298d08f1C19f0186648C90",
+          "evaluator": "0x46f4c13EB296454c8455bA24168d180AC7158B83",
+          "expiredAt": "1788788686",
+          "hook": "0x0000000000000000000000000000000000000000"
+        },
+        "transactionHash": "0x0c4d784d6f7ba4c54bafc6f3987fff8afacc20ad531c8ceb0a2eb7af8b905387",
+        "blockNumber": "50998773"
+      },
+      {
+        "event": "JobFunded",
+        "args": {
+          "jobId": "77243",
+          "client": "0x46f4c13EB296454c8455bA24168d180AC7158B83",
+          "amount": "10000"
+        },
+        "transactionHash": "0x599467305214ac9b148e12962302f3efbe965bf46ffce360866888354c1ed996",
+        "blockNumber": "50998817"
+      },
+      {
+        "event": "JobSubmitted",
+        "args": {
+          "jobId": "77243",
+          "provider": "0x7457b799121c9B8C51298d08f1C19f0186648C90",
+          "deliverable": "0x209396a7d8bdd523a84fb76dce7ec465c53e2769dd1185b6ce654760cf5281b7"
+        },
+        "transactionHash": "0xa87050fb2fa93042c0ccea69d5be27d2cbf4ae78415728b7eb5cff1b206c928d",
+        "blockNumber": "50998820"
+      },
+      {
+        "event": "JobCompleted",
+        "args": {
+          "jobId": "77243",
+          "evaluator": "0x46f4c13EB296454c8455bA24168d180AC7158B83",
+          "reason": "0x39fa20d242b5c7bf1c42a59d025130ba9b383ad924dfc7c3bc5111969952dbca"
+        },
+        "transactionHash": "0x2d888017553a27a515df29b8a0d5a0779ba78a20278c7be11afcbf5b3d076737",
+        "blockNumber": "50998884"
+      }
+    ],
+    "receipts": [
+      {
+        "transactionHash": "0x0c4d784d6f7ba4c54bafc6f3987fff8afacc20ad531c8ceb0a2eb7af8b905387",
+        "status": "success",
+        "blockNumber": "50998773"
+      },
+      {
+        "transactionHash": "0x599467305214ac9b148e12962302f3efbe965bf46ffce360866888354c1ed996",
+        "status": "success",
+        "blockNumber": "50998817"
+      },
+      {
+        "transactionHash": "0xa87050fb2fa93042c0ccea69d5be27d2cbf4ae78415728b7eb5cff1b206c928d",
+        "status": "success",
+        "blockNumber": "50998820"
+      },
+      {
+        "transactionHash": "0x2d888017553a27a515df29b8a0d5a0779ba78a20278c7be11afcbf5b3d076737",
+        "status": "success",
+        "blockNumber": "50998884"
+      }
+    ]
+  },
+  "claim_boundary": {
+    "real_paid_provider_delivery": true,
+    "real_completed_job": true,
+    "news_truth_verified": false,
+    "independent_security_review": false,
+    "memoryguard_risks_resolved": false,
+    "production_casework_modified": false,
+    "included_in_current_video": true,
+    "partner_multiplier_awarded": false
+  }
+}

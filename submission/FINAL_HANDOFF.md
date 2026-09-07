@@ -34,7 +34,7 @@ workflow fails closed instead of silently switching to another business store.
 
 ## Film
 
-- 1920 × 1080; 178.347 seconds; English narration.
+- 1920 × 1080; 189.717 seconds; English narration.
 - Core: 00:16.46–01:21.46, continuous and normal speed, no internal cuts.
 - Full raw recording retained locally; the final film selects raw seconds 0–65.
 - Eleven recording checks passed; three real, structured remote-model receipts.
@@ -67,11 +67,14 @@ Base: previously verified Sepolia audit-anchor transaction
 `0xc518b7b197ddd2b9c4d30a3a61846a0773489b9082bdd96b287ce82758b3704b`.
 The film displays the dated transaction proof; it does not send a new transaction.
 
-Virtuals: Gloria job `1003558157` delivered ten news items for 0.01 USDC; seven
-quarantine receipts were preserved. Latest authenticated status recheck confirms EVALUATION and a pending completion
-memo; see [current job check](evidence/gloria-status-20260907.json). Final ACP
-settlement is unverified. News
-cannot resolve a risk or approve a task. This is not an independent safety review.
+Virtuals: native ACP job **77243** with **Otto AI - Market Alpha Agent** is
+**COMPLETED**, including buyer self-evaluation and independently checked Base
+mainnet transaction receipts. Actual price: **0.01 USDC**. See
+[full receipt](evidence/virtuals-otto-77243.json). The film now includes two clearly
+labelled recorded-receipt cards for this completed purchase. The original
+MemoryGuard wallet is both buyer and evaluator. This is external-news delivery,
+not an independent safety review; news cannot resolve a risk or approve a task.
+Gloria job 1003558157 remains separate historical evidence with pending settlement.
 
 PMF and partner multipliers are not claimed as awarded results.
 
@@ -97,7 +100,7 @@ Correction wording provided to the owner (owner reports posted):
 
 The official private portal was reloaded after saving: all four artifact
 milestones are checked and **Marked ready for judging** is enabled. It points to
-the current hosted 2:58 film. The owner can revise/unmark before close.
+the hosted film URL (updated from 2:58 to 3:10 with the Otto receipt). The owner can revise/unmark before close.
 
 ## Release boundary
 

@@ -258,7 +258,7 @@
   },
   "capture_finished_utc": "2026-09-07T09:56:00.856Z",
   "recorded_ui_commit": "4692b4268bc46fc82513eb6c9e343a1ead1364dd",
-  "video_sha256": "7770d9c101ddd5706e6a787dd9a2caa84746bb11be091847e4ebe53a95605c47",
+  "video_sha256": "840883cad89aeec75fa14f696732a3b5d6cb61fde40acadcf03708b76b115d58",
   "raw_sha256": "5dd00b86cf5772b48f33f59d4977529540be810bc9c0d7916158c082f733cf89",
   "continuous_final_interval_seconds": [
     16.46,

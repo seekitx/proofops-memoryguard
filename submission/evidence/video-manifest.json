@@ -1,9 +1,9 @@
 {
   "business_commit": "8a4e5216aa0ab56c6718af9011a47b4a06013b2b",
   "recorded_ui_commit": "4692b4268bc46fc82513eb6c9e343a1ead1364dd",
-  "duration_seconds": 178.346667,
+  "duration_seconds": 189.717333,
   "resolution": "1920x1080",
-  "video_sha256": "7770d9c101ddd5706e6a787dd9a2caa84746bb11be091847e4ebe53a95605c47",
+  "video_sha256": "840883cad89aeec75fa14f696732a3b5d6cb61fde40acadcf03708b76b115d58",
   "raw_sha256": "5dd00b86cf5772b48f33f59d4977529540be810bc9c0d7916158c082f733cf89",
   "continuous_raw_interval": [
     0,
@@ -67,18 +67,18 @@
       "duration": 16.028
     },
     {
-      "section": "09-gloria",
+      "section": "09-otto",
       "start": 153.58,
-      "duration": 11.600000000000001
+      "duration": 22.96
     },
     {
       "section": "10-close",
-      "start": 165.18,
+      "start": 176.54000000000002,
       "duration": 13.040000000000001
     }
   ],
   "privacy": "webpage only; isolated browser context; no bookmarks or personal browser profile",
-  "partner_scope": "Historical Base Sepolia audit anchor and Gloria news delivery; no new transaction; no final ACP settlement claim",
+  "partner_scope": "Historical Base Sepolia audit anchor; real Base mainnet Virtuals ACP job 77243 with Otto, paid 0.01 USDC, delivered and buyer-completed; recorded receipt cards, not a live transaction replay. News truth and independent security review not claimed.",
   "public_url": "https://memoryguard.eyesonchain.xyz/assets/memoryguard-demo.mp4",
   "filename": "memoryguard-demo.mp4",
   "presentation_corrections": {
@@ -87,6 +87,7 @@
     "subtitle_changes": "Punctuation spacing and sentence line breaks only; all timestamps unchanged",
     "continuous_source_sha256": "7eae4f171cc1cafa9983873adc70edd624ed7f1e9060c61878e29e02d8c5d6b5",
     "continuous_source_unchanged": true,
-    "prior_video_sha256": "307b17dcb76b125a1374bc2d66a12e36df7d5ebf54b22f819630e134ee6a5ec1"
+    "prior_video_sha256": "7770d9c101ddd5706e6a787dd9a2caa84746bb11be091847e4ebe53a95605c47",
+    "virtuals_update": "Otto completed job 77243; provider-timed new captions; closing card updated"
   }
 }

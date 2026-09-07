@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-09-07T10:59:23.616792+00:00",
+  "updated_at": "2026-09-07T13:24:53.946630+00:00",
   "claims": {
     "registration_confirmed": {
       "state": "verified",
@@ -103,8 +103,8 @@
       "evidence": "Base Sepolia transaction 0xc518b7b197ddd2b9c4d30a3a61846a0773489b9082bdd96b287ce82758b3704b committed the proof root at memoryVersion 49. Public Blockscout recheck: submission/evidence/base-anchor-public-check.json. Audit-only; no payment authority or awarded multiplier claimed."
     },
     "virtuals_integration": {
-      "state": "live_recheck_delivered_evaluation_pending",
-      "evidence": "submission/evidence/gloria-status-20260907.json. Ten news items delivered; completion-target memo remains PENDING, external evaluator address specified, expiry timestamp passed but API still EVALUATION. Seven historical quarantine receipts. No new payment, import or approval."
+      "state": "native_acp_completed_independently_verified",
+      "evidence": "submission/evidence/virtuals-otto-77243.json. Otto job77243: 0.01 USDC, provider delivery, buyer self-evaluation, COMPLETED; independent Base mainnet receipts all success. No news-truth or independent-security-review claim. Gloria remains historical and separate."
     },
     "pmf_bonus": {
       "state": "not_claimed",
@@ -117,7 +117,8 @@
     "demo_video": {
       "state": "published_and_saved_in_portal_owner_final_listen_pending",
       "evidence": "https://memoryguard.eyesonchain.xyz/assets/memoryguard-demo.mp4 ; 178.347 seconds, 1080p. Public download hash matches video manifest. Approved voice; new assembly owner listen pending.",
-      "presentation_corrections": "Project/team closing credits; narration-source credit removed at owner request. Recorded READY receipt enlarged; subtitle timing and continuous sequence unchanged."
+      "presentation_corrections": "Otto native ACP job77243 completed receipt cards; updated English narration and word-timed captions; original continuous sequence unchanged.",
+      "duration_seconds": 189.717333
     },
     "public_posts": {
       "state": "tags_previously_verified_link_correction_user_confirmed",

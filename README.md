@@ -4,7 +4,7 @@
 
 **Builder:** [@reslibadsi28525](https://x.com/reslibadsi28525) (public entrant identity)
 
-**Stacks:** Sibyl Memory; Base Sepolia audit anchoring; Virtuals / Gloria external news.
+**Stacks:** Sibyl Memory; Base Sepolia audit anchoring; Virtuals / Otto completed external-news purchase.
 
 ## Judge entry — September 7 final presentation
 
@@ -12,7 +12,7 @@ MemoryGuard remembers risk across processes, stops only dependent work, and
 requires valid resolutions plus explicit human reconsideration before a new READY
 proof. READY is never a payment or execution capability.
 
-- [Project introduction](https://memoryguard.eyesonchain.xyz/) · [English demo, 2:58](https://memoryguard.eyesonchain.xyz/assets/memoryguard-demo.mp4)
+- [Project introduction](https://memoryguard.eyesonchain.xyz/) · [English demo, 3:10](https://memoryguard.eyesonchain.xyz/assets/memoryguard-demo.mp4)
 - [Current recording evidence](submission/evidence/heritage-4692b42.json) · [video timing and fingerprints](submission/evidence/video-manifest.json)
 - [Runtime release result](submission/evidence/local-release-8a4e521.json) · [runtime CI](https://github.com/seekitx/proofops-memoryguard/actions/runs/34093259925)
 - [Hosted workbench](https://memoryguard.eyesonchain.xyz/casework) · [public evidence](https://memoryguard.eyesonchain.xyz/casework/evidence)
@@ -31,11 +31,19 @@ remote-model receipts accompany the synthetic casework. English
 narration uses word timestamps for captions. The voice was previously
 owner-approved; the newly assembled film still needs the owner's final listen.
 
-Base is a historical verified Sepolia audit anchor, not a transaction sent in
-this new recording. Gloria delivered news through Virtuals; seven quarantine
-receipts exist. A [live job-status check](submission/evidence/gloria-status-20260907.json)
-confirms EVALUATION with a pending completion memo. Final ACP settlement, independent security review, PMF and
-awarded partner multipliers are not claimed. Research and internal docs stay local.
+Base is a historical verified Sepolia audit anchor. Virtuals now has a real
+completed native ACP job: **77243**, purchased by the original MemoryGuard wallet
+from **Otto AI - Market Alpha Agent** for **0.01 USDC**. The provider accepted,
+delivered a news report, and the buyer explicitly accepted delivery. An independent
+Base mainnet RPC check confirms the creation, funding, submission and completion
+transactions succeeded. [Full receipt](submission/evidence/virtuals-otto-77243.json)
+· [Completion transaction](https://basescan.org/tx/0x2d888017553a27a515df29b8a0d5a0779ba78a20278c7be11afcbf5b3d076737).
+The film shows dated receipt cards, not a live replay of these transactions.
+News claims remain unverified; buyer acceptance is not independent security review
+and cannot resolve MemoryGuard risks or override DENY. The model has no wallet authority.
+The earlier [Gloria job](submission/evidence/gloria-status-20260907.json) remains
+separate historical delivery evidence with pending settlement. PMF and awarded
+partner multipliers are not claimed. Research and internal docs stay local.
 Storage maintenance preserved all tables and row identifiers; only unused pages
 were reclaimed. No SDK quota was changed. All three temporary recording roles
 were revoked and returned HTTP 401 after cleanup.
